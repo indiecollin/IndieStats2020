@@ -1,4 +1,5 @@
 export default {
+    //will probably move navbar colors to its component
     navBarPrimary: '#313232',
     navBarSecondary: '#3f4141',
     navBarHover: '#ffff00',
@@ -19,8 +20,11 @@ export default {
     hoverRed: '#F73835',
     disabledGreyPrim: '#BFC9CA',
     disabledGreySec: '#CACFD2',    
-    optionsTextStroke: '#226377',
+    scrollbarPrimary: '#BFBFBF',
+    scrollbarSecondary: '#E6E6E6',
+    optionsTextStroke: '#226377',//move this?
 
-    black: '#2e2d2d',
-    white: '#ffffff'
+    black: '#2E2D2D',
+    white: '#FFFFFF',
+    darkGrey:'#2E3B43'
 };
