@@ -23,8 +23,11 @@ export default {
     scrollbarPrimary: '#BFBFBF',
     scrollbarSecondary: '#E6E6E6',
     optionsTextStroke: '#226377',//move this?
+    optionsBackground: '#DBE6EC',
 
-    black: '#2E2D2D',
     white: '#FFFFFF',
-    darkGrey:'#2E3B43'
+    lightGrey: '#F1F2EC',
+    grey: '#888888',
+    darkGrey:'#2E3B43',
+    black: '#2E2D2D'
 };

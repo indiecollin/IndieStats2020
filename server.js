@@ -9,6 +9,7 @@ const app = express();
 
 app.use(webpackMiddleware(webpack(webpackConfig)));
 app.use('/assets', express.static(__dirname + '/public'));
+//.use(express.static('public'))
 
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, './index.html'), function(err) {

@@ -202,14 +202,14 @@ const PlayersContainer = styled.main`
 
 const Players = (props) => (
     <PlayersContainer>
-        <PlayerList players = {powerRanks} all = {false}/>
-        <HubCard type = 'player'/>
-        <HubCard type = 'stats' preview = {statsPreview}/>
-        <HubCard type = 'tournaments' preview = {tournamentsPreview}/>
-        <HubCard type = 'rivals' preview = {rivals}/>
-        <PlayerDetailsStats stats = {playerStats}/>
-        <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/>
-        <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/>
+        {/* <PlayerList players = {powerRanks} all = {false}/> */}
+        {/* <HubCard type = 'player'/> */}
+        {/* <HubCard type = 'stats' preview = {statsPreview}/> */}
+        {/* <HubCard type = 'tournaments' preview = {tournamentsPreview}/> */}
+        {/* <HubCard type = 'rivals' preview = {rivals}/> */}
+        {/* <PlayerDetailsStats stats = {playerStats}/> */}
+        {/* <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> */}
+        {/* <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/> */}
     </PlayersContainer>
   );
 

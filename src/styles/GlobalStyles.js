@@ -2,14 +2,8 @@ import {createGlobalStyle} from 'styled-components';
 
 export default createGlobalStyle`
     body{
-        background-color: lightblue;
+        background-color: #556B2FDF;
         font-family: Arial, Helvetica, sans-serif;
-        margin: 0;
-    }
-
-    h1{
-        color: navy;
-        width: max-content;
-        margin: 40px auto 0;
+        margin: 0;        
     }
 `;

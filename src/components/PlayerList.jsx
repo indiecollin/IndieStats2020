@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import theme from '../styles/Theme';
 import ClearX from './ClearX.jsx';
 import NavTriangle from './NavTriangle.jsx';
+import OptionSwitch from './OptionSwitch.jsx';
 import SortArrows from './SortArrows.jsx';
 import Expander from './Expander.jsx';
 
@@ -60,47 +61,6 @@ const StyledPlayerList = styled.div`
     } */    
 `;
 
-const ListOptions = styled.div`    
-    display: flex;        
-    background-color: ${props => props.theme.white}; 
-    position: relative;
-    z-index: 10;
-    border-radius: 10px;
-    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});  
-    border-bottom: solid 0.2px ${props => props.theme.stripeGrey}; 
-    width: 75%;//temp
-    margin: 0 auto 4px;
-    min-height: 30px;    
-
-    button:first-child{ 
-        clip-path: polygon(0% 0%, 0% 100%, 85% 100%, 95% 0%);
-        z-index: 20;        
-    }     
-
-    button:last-child{                    
-        clip-path: polygon(15% 0%, 5% 100%, 100% 100%, 100% 0%);        
-    }               
-`;
-
-const OptionsButton = styled.button`
-    border: 1.5px solid ${props => props.theme.stripeGrey};
-    border-radius: 10px;
-    -webkit-text-stroke: ${props => props.theme.optionsTextStroke} 0.5px;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 19px;
-    width: 100%;
-    background-color: ${props => props.selected ? props.theme.white : listingGrey};
-    outline: none;                        
-    position: ${props => props.selected ? 'relative' : 'static'};
-    cursor: ${props => props.selected ? 'default' : 'pointer'};
-
-    &:hover{        
-        border: 1.5px solid ${props => props.selected ? props.theme.stripeGrey : props.theme.hoverRed};
-        background-color: ${props => props.theme.white};
-    }  
-`;
-
 const SearchWrapper = styled.div`
     display: flex;
     position: relative;
@@ -128,7 +88,7 @@ const ListSearch = styled.input`
 const PlayerListing = styled.div`    
     height: 36px;
     min-height: 36px;
-    background-color: ${() => listingGrey};
+    background-color: ${props => props.theme.optionsBackground};
     display: flex;
     margin: 0 8px;
     text-align: center;
@@ -165,13 +125,10 @@ class PlayerList extends Component {
         super(props, context)                    
     }
             
-    render(){                                     
+    render(){
         return <PlayerListWrapper>
-            <StyledPlayerList>                   
-                <ListOptions>
-                    <OptionsButton onClick = {false} selected = {!this.props.all}>Ranks</OptionsButton>                        
-                    <OptionsButton onClick = {false} selected = {this.props.all}>All</OptionsButton>                            
-                </ListOptions>
+            <StyledPlayerList>
+                <OptionSwitch selected = {this.props.all} left='Ranks' right='All'/>                
                 <SearchWrapper>
                     <NavTriangle left={true}/>
                     <ListSearch disabled = {!this.props.all} placeholder = {this.props.all ? 'Search Player' : ''}/>                                
