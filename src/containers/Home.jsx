@@ -69,15 +69,32 @@ const articles = [
 const pastOrFuture = false;//past means true
 
 const HomeContainer = styled.div`
-  min-height: calc(100% - 48px);
+  min-height: 100vh;  
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 32px;
+
+  &>div{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    grid-gap: 20px;    
+    margin: 0 auto;
+    padding-top: 90px;
+    max-width: 940px;
+  }
+
 `;
 
 const Home = (props) => {
     return(
         <HomeContainer>
-            {/* <PowerRanks ranks = {ranks}/> */}
+          <div>
+            <PowerRanks ranks = {ranks}/>
             <FeaturedTournaments past = {pastOrFuture} tournaments = {tournaments}/>
-            {/* <NewsFlash articles = {articles}/> */}
+            <NewsFlash articles = {articles}/>
+          </div>
         </HomeContainer>
     )
 }

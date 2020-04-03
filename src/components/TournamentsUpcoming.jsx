@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
@@ -17,7 +17,8 @@ const UpcomingTournamentsContainer = styled.div`
     padding-bottom: 20px;
 `;
 
-const UpcomingTournaments = styled.div`    
+const UpcomingTournaments = styled.div`
+    height: 752px;
     margin: 0 auto;
     padding: 0 16px;
     overflow: hidden;   
@@ -116,33 +117,44 @@ const TournamentLink = styled(DataInfo)`
     color: ${()=> link};
 `;
 
-const TournamentsUpcoming = (props) => {
-    const [banners, setBanners] = useState([]);
-    useEffect(() => {
-        let imports = props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
-        Promise.all(imports).then(images => setBanners(images.map(banner => banner.default)));
-      });
-    return <UpcomingTournamentsContainer>
-        <UpcomingTournaments>
-            <h3>Upcoming Tournaments</h3>
-            <UpcomingListingsWrapper>                        
-                {
-                    props.tournaments.map((t, i) => {
-                        return <UpcomingListing key = {t.name}>
-                            <TournamentBanner src={banners[i]} />
-                            <TournamentName>{t.name}</TournamentName>
-                            <DataGrid></DataGrid>
-                            <DataIcon src={CalendarIcon} gridRow = '3/4'/><DataInfo gridRow = '3/4'>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</DataInfo>
-                            <DataIcon src={LocationIcon} gridRow = '4/5'/><DataInfo gridRow = '4/5'>{t.venue}</DataInfo>
-                            <DataIcon src={Smashgg} gridRow = '5/6'/><TournamentLink gridRow = '5/6'>smash.gg</TournamentLink>
-                            <DataIcon src={SeasonIcon} gridRow = '6/7'/><DataInfo gridRow = '6/7'>Spring 2020</DataInfo>
-                        </UpcomingListing>
-                    })
-                }                
-            </UpcomingListingsWrapper>
-        </UpcomingTournaments>
-        <Expander/>
-    </UpcomingTournamentsContainer>
-}
+class TournamentsUpcoming extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            banners: []
+        };
+    }
+
+    componentDidMount(){            
+        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
+        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));
+    }    
+
+    render(){
+        return (
+            <UpcomingTournamentsContainer>
+                <UpcomingTournaments>
+                    <h3>Upcoming Tournaments</h3>
+                    <UpcomingListingsWrapper>                        
+                        {
+                            this.props.tournaments.map((t, i) => {
+                                return <UpcomingListing key = {t.name}>
+                                    <TournamentBanner src={this.state.banners[i]} />
+                                    <TournamentName>{t.name}</TournamentName>
+                                    <DataGrid></DataGrid>
+                                    <DataIcon src={CalendarIcon} gridRow = '3/4'/><DataInfo gridRow = '3/4'>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</DataInfo>
+                                    <DataIcon src={LocationIcon} gridRow = '4/5'/><DataInfo gridRow = '4/5'>{t.venue}</DataInfo>
+                                    <DataIcon src={Smashgg} gridRow = '5/6'/><TournamentLink gridRow = '5/6'>smash.gg</TournamentLink>
+                                    <DataIcon src={SeasonIcon} gridRow = '6/7'/><DataInfo gridRow = '6/7'>Spring 2020</DataInfo>
+                                </UpcomingListing>
+                            })
+                        }                
+                    </UpcomingListingsWrapper>
+                </UpcomingTournaments>
+                <Expander/>
+            </UpcomingTournamentsContainer>
+        );
+    };
+};
 
 export default TournamentsUpcoming;

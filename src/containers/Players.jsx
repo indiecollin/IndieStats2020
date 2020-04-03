@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import PlayerList from '../components/PlayerList.jsx';
 import HubCard from '../components/HubCard.jsx';
+
+
 import PlayerDetailsStats from '../components/PlayerDetailsStats.jsx';
 import PlayerDetailsTournaments from '../components/PlayerDetailsTournaments.jsx';
 import PlayerDetailsRivals from '../components/PlayerDetailsRivals.jsx';
@@ -20,17 +22,30 @@ const powerRanks = [
     {gamerTag:"Elegant", setWins: 0, setLosses: 0}
 ];
 
+const playerInfo = {
+  gamerTag: 'indie',
+  main: 'incineroar1'
+}
+
 const statsPreview = [
-    <React.Fragment><span>Set Record</span><span>3 - 4</span></React.Fragment>,
-    <React.Fragment><span>Game Record</span><span>7 - 8</span></React.Fragment>
+  <React.Fragment><span>Set Record</span><span>3 - 4</span></React.Fragment>,
+  <React.Fragment><span>Game Record</span><span>7 - 8</span></React.Fragment>
 ];
 
 const tournamentsPreview = [
-    'MSM 100',
-    'MSM 101',
-    'MSM 103',
-    'MSM 104',
-    'MSM 107'
+  'MSM 100',
+  'MSM 101',
+  'MSM 103',
+  'MSM 104',
+  'MSM 107'
+];
+
+const rivalsPreview = [
+  <span>Lin</span>,
+  <span>Assmilk</span>,
+  <span>Drew</span>,
+  <span>Bleh</span>,
+  <span>SomeGuy</span>
 ];
 
 const rivals = [
@@ -132,6 +147,7 @@ const playerTournaments = [
 
 const rival = {
   gamerTag:  'Lin',
+  main: 'default',
   setWins: 1,
   setLosses: 6,
   gameWins: 7,
@@ -140,7 +156,12 @@ const rival = {
   highestPlacement: '1st',
   lastMet:"MSM 180"
 };
-const player = 'indie';
+
+const player = {
+  gamerTag: 'indie',
+  main: 'incineroar1'  
+};
+
 const matchHistory = [
     {
       tournamentName: "Mega Smash Mondays 169",      
@@ -193,23 +214,36 @@ const matchHistory = [
     },
 ];
 
-const PlayersContainer = styled.main`
-    background-color: white;
-    width: 100%;
-    height: 100%;
-    padding: 80px;
+const PlayersContainer = styled.main`    
+    min-height: 100vh;    
+`;
+
+const PlayerInfo = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(320px, 0.8fr)) minmax(0, 0.4fr);
+  gap: 20px 8px;
+  flex-wrap: wrap;
+  justify-items: center;  
+  position: relative;
+  margin: 0 auto 40px;
+  margin-top: 90px;
+  margin-bottom: auto;
+  padding: 0;
+  transition: max-height 0.5s linear;  
 `;
 
 const Players = (props) => (
     <PlayersContainer>
-        {/* <PlayerList players = {powerRanks} all = {false}/> */}
-        {/* <HubCard type = 'player'/> */}
-        {/* <HubCard type = 'stats' preview = {statsPreview}/> */}
-        {/* <HubCard type = 'tournaments' preview = {tournamentsPreview}/> */}
-        {/* <HubCard type = 'rivals' preview = {rivals}/> */}
-        {/* <PlayerDetailsStats stats = {playerStats}/> */}
-        {/* <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> */}
-        {/* <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/> */}
+        <PlayerList players = {powerRanks} all = {false}/>
+        <PlayerInfo>
+          <HubCard type = 'player' player = {playerInfo} gridColumn = '3 / 4'/>
+          <HubCard type = 'stats' preview = {statsPreview} gridColumn = '2 / 3'/>
+          <HubCard type = 'tournaments' preview = {tournamentsPreview} gridColumn = '3 / 4'/>
+          <HubCard type = 'rivals' preview = {rivalsPreview} gridColumn = '4 / 5'/>
+          {/* <PlayerDetailsStats stats = {playerStats}/> */}
+          {/* <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> */}
+          <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/>
+        </PlayerInfo>
     </PlayersContainer>
   );
 

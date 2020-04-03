@@ -11,7 +11,7 @@ const HubWrapper = styled.div`
     width: 256px;        
     position: absolute;
     left: 75%;    
-    top: 110px;        
+    top: 120px;        
     height: 752px;//derived from grid height
 
     /* @media screen and (max-width: 1300px) { 

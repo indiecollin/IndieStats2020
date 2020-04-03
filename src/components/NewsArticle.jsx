@@ -8,7 +8,7 @@ const Article = styled.div`
     display: flex;
     flex-direction: column;
     padding-bottom: 60px;
-    background-color: $white;
+    background-color: ${props => props.theme.white};
     margin-left: auto;
     margin-right: auto;
     max-width: 960px;
@@ -60,18 +60,6 @@ const Article = styled.div`
     }
 } */
 `;
-
-// const NewsArticle = (props) => {
-//     const [selected, setSelected] = useState();
-//     useEffect(() => {        
-//         import(/* webpackMode: "eager" */ `../articles/${props.article.content}`).then(article => setSelected(article.default));
-//       });
-//     return(
-//         <Article key = {'test'}>
-//             {selected}
-//         </Article>
-//     );
-// };
 
 class NewsArticle extends Component{
 

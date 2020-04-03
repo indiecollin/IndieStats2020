@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
 
-import Banner from '../../public/images/MSM96px.png';
 import First from '../../public/images/gold-medal.png';
 import Second from '../../public/images/silver-medal.png';
 import Third from '../../public/images/bronze-medal.png';
@@ -18,12 +17,13 @@ const listingSelected = '#FF8C8C';
 const seedPrimary ='#A2A4C7';
 const seedSecondary = '#807387';
 
-const TournamentsListing = styled.div`    
-    height: 788px;      
-    width: 600px;
-    overflow: scroll;
-    overflow-x: hidden;  
+const TournamentsListing = styled.div`
+    grid-column: 2 / 3; 
     position: relative;   
+    width: 600px;
+    height: 788px;      
+    overflow: scroll;
+    overflow-x: hidden;      
     background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});     
 
     /* .menu-button{
@@ -187,63 +187,77 @@ const Seeds = styled.div`
     }            
 `;
 
-const TournamentsList = (props) => {
-    return (
-        <TournamentsListing>
-            <Header><h3>Past Tournaments</h3></Header>
-            {props.tournaments.map(t => {
-                return <TournamentListing>
-                    <span>{t.name}</span>
-                    <img src = {Banner}/>
-                    <Placements>
-                        <div>
-                            <img src={First} />
-                            <span>{t.topPlacements[0].gamerTag}</span>
-                        </div>
-                        <div>
-                            <img src={Second} />
-                            <span>{t.topPlacements[1].gamerTag}</span>
-                        </div>
-                        <div>
-                            <img src={Third} />
-                            <span>{t.topPlacements[2].gamerTag}</span>
-                        </div>
-                    </Placements>
-                    <Info>
-                        <div>
-                            <img src={PlayersIcon} />
-                            <span>{t.entrantCount}</span>
-                        </div>
-                        <div>
-                            <img src={CalendarIcon} />
-                            <span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span>
-                        </div>
-                        <div>
-                            <img src={LocationIcon} />
-                            <span>{t.venue}</span>
-                        </div>
-                        <div>
-                            {/*condition once Challonge tournaments are being added*/ }
-                            <img src={Smashgg} />
-                            <Link>smash.gg</Link>
-                        </div>
-                        <div>
-                            <img src={SeasonIcon} />
-                            <span>Spring 2018</span>
-                        </div>
-                    </Info>
-                    <Seeds>
-                        <h4>Seeds</h4>
-                        <div><span>1</span><span>{t.topSeeds[0].gamerTag}</span></div>
-                        <div><span>2</span><span>{t.topSeeds[1].gamerTag}</span></div>
-                        <div><span>3</span><span>{t.topSeeds[2].gamerTag}</span></div>
-                        <div><span>4</span><span>{t.topSeeds[3].gamerTag}</span></div>
-                        <div><span>5</span><span>{t.topSeeds[4].gamerTag}</span></div>
-                    </Seeds>
-                </TournamentListing>}
-            )}
-        </TournamentsListing>
-    )
+class TournamentsList extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            banners: []
+        }
+    }
+
+    componentDidMount(){            
+        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
+        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));      
+    }
+
+    render(){
+        return (
+            <TournamentsListing>
+                <Header><h3>Past Tournaments</h3></Header>
+                {this.props.tournaments.map((t, i) => {
+                    return <TournamentListing>
+                        <span>{t.name}</span>
+                        <img src = {this.state.banners[i]}/>
+                        <Placements>
+                            <div>
+                                <img src={First} />
+                                <span>{t.topPlacements[0].gamerTag}</span>
+                            </div>
+                            <div>
+                                <img src={Second} />
+                                <span>{t.topPlacements[1].gamerTag}</span>
+                            </div>
+                            <div>
+                                <img src={Third} />
+                                <span>{t.topPlacements[2].gamerTag}</span>
+                            </div>
+                        </Placements>
+                        <Info>
+                            <div>
+                                <img src={PlayersIcon} />
+                                <span>{t.entrantCount}</span>
+                            </div>
+                            <div>
+                                <img src={CalendarIcon} />
+                                <span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span>
+                            </div>
+                            <div>
+                                <img src={LocationIcon} />
+                                <span>{t.venue}</span>
+                            </div>
+                            <div>
+                                {/*condition once Challonge tournaments are being added*/ }
+                                <img src={Smashgg} />
+                                <Link>smash.gg</Link>
+                            </div>
+                            <div>
+                                <img src={SeasonIcon} />
+                                <span>Spring 2018</span>
+                            </div>
+                        </Info>
+                        <Seeds>
+                            <h4>Seeds</h4>
+                            <div><span>1</span><span>{t.topSeeds[0].gamerTag}</span></div>
+                            <div><span>2</span><span>{t.topSeeds[1].gamerTag}</span></div>
+                            <div><span>3</span><span>{t.topSeeds[2].gamerTag}</span></div>
+                            <div><span>4</span><span>{t.topSeeds[3].gamerTag}</span></div>
+                            <div><span>5</span><span>{t.topSeeds[4].gamerTag}</span></div>
+                        </Seeds>
+                    </TournamentListing>}
+                )}
+            </TournamentsListing>
+        );
+    };
 };
 
 export default TournamentsList;

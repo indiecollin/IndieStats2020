@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import SearchIcon from './svgs/SearchIcon.jsx';
 
@@ -119,27 +119,36 @@ const Thumbnail = styled.div`
     }    
 `;
 
-const NewsArticleListing = (props) => {
-    const [thumbnails, setThumbnails] = useState([]);
-    useEffect(() => {
-        let imports = props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
-        Promise.all(imports).then(images => {setThumbnails(images.map(banner => banner.default));})
-      });
-    return(
-        <ArticleListing>
-            <h2>Articles</h2>
-            <Search>
-                <input  type='text' placeholder = 'Search Articles'></input>
-                <button><span><SearchIcon/></span></button>
-            </Search>
-            {props.articles.map((a,i) => {
-                return <Thumbnail key = {a.name}>
-                    <img src={thumbnails[i]}/>
-                    <span>{a.name}</span>
-                </Thumbnail>
-            })}
-        </ArticleListing>
-    )
+class NewsArticleListing extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            thumbnails: []
+        };
+    }
+
+    componentDidMount(){            
+        let imports = this.props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
+        Promise.all(imports).then(images => this.setState({thumbnails: images.map(banner => banner.default)}));
+    }    
+    
+    render(){    
+        return(
+            <ArticleListing>
+                <h2>Articles</h2>
+                <Search>
+                    <input  type='text' placeholder = 'Search Articles'></input>
+                    <button><span><SearchIcon/></span></button>
+                </Search>
+                {this.props.articles.map((a,i) => {
+                    return <Thumbnail key = {a.name}>
+                        <img src={this.state.thumbnails[i]}/>
+                        <span>{a.name}</span>
+                    </Thumbnail>
+                })}
+            </ArticleListing>
+        );
+    };
 };
 
 export default NewsArticleListing;

@@ -1,7 +1,6 @@
 //MAY NEED TO USE STATE IN THIS COMPONENT TO HANDLE PAGING
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import MSM from '../../public/images/MSM96px.png';
 import First from '../../public/images/gold-medal.png';
 import Second from '../../public/images/silver-medal.png';
 import Third from '../../public/images/bronze-medal.png';
@@ -9,11 +8,13 @@ import Third from '../../public/images/bronze-medal.png';
 const highlightTheme = '#850303';
 
 const TournamentDetails = styled.div`    
-    min-width: 600px;//temp
-    width: 608px;//temp
-    min-height: 560px; 
+    grid-column: 2 / 5;    
     display: flex;
     flex-direction: column;
+    width: 608px;//temp
+    min-width: 600px;//temp
+    min-height: 560px;     
+    margin: 0 auto 20px;
 
     /* @media screen and (max-width: 706px){
         min-width: unset;       
@@ -163,31 +164,47 @@ const PaginationButton = styled.button`
     }
 `;
 
-const PlayerDetailsTournaments = (props) => {
-    return(
-        <TournamentDetails>
-            {props.tournaments.map((t, i) => {
-                return <TournamentListing key = {i}>
-                    <img src = {MSM}/>
-                    <span>{t.name}</span>
-                    <PlayerInfo>
-                        <div><span>Place</span><span>{t.placement}</span></div>
-                        <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
-                        <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
-                        <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
-                    </PlayerInfo>
-                    <Top3>
-                        <div><img src = {First}/><span></span>{t.top3[0]}</div>
-                        <div><img src = {Second}/><span></span>{t.top3[1]}</div>
-                        <div><img src = {Third}/><span></span>{t.top3[2]}</div>
-                    </Top3>
-                </TournamentListing>                
-            })}
-            <Pagination>
-                    {[...Array(5)].map((x,i) => <PaginationButton key = {i} index = {i} page={props.page}></PaginationButton>)}
-            </Pagination>
-        </TournamentDetails>
-    );
+class PlayerDetailsTournaments extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            banners: []
+        }
+    };
+
+    componentDidMount(){
+        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+        Promise.all(imports).then(images => {                                 
+            this.setState({banners: images.map(banner => banner.default)});
+        });
+    }
+
+    render(){
+        return(
+            <TournamentDetails>
+                {this.props.tournaments.map((t, i) => {
+                    return <TournamentListing key = {i}>
+                        <img src = {this.state.banners[i]}/>
+                        <span>{t.name}</span>
+                        <PlayerInfo>
+                            <div><span>Place</span><span>{t.placement}</span></div>
+                            <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
+                            <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
+                            <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
+                        </PlayerInfo>
+                        <Top3>
+                            <div><img src = {First}/><span></span>{t.top3[0]}</div>
+                            <div><img src = {Second}/><span></span>{t.top3[1]}</div>
+                            <div><img src = {Third}/><span></span>{t.top3[2]}</div>
+                        </Top3>
+                    </TournamentListing>                
+                })}
+                <Pagination>
+                        {[...Array(5)].map((x,i) => <PaginationButton key = {i} index = {i} page={this.props.page}></PaginationButton>)}
+                </Pagination>
+            </TournamentDetails>
+        );
+    }
 };
 
 export default PlayerDetailsTournaments;

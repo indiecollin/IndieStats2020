@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import Image from '../../public/images/incineroar1s.png';
 
 const playerCardGrey = '#BECFE3';
 const gamerTag =  'rgba(255, 127, 127, 0.8)';//get hex
@@ -12,9 +11,10 @@ const hubColors = {
 };
 
 const HubWrapper = styled.div`
+    grid-column: ${props => props.gridColumn};
     position: relative;    
     width: 300px;
-    height: 268px;
+    height: 268px;    
     &::before{
         content: '';
         width: 100%;
@@ -150,16 +150,35 @@ const GamerTag = styled.div`
     font-weight: 550;
 `;
 
-const HubCard = (props) => {
-    return <HubWrapper type = {props.type}>
-        <Hub type = {props.type}>
-            {props.preview ? props.preview.map(rival => <HubPreview type = {props.type}>{rival.gamerTag}</HubPreview>) : null}
-            <span>{props.type !== 'player' ? props.type : 'incineroar' }</span>
-            {props.type === 'player' ? <GamerTag>indie</GamerTag> : null}
-            <HubFooter type = {props.type}><div><div></div></div></HubFooter>
-            {props.type === 'player' ? <img src={Image}></img> : null}
-        </Hub>        
-    </HubWrapper>
+class HubCard extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            charImage: ''
+        };
+    }
+
+    componentDidMount(){
+        if(this.props.type === 'player'){
+            import(/* webpackMode: "eager" */ `../../public/main_portraits/${this.props.player.main}.png`).then(portrait => {
+                this.setState({charImage: portrait.default});
+            });
+        }
+    }
+
+    render(){
+        return(
+            <HubWrapper type = {this.props.type} gridColumn = {this.props.gridColumn}>
+                <Hub type = {this.props.type}>
+                    {this.props.preview ? this.props.preview.map(content => <HubPreview type = {this.props.type}>{content}</HubPreview>) : null}
+                    <span>{this.props.type !== 'player' ? this.props.type : this.props.player.main.slice(0,-1) }</span>
+                    {this.props.type === 'player' ? <GamerTag>{this.props.player.gamerTag}</GamerTag> : null}
+                    <HubFooter type = {this.props.type}><div><div></div></div></HubFooter>
+                    {this.props.type === 'player' ? <img src={this.state.charImage}></img> : null}
+                </Hub>        
+            </HubWrapper>
+        );
+    };
 };
 
 export default HubCard;

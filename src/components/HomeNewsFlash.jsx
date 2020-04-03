@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import NewsIcon from './svgs/NewsIcon.jsx';
 import ArrowIcon from './svgs/ArrowIcon.jsx';
@@ -8,7 +8,7 @@ const headerBackground = '#697279';
 const articleHeaderSecondary = '#EEDF0F';
 
 const NewsFlash = styled.div`
-
+    grid-column: 1 / -1;
     margin: 0 80px 20px;
 
     h3{
@@ -108,45 +108,54 @@ const ArticleHeader = styled.div`
     } 
 `;
 
-const HomeNewsFlash = (props) => {
-    const [thumbnails, setThumbnails] = useState([]);
-    useEffect(() => {
-        let imports = props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
-        Promise.all(imports).then(images => {setThumbnails(images.map(banner => banner.default));})
-      });
-    return(
-        <NewsFlash>
-            <h3>News Flash</h3>
-            <div className='article'>
-                <ArticleHeader>
-                    <span className='news-icon'><NewsIcon/></span><h4>{props.articles[0].name}</h4>
-                </ArticleHeader>
-                <div className='content-container'>
-                    <img src = {thumbnails[0]}/>             
-                    <div className='content'>   
-                        <p>{props.articles[0].abstract}</p>
-                        <div className='more'>
-                            <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+class HomeNewsFlash extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            thumbnails: []
+        };
+    };
+
+    componentDidMount(){
+        let imports = this.props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
+        Promise.all(imports).then(images => this.setState({thumbnails: images.map(banner => banner.default)}));
+    };
+
+    render(){    
+        return(
+            <NewsFlash>
+                <h3>News Flash</h3>
+                <div className='article'>
+                    <ArticleHeader>
+                        <span className='news-icon'><NewsIcon/></span><h4>{this.props.articles[0].name}</h4>
+                    </ArticleHeader>
+                    <div className='content-container'>
+                        <img src = {this.state.thumbnails[0]}/>             
+                        <div className='content'>   
+                            <p>{this.props.articles[0].abstract}</p>
+                            <div className='more'>
+                                <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className='article'>
-                <ArticleHeader>
-                    <span className='news-icon'><NewsIcon/></span><h4>{props.articles[1].name}</h4>
-                </ArticleHeader>
-                <div className='content-container'>
-                    <img src = {thumbnails[1]}/>             
-                    <div className='content'>   
-                        <p>{props.articles[1].abstract}</p>
-                        <div className='more'>
-                            <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+                <div className='article'>
+                    <ArticleHeader>
+                        <span className='news-icon'><NewsIcon/></span><h4>{this.props.articles[1].name}</h4>
+                    </ArticleHeader>
+                    <div className='content-container'>
+                        <img src = {this.state.thumbnails[1]}/>             
+                        <div className='content'>   
+                            <p>{this.props.articles[1].abstract}</p>
+                            <div className='more'>
+                                <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </NewsFlash>
-    )
+            </NewsFlash>
+        )
+    }
 };
 
 export default HomeNewsFlash;

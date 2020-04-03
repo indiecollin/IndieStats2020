@@ -8,11 +8,13 @@ const rowHeader = '#434343';//grey
 const iconDims = 28;
 
 const StatDetails = styled.div`     
+    grid-column: 2 / 5;
+    margin: 0 auto 20px;
     min-width: 500px;
     width: 500px;//temp
     height: 320px;
-    overflow-y: scroll;   
     padding-right: 24px;
+    overflow-y: scroll;   
 
     span{
         font-size: 24px;

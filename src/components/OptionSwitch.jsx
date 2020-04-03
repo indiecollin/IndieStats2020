@@ -10,7 +10,7 @@ const Options = styled.div`
     background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});  
     border-bottom: solid 0.2px ${props => props.theme.stripeGrey}; 
     width: 75%;//temp
-    margin: 0 auto 4px;
+    margin: 0 auto;// 4px;
     min-height: 30px;    
 
     button:first-child{ 
@@ -46,8 +46,8 @@ const OptionsButton = styled.button`
 const OptionSwitch = (props) => {
     return(
         <Options>
-            <OptionsButton onClick = {false} selected = {!props.selected}>{props.left}</OptionsButton>
-            <OptionsButton onClick = {false} selected = {props.selected}>{props.right}</OptionsButton>
+            <OptionsButton selected = {!props.selected}>{props.left}</OptionsButton>
+            <OptionsButton selected = {props.selected}>{props.right}</OptionsButton>
         </Options>
     );
 };

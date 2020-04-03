@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
 import theme from '../styles/Theme';
 import ClearX from './ClearX.jsx';
 import SortArrows from './SortArrows.jsx';
-import MSM from '../../public/images/MSM96px.png';
 import Smashgg from '../../public/images/smash.gg.png';
 import Facebook from '../../public/images/facebook.png';
 
@@ -30,14 +29,15 @@ const placeSorterPos = {right: '4px'}
 const seedSorterPos = {right: '8px'}
 
 const TournamentHub = styled.div`
-    width: 932px;
-    min-height: 500px;
-    margin: 20px auto 40px;
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 2fr;
     position: relative;                            
-    background-color: ${props => props.theme.lightGrey};
+    width: 932px;
+    min-height: 500px;
+    margin: 20px auto 40px;
     overflow: hidden;
+    background-color: ${props => props.theme.lightGrey};
 `;
 
 const Header = styled.div`
@@ -282,87 +282,102 @@ const InfoExpanderData = styled.td`
     ${() => infoExpanderStyles}
 `;
 
-const TournamentsDetails = (props) => {
-    return(
-        <TournamentHub>
-            <Header>
-                <div>
-                    <h2>{props.tournament.name}</h2>
-                    <div>                
-                        <p>{Moment(new Date(props.tournament.eventDate)).format('MMM D, YYYY')}</p>
-                        <p>{props.tournament.entrantCount} Entrants</p>                    
-                        <a href={props.tournament.bracketLink}><img src={Smashgg}></img></a>
-                        <a href='#'><img src={Facebook}></img></a>   
-                        {/* {props.tournament.eventPage ? <p>Event Page: {props.tournament.eventPage}</p> : null}                 */}
-                    </div>                
-                </div> 
-            </Header>
-            <Banner>
-                <img src = {MSM}/>
-            </Banner>
-            <Search>
-                <input type='text' placeholder='Search Player' />
-                <ClearX visible = {true} position = {playerSearchPos}/>
-            </Search>            
-            <TableWrapper>
-                <table>
+class TournamentsDetails extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            banner: ''
+        };
+    }
+
+    componentDidMount(){
+        import(/* webpackMode: "eager" */ `../../public/tournament_banners/${this.props.tournament.shortName.split(' ')[0]}96px.png`).then(image =>{
+            this.setState({banner: image.default});
+        });      
+    };
+
+    render(){
+        return(
+            <TournamentHub>
+                <Header>
                     <div>
-                        <tbody>                    
-                            <tr>
-                                <ColumnHeader width='160' position='relative'>
-                                    Player
-                                    <SortArrows position = {playerSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
-                                </ColumnHeader>
-                                <ColumnHeader width='60' position='relative'>
-                                    Place
-                                    <SortArrows position = {placeSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
-                                </ColumnHeader>
-                                <ColumnHeader width='60' position='relative'>
-                                    Seed
-                                    <SortArrows position = {seedSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
-                                </ColumnHeader>
-                                <ColumnHeader width='64'>Record</ColumnHeader>
-                                <ColumnHeader width='200'>Matches</ColumnHeader>
-                                <ColumnHeader width='160'>Loss To</ColumnHeader>
-                                <ColumnHeader width='160'>Eliminator</ColumnHeader>
-                                {/* <th className='info-expander'>More</th> */}
-                            </tr>
-                            {props.tournament.players
-                            // .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering                    
-                            // .sort((p1, p2) => {
-                            //     switch(this.state.sort){
-                            //         case 'gamerTag': 
-                            //             if(p1.gamerTag.toLowerCase() < p2.gamerTag.toLowerCase()) { return -1 * this.state.sortAsc }
-                            //             if(p1.gamerTag.toLowerCase() > p2.gamerTag.toLowerCase()) { return 1 * this.state.sortAsc }
-                            //             return 0                            
-                            //         case 'placement': return (p1.placement - p2.placement) * this.state.sortAsc//use the ordinal!                           
-                            //         case 'seed': return (p1.seed - p2.seed)  * this.state.sortAsc
-                            //         default: return 1                            
-                            //     }
-                            // })
-                            .map(p=>{
-                                //let loserClasses = p.loser ? 'loser true' : 'loser'
-                                //let eliminatorClasses = p.eliminator ? 'eliminator true' : 'eliminator'
-                                return <tr key={p.gamerTag}>
-                                    <LinkColumn width='160'>{p.gamerTag}</LinkColumn>
-                                    <ColumnData width='60'>{p.placement}</ColumnData>
-                                    <ColumnData width='60'>{p.seed}</ColumnData>
-                                    <ColumnData width='64'>{p.wins+' - '+p.losses}</ColumnData>
-                                    <Matches>                                        
-                                        {p.matches.split('').map(m => <MatchIcon win = {m == 'W'}>{m}</MatchIcon>)}
-                                    </Matches>
-                                    <LinkColumn width='160' link = {p.loser}>{p.loser ? p.loser : '-----'}</LinkColumn>
-                                    <LinkColumn width='160' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                    
-                                    {/* <td className='info-expander' onClick={() => this.toggleMoreInfo(p)}><CaretIcon></CaretIcon></td> */}
+                        <h2>{this.props.tournament.name}</h2>
+                        <div>                
+                            <p>{Moment(new Date(this.props.tournament.eventDate)).format('MMM D, YYYY')}</p>
+                            <p>{this.props.tournament.entrantCount} Entrants</p>                    
+                            <a href={this.props.tournament.bracketLink}><img src={Smashgg}></img></a>
+                            <a href='#'><img src={Facebook}></img></a>   
+                            {/* {this.props.tournament.eventPage ? <p>Event Page: {this.props.tournament.eventPage}</p> : null}                 */}
+                        </div>                
+                    </div> 
+                </Header>
+                <Banner>
+                    <img src = {this.state.banner}/>
+                </Banner>
+                <Search>
+                    <input type='text' placeholder='Search Player' />
+                    <ClearX visible = {true} position = {playerSearchPos}/>
+                </Search>            
+                <TableWrapper>
+                    <table>
+                        <div>
+                            <tbody>                    
+                                <tr>
+                                    <ColumnHeader width='160' position='relative'>
+                                        Player
+                                        <SortArrows position = {playerSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
+                                    </ColumnHeader>
+                                    <ColumnHeader width='60' position='relative'>
+                                        Place
+                                        <SortArrows position = {placeSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
+                                    </ColumnHeader>
+                                    <ColumnHeader width='60' position='relative'>
+                                        Seed
+                                        <SortArrows position = {seedSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
+                                    </ColumnHeader>
+                                    <ColumnHeader width='64'>Record</ColumnHeader>
+                                    <ColumnHeader width='200'>Matches</ColumnHeader>
+                                    <ColumnHeader width='160'>Loss To</ColumnHeader>
+                                    <ColumnHeader width='160'>Eliminator</ColumnHeader>
+                                    {/* <th className='info-expander'>More</th> */}
                                 </tr>
-                            })}
-                            {/* <tr className='last-row'></tr> what is this for? */}
-                        </tbody>
-                    </div>
-                </table> 
-            </TableWrapper>
-        </TournamentHub>
-    )
+                                {this.props.tournament.players
+                                // .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering                    
+                                // .sort((p1, p2) => {
+                                //     switch(this.state.sort){
+                                //         case 'gamerTag': 
+                                //             if(p1.gamerTag.toLowerCase() < p2.gamerTag.toLowerCase()) { return -1 * this.state.sortAsc }
+                                //             if(p1.gamerTag.toLowerCase() > p2.gamerTag.toLowerCase()) { return 1 * this.state.sortAsc }
+                                //             return 0                            
+                                //         case 'placement': return (p1.placement - p2.placement) * this.state.sortAsc//use the ordinal!                           
+                                //         case 'seed': return (p1.seed - p2.seed)  * this.state.sortAsc
+                                //         default: return 1                            
+                                //     }
+                                // })
+                                .map(p =>{
+                                    //let loserClasses = p.loser ? 'loser true' : 'loser'
+                                    //let eliminatorClasses = p.eliminator ? 'eliminator true' : 'eliminator'
+                                    return <tr key={p.gamerTag}>
+                                        <LinkColumn width='160'>{p.gamerTag}</LinkColumn>
+                                        <ColumnData width='60'>{p.placement}</ColumnData>
+                                        <ColumnData width='60'>{p.seed}</ColumnData>
+                                        <ColumnData width='64'>{p.wins+' - '+p.losses}</ColumnData>
+                                        <Matches>                                        
+                                            {p.matches.split('').map(m => <MatchIcon win = {m == 'W'}>{m}</MatchIcon>)}
+                                        </Matches>
+                                        <LinkColumn width='160' link = {p.loser}>{p.loser ? p.loser : '-----'}</LinkColumn>
+                                        <LinkColumn width='160' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                    
+                                        {/* <td className='info-expander' onClick={() => this.toggleMoreInfo(p)}><CaretIcon></CaretIcon></td> */}
+                                    </tr>
+                                })}
+                                {/* <tr className='last-row'></tr> what is this for? */}
+                            </tbody>
+                        </div>
+                    </table> 
+                </TableWrapper>
+            </TournamentHub>
+        );
+    };
 };
 
 export default TournamentsDetails;

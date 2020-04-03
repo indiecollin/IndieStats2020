@@ -10,7 +10,7 @@ import GlobalStyles from '../styles/GlobalStyles';
 
 import NavBar from './NavBar.jsx';
 import Footer from './Footer.jsx';
-import Modal from './Modal.jsx';
+//import Modal from './Modal.jsx';
 import ContactUs from './ContactUs.jsx';
 import Home from '../containers/Home.jsx';
 import Players from '../containers/Players.jsx';
@@ -59,7 +59,7 @@ class App extends Component {
             <ThemeProvider theme = {theme}>
                 <React.Fragment>
                     <GlobalStyles/>
-                    <NavBar/>                    
+                    {/* <NavBar/> */}
                     {/* <Modal>Testing</Modal> */}
                     {/* <ContactUs/> */}
                     {/* <button onClick = {() => this.props.history.push('/redirect')}>Go To 2</button> */}
@@ -67,13 +67,11 @@ class App extends Component {
                     {/* <div>{this.props.actionRan ? <ImageTest/> : null}</div> */}                    
                     <Switch>
                         <Route path='/' exact><Home/></Route>
-                        {/* <Route path='/' exact><Players/></Route> */}
+                        {/* <Route path='/players' exact><Players/></Route> */}
                         {/* <Route path='/' exact><Tournaments/></Route> */}
                         {/* <Route path='/' exact><News/></Route> */}
-                        {/* <Route path='/' exact component = {AsyncTest1Component}/> */}
-                        {/* <Route path='/redirect' exact component = {AsyncTest2Component}/>*/}
                     </Switch>
-                    <Footer/>
+                    {/* <Footer/> */}
                 </React.Fragment>
             </ThemeProvider>
         )

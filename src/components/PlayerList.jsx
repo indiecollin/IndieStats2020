@@ -8,8 +8,6 @@ import OptionSwitch from './OptionSwitch.jsx';
 import SortArrows from './SortArrows.jsx';
 import Expander from './Expander.jsx';
 
-const listingGrey = '#DBE6EC';
-
 const clearXPos = {
     top: '6px',
     right: '38px'
@@ -64,7 +62,7 @@ const StyledPlayerList = styled.div`
 const SearchWrapper = styled.div`
     display: flex;
     position: relative;
-    margin-bottom: 8px;
+    margin: 4px 0 8px;
     min-height: 24px;            
     
     svg{            
@@ -94,7 +92,7 @@ const PlayerListing = styled.div`
     text-align: center;
     margin-bottom: 8px;
     border: solid ${props => props.theme.stripeBlack} 1.5px;
-    cursor: pointer;    
+    cursor: pointer;
     
     &:hover{
         background-color: ${props => props.theme.white};

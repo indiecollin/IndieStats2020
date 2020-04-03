@@ -1,8 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, {Component} from 'react';
+import styled, { ThemeConsumer } from 'styled-components';
 import ClearX from './ClearX.jsx';
-import PlayerPortrait from '../../public/images/incineroar1r.png';
-import RivalPortrait from '../../public/images/defaultr.png';
 import BadgeIcon from '../../public/images/badge-icon0.png';
 
 const portraitHeader = '#00000C';
@@ -47,10 +45,11 @@ const matchHistoryClearXPos = {
 }
 
 const RivalDetails = styled.div`            
+    grid-column: 2 / 5;    
     display: grid;
     grid-template-columns: 180px 1fr;
     max-height: 452px;
-    margin-bottom: 40px;           
+    margin: 0 auto 20px;    
 
     /* @media screen and (max-width: 1276px){
         padding: 0 20px;      
@@ -394,86 +393,106 @@ const Match = styled.div`
     }
 `;
 
-const PlayerDetailsRivals = (props) => {
-    return(
-        <RivalDetails>
-            <RivalsListing rivals = {props.rivals}>
-                <input type="text" placeholder='Search Rivals'/>
-                <ClearX visible = {true} position = {rivalSearchClearXPos}/>
-                <div>  
-                    {props.rivals.map(rival => {
-                        return <RivalTag>
-                            <img src={BadgeIcon}></img>                            
-                            <div><span>{(rival.wins === 1 ? (rival.wins + ' Win'): (rival.wins + ' Wins'))}</span></div>
-                            <span key = {rival.gamerTag}>{rival.gamerTag}</span>
-                        </RivalTag>
-                    })}   
-                </div>
-            </RivalsListing>
-            <RivalInfo>
-                    <div>
-                        <Portraits>
-                            <Portrait player = {true}>
-                                <PortraitSpacer/>
-                                <PortraitHeader player={true}>
-                                    <span>P1</span>
-                                    <span>{props.player}</span>
-                                </PortraitHeader>
-                                <img src={PlayerPortrait}/>
-                            </Portrait>
-                            <Portrait>
-                                <PortraitSpacer/>
-                                <PortraitHeader>
-                                    <span>P2</span>
-                                    <span>{props.rival.gamerTag}</span>
-                                </PortraitHeader>
-                                <img src={RivalPortrait}/>
-                            </Portrait>
-                        </Portraits>
-                        <RivalStats>
-                            <StatsListing>
-                                <div>
-                                    <StatHeader width = {'100px'} marginLeft = {'68px'}>Set Record:</StatHeader>
-                                    <span>{props.rival.setWins + ' - ' + props.rival.setLosses}</span>
-                                </div>
-                                <div>
-                                    <StatHeader width = {'120px'} marginLeft = {'48px'}>Game Record:</StatHeader>
-                                    <span>{props.rival.gameWins + ' - ' + props.rival.gameLosses}</span>
-                                </div>
-                                <div>
-                                    <StatHeader width = {'100px'} marginLeft = {'66px'}>Highest Set:</StatHeader>
-                                    <span>{props.rival.highestTournament + ' For ' + props.rival.highestPlacement }</span>
-                                </div>
-                                <div>
-                                    <StatHeader width = {'80px'} marginLeft = {'86px'}>Last Met:</StatHeader>
-                                    <span>{props.rival.lastMet}</span>
-                                </div>
-                            </StatsListing>
-                            <MatchHistory>
-                                <MatchHistoryHeader>
-                                    <span>Match History</span>
-                                    <input type="text" placeholder='Search Tournaments'/>
-                                    <ClearX visible = {true} position = {matchHistoryClearXPos}/>
-                                </MatchHistoryHeader>
-                                <MatchListings>
-                                    {props.matchHistory.map(match => {
-                                        return <Match win = {match.win}>
-                                            <span>{match.tournamentName}</span>
-                                            <span>{match.title}</span>  
-                                            <div>
-                                                <span>{match.playerScore}</span>
-                                                <span>-</span>
-                                                <span>{match.rivalScore}</span>  
-                                            </div>
-                                        </Match>
-                                    })}
-                                </MatchListings>
-                            </MatchHistory>
-                        </RivalStats>
+class PlayerDetailsRivals extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            playerPortrait: '',
+            rivalPortrait: ''
+        };
+    }
+
+    componentDidMount(){
+        import(/* webpackMode: "eager" */ `../../public/rival_portraits/${this.props.player.main}.png`).then(playerImg => {
+            this.setState({playerPortrait: playerImg.default});
+        });
+
+        import(/* webpackMode: "eager" */ `../../public/rival_portraits/${this.props.rival.main}.png`).then(rivalImg => {
+            this.setState({rivalPortrait: rivalImg.default});
+        });
+    }
+
+    render(){    
+        return(
+            <RivalDetails>
+                <RivalsListing rivals = {this.props.rivals}>
+                    <input type="text" placeholder='Search Rivals'/>
+                    <ClearX visible = {true} position = {rivalSearchClearXPos}/>
+                    <div>  
+                        {this.props.rivals.map(rival => {
+                            return <RivalTag>
+                                <img src={BadgeIcon}></img>                            
+                                <div><span>{(rival.wins === 1 ? (rival.wins + ' Win'): (rival.wins + ' Wins'))}</span></div>
+                                <span key = {rival.gamerTag}>{rival.gamerTag}</span>
+                            </RivalTag>
+                        })}   
                     </div>
-            </RivalInfo>
-        </RivalDetails>
-    )
+                </RivalsListing>
+                <RivalInfo>
+                        <div>
+                            <Portraits>
+                                <Portrait player = {true}>
+                                    <PortraitSpacer/>
+                                    <PortraitHeader player={true}>
+                                        <span>P1</span>
+                                        <span>{this.props.player.gamerTag}</span>
+                                    </PortraitHeader>
+                                    <img src={this.state.playerPortrait}/>
+                                </Portrait>
+                                <Portrait>
+                                    <PortraitSpacer/>
+                                    <PortraitHeader>
+                                        <span>P2</span>
+                                        <span>{this.props.rival.gamerTag}</span>
+                                    </PortraitHeader>
+                                    <img src={this.state.rivalPortrait}/>
+                                </Portrait>
+                            </Portraits>
+                            <RivalStats>
+                                <StatsListing>
+                                    <div>
+                                        <StatHeader width = {'100px'} marginLeft = {'68px'}>Set Record:</StatHeader>
+                                        <span>{this.props.rival.setWins + ' - ' + this.props.rival.setLosses}</span>
+                                    </div>
+                                    <div>
+                                        <StatHeader width = {'120px'} marginLeft = {'48px'}>Game Record:</StatHeader>
+                                        <span>{this.props.rival.gameWins + ' - ' + this.props.rival.gameLosses}</span>
+                                    </div>
+                                    <div>
+                                        <StatHeader width = {'100px'} marginLeft = {'66px'}>Highest Set:</StatHeader>
+                                        <span>{this.props.rival.highestTournament + ' For ' + this.props.rival.highestPlacement }</span>
+                                    </div>
+                                    <div>
+                                        <StatHeader width = {'80px'} marginLeft = {'86px'}>Last Met:</StatHeader>
+                                        <span>{this.props.rival.lastMet}</span>
+                                    </div>
+                                </StatsListing>
+                                <MatchHistory>
+                                    <MatchHistoryHeader>
+                                        <span>Match History</span>
+                                        <input type="text" placeholder='Search Tournaments'/>
+                                        <ClearX visible = {true} position = {matchHistoryClearXPos}/>
+                                    </MatchHistoryHeader>
+                                    <MatchListings>
+                                        {this.props.matchHistory.map(match => {
+                                            return <Match win = {match.win}>
+                                                <span>{match.tournamentName}</span>
+                                                <span>{match.title}</span>  
+                                                <div>
+                                                    <span>{match.playerScore}</span>
+                                                    <span>-</span>
+                                                    <span>{match.rivalScore}</span>  
+                                                </div>
+                                            </Match>
+                                        })}
+                                    </MatchListings>
+                                </MatchHistory>
+                            </RivalStats>
+                        </div>
+                </RivalInfo>
+            </RivalDetails>
+        );
+    };
 };
 
 export default PlayerDetailsRivals;

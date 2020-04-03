@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import NavTriangle from './NavTriangle.jsx';
 
@@ -7,8 +7,7 @@ const headerSecondary = '#E31B73';
 const background =  '#FBCFE8';
 
 const PowerRanks = styled.div`
-    max-width: 424px;
-    width: 424px;
+    max-width: 424px;    
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -58,8 +57,7 @@ const PowerRanks = styled.div`
         background-color: ${()=> background};
         justify-content: space-around;
         padding: 0 32px;
-        max-width: 384px;
-        width: 332px;
+        max-width: 384px;        
         height: 240px;   
         
         &>div{
@@ -109,73 +107,78 @@ const PowerRanks = styled.div`
     }
 `;
 
-const HomePowerRanks = (props) => {    
-    const [playerIcons, setPlayerIcons] = useState(Array(5).fill({}));
-    useEffect(() => {//this can be down using 2 loops instead of using an image indexer
-        let imports = [];
-        props.ranks.forEach(player => {
-            imports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.primary}`));
+class HomePowerRanks extends Component{    
+    constructor(props){
+        super(props);
+        this.state = {
+            playerIcons: [...Array(5).fill({})]//might not need these
+        }
+    }
+
+    componentDidMount(){                
+        let imports = this.props.ranks.map(player => {
+            let playerImports = [];
+            playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.primary}`));
             if(player.sponsor){
-                imports.push(import(/* webpackMode: "eager" */ `../../public/sponsors/${player.sponsor}`))
+                playerImports.push(import(/* webpackMode: "eager" */ `../../public/sponsors/${player.sponsor}`));
             }
             if(player.secondary){
-                imports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.secondary}`))
+                playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.secondary}`));
                 if(player.tertiary){
-                    imports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.tertiary}`))
+                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.tertiary}`));
                 }
             }
-        });
-        Promise.all(imports).then(images => {
-            let imageIndex = 0;
-            let icons = [];         
-            props.ranks.forEach((player, playerIndex) => {
-                icons[playerIndex] = {primary: images[imageIndex].default};
-                imageIndex++;
+            return playerImports;
+        });        
+        this.props.ranks.forEach((player, i) => {
+            Promise.all(imports[i]).then(images => {
+                let icons = {primary: images.shift().default};
                 if(player.sponsor){
-                    icons[playerIndex].sponsor = images[imageIndex].default;
-                    imageIndex++;
+                    icons.sponsor = images.shift().default;                    
                 }
                 if(player.secondary){
-                    icons[playerIndex].secondary = images[imageIndex].default;
-                    imageIndex++;
+                    icons.secondary = images.shift().default;                    
                     if(player.tertiary){
-                        icons[playerIndex].tertiary = images[imageIndex].default;
-                        imageIndex++;
+                        icons.tertiary = images.shift().default;
                     }
                 }
+                let playerIcons = [...this.state.playerIcons];
+                playerIcons[i] = icons;
+                this.setState({playerIcons: playerIcons});
             });
-            setPlayerIcons(icons);
-        })             
-      });
-    return(
-        <PowerRanks>            
-            <h2>Power Ranks</h2>
-            <div>
-                <NavTriangle left={true}/>
-                <div>                
-                {
-                    props.ranks
-                    //.filter((player, index) => {return (index >= this.props.playerListStart && index <= this.props.playerListEnd)})
-                    .map((player, i) =>{
-                        return (                            
-                            <div key = {player.gamerTag}>
-                                {/*player.sponsor ? <img src = {() => import( /* webpackChunkName: "imageTest" *//* './ImageTest.jsx').then(module => {})}/> : <span/>*/}
-                                {player.sponsor ? <img src = {playerIcons[i].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
-                                <span>{player.gamerTag}</span>
-                                <div>
-                                    {player.primary?<img src= {playerIcons[i].primary}/>:null}
-                                    {player.secondary?<img src= {playerIcons[i].secondary}/>:null}
-                                    {player.tertiary?<img src= {playerIcons[i].tertiary}/>:null}                                    
-                                </div>
-                            </div>                            
-                        )
-                    })
-                }                             
+        });        
+    }    
+    render(){      
+        return(
+            <PowerRanks>            
+                <h2>Power Ranks</h2>
+                <div>
+                    <NavTriangle left={true}/>
+                    <div>                
+                    {
+                        this.props.ranks
+                        //.filter((player, index) => {return (index >= this.props.playerListStart && index <= this.props.playerListEnd)})
+                        .map((player, i) =>{
+                            return (                            
+                                <div key = {player.gamerTag}>
+                                    {/*player.sponsor ? <img src = {() => import( /* webpackChunkName: "imageTest" *//* './ImageTest.jsx').then(module => {})}/> : <span/>*/}
+                                    {player.sponsor ? <img src = {this.state.playerIcons[i].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
+                                    <span>{player.gamerTag}</span>
+                                    <div>
+                                        {player.primary?<img src= {this.state.playerIcons[i].primary}/>:null}
+                                        {player.secondary?<img src= {this.state.playerIcons[i].secondary}/>:null}
+                                        {player.tertiary?<img src= {this.state.playerIcons[i].tertiary}/>:null}                                    
+                                    </div>
+                                </div>                            
+                            )
+                        })
+                    }                             
+                    </div>
+                    <NavTriangle left={false}/>
                 </div>
-                <NavTriangle left={false}/>
-            </div>
-        </PowerRanks>
-    );
+            </PowerRanks>
+        );
+    }
 }
 
 export default HomePowerRanks;

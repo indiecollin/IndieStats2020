@@ -6,10 +6,6 @@ import TournamentsSearch from '../components/TournamentsSearch.jsx';
 import TournamentsDetails from '../components/TournamentsDetails.jsx';
 import TournamentMobileDetails from '../components/TournamentMobileDetails.jsx';
 
-const TournamentsContainer = styled.main`
-    background-color: white;    
-    padding-top: 80px;
-`;
 const upcoming = [
   {
     "name": "HAT 100",
@@ -1081,13 +1077,27 @@ const tournament = {
   ]
 };
 
+const TournamentsContainer = styled.main`    
+    padding-top: 120px;
+`;
+
+const TournamentsGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(268px, 1fr) minmax(620px, 1fr) minmax(340px, 1fr);
+  gap: 20px 20px;  
+  margin-left: 3%;
+  margin-right: 3%;
+`;
+
 const Tournaments = (props) => (
-    <TournamentsContainer>        
-        {/* <TournamentsUpcoming tournaments = {upcoming}/> */}
-        {/* <TournamentsList tournaments = {tournaments}/> */}
-        {/* <TournamentsSearch/> */}
-        {/* <TournamentsDetails tournament = {tournament}/> */}
+    <TournamentsContainer>
+      <TournamentsGrid>
+        <TournamentsUpcoming tournaments = {upcoming}/>
+        <TournamentsList tournaments = {tournaments}/>        
+        <TournamentsDetails tournament = {tournament}/>
         {/* <TournamentMobileDetails player = {tournament.players[0]}/> */}
+      </TournamentsGrid>
+      <TournamentsSearch/>
     </TournamentsContainer>
   );
 

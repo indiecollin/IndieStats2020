@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
-
 import theme from '../styles/Theme';
 import SmashBallIcon from './svgs/SmashBallIcon.jsx';
 import PlayersIcon from './svgs/PlayersIcon.jsx';
@@ -27,6 +27,7 @@ const NavList = styled.ul`
     height: 64px;//subject to change   
     display: flex;
     justify-content: space-between;
+    margin: 0;
     padding: 0 16px;   
     list-style-type: none;
 `;
@@ -124,31 +125,31 @@ class NavBar extends Component{
             <StyledNavBar>
                 <NavList>
                     <NavLink primGradient = {theme.homeNavPrimary} secGradient = {theme.homeNavSecondary}>
-                        <a href='javascript:void(0)'>
+                        <a href=''>
                             <SmashBallIcon dims = {iconDims} fill={theme.navBarColor}/>
                             <span>Home</span>
                         </a>
                     </NavLink>
                     <NavLink primGradient = {theme.playersNavPrimary} secGradient = {theme.playersNavSecondary}>
-                        <a href='javascript:void(0)'>
+                        <a href=''>                            
                             <PlayersIcon dims = {iconDims} fill={theme.navBarColor}/>
-                            <span>Players</span>
+                            <span>Players</span>                            
                         </a>
                     </NavLink>
                     <NavLink primGradient = {theme.tournamentsNavPrimary} secGradient = {theme.tournamentsNavSecondary}>
-                        <a href='javascript:void(0)'>
+                        <a href=''>
                             <BracketIcon dims = {iconDims} fill={theme.navBarColor}/>
                             <span>Tournaments</span>
                         </a>
                     </NavLink>
                     <NavLink primGradient = {theme.newsNavPrimary} secGradient = {theme.newsNavSecondary}>
-                        <a href='javascript:void(0)'>
+                        <a href=''>
                             <EnvelopeIcon dims = {iconDims} fill={theme.navBarColor}/>
                             <span>News</span>
                         </a>
                     </NavLink>
                     <NavLink primGradient = {theme.aboutNavPrimary} secGradient = {theme.aboutNavSecondary}>
-                        <a href='javascript:void(0)'>
+                        <a href=''>
                             <InfoIcon dims = {iconDims} fill={theme.navBarColor}/>
                             <span>About</span>
                         </a>

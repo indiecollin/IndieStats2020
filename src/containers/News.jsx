@@ -20,16 +20,25 @@ const articles = [
   ];
 
 const NewsContainer = styled.div`
-
+    &>div{
+        display: grid;
+        grid-template-columns: minmax(256px, 1fr) 4fr;
+        grid-gap: 20px;
+        grid-column-gap: 36px;        
+        margin: 0 auto;        
+        padding-top: 90px;
+    }
 `;
 
 const News = (props) => {
     return (
         <NewsContainer>
-            {/* <NewsArticleListing articles = {articles}></NewsArticleListing> */}
-            <NewsArticle article = {articles[0]}></NewsArticle>
+            <div>
+                <NewsArticleListing articles = {articles}></NewsArticleListing>
+                <NewsArticle article = {articles[0]}></NewsArticle>
+            </div>
         </NewsContainer>
-    )
+    );
 };
 
 export default News;
