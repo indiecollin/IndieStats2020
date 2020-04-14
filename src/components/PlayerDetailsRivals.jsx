@@ -51,96 +51,20 @@ const RivalDetails = styled.div`
     max-height: 452px;
     margin: 0 auto 20px;    
 
-    /* @media screen and (max-width: 1276px){
-        padding: 0 20px;      
+    @media screen and (max-width: 1320px){
+        grid-column: 1 / -1;
     }
+
     
     @media screen and (max-width: 1000px){
-        grid-template-columns: 160px 1fr;    
-        
-        .rivals-listing .rival-tag{
-            width: 140px;
-            .wins, .gamer-tag{
-                font-size: 14px;
-            }
-        }
-
-        .rivals-info .rivals-stats-wrapper .portraits .portrait-header .player-icon{
-            font-size: 16px;      
-            width: unset;
-            margin-left: 4px;  
-        }
-
-        .rivals-info .rivals-stats-wrapper .portraits .portrait-header .portrait-tag{
-            font-size: 28px;
-            margin-left: 16px; 
-        }
+        grid-template-columns: 160px 1fr;
     }
     
     @media screen and (max-width: 706px){
         padding: 0; 
         margin: 0;
         max-height: unset;   
-
-        .rivals-listing{
-            grid-column: 1 / -1;
-            padding: 0;
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            .rival{
-                display: flex;
-                justify-content: space-evenly;
-                flex-flow: row wrap;
-                overflow: hidden;
-                max-height: 76px;
-            }
-
-            input[type=text]{width: 50%;}
-
-            svg{            
-                right: 25.5%;
-                top: 3px;
-            }
-
-            .rival-tag{
-                height: 68px;
-                padding: 8px 0 0;
-
-                .avatar-background{
-                    height: 32px;
-                    margin-left: 8px;
-                    .avatar{
-                        width: 32px;
-                    }
-                }
-
-                .wins{
-                    margin-top: 14px;
-                    margin-left: 3px;
-                    margin-right: 0;                                                
-                    width: 52px;                    
-
-                    span{
-                        margin-right: 2px;
-                    }
-                }
-
-                .gamer-tag{
-                    margin-left: 8px;
-                    max-width: 90px; 
-                }
-
-            }
-        }
-
-        .rivals-info{
-            grid-column: 1 / -1;
-
-            .rivals-stats-wrapper .portraits .portrait-header .portrait-tag{margin-left: 0;}
-        }
-    }     */
+    }    
 `;
 
 const RivalsListing = styled.div`
@@ -154,13 +78,31 @@ const RivalsListing = styled.div`
         &::-webkit-input-placeholder {
             text-align: center;
         }       
+    }
+
+    @media screen and (max-width: 706px){
+        grid-column: 1 / -1;
+        padding: 0;
+        margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &>div{
+            display: flex;
+            justify-content: space-evenly;
+            flex-flow: row wrap;
+            overflow: hidden;
+            max-height: 76px;
+        }
+
+        input[type=text]{width: 50%;}
+
+        button{            
+            right: 25.5%;
+            top: 3px;
+        }
     }    
-    
-    /* @include clear-x;
-    svg{            
-        right: 14.5px;
-        top: 14.5px;
-    } */     
 `;
 
 const RivalTag = styled.div`
@@ -219,11 +161,46 @@ const RivalTag = styled.div`
         white-space: nowrap;
         overflow: hidden;                    
     }
+
+    @media screen and (max-width: 1000px){
+        width: 140px;
+        div, div > span{
+            font-size: 14px;
+        }        
+    }
+
+    @media screen and (max-width: 706px){
+        height: 68px;
+        padding: 8px 0 0;
+
+        img{
+            width: 32px;
+            height: 32px;
+            margin-left: 8px;
+        }
+
+        div{
+            margin-top: 14px;
+            margin-left: 3px;
+            margin-right: 0;                                                
+            width: 52px;                    
+
+            span{
+                margin-right: 2px;
+            }
+        }
+
+        &>span{
+            margin-left: 8px;
+            max-width: 90px; 
+        }
+    }
+
 `;
 
 const RivalInfo = styled.div`    
     grid-column : 2 / 3;     
-    width: 760px;//temp         
+    //width: 760px;//temp         
 
     &>div{  
         display: grid; 
@@ -231,6 +208,11 @@ const RivalInfo = styled.div`
         text-align: center;   
         flex-direction: column;                          
     }
+
+    @media screen and (max-width: 706px){
+        grid-column: 1 / -1;
+    }
+
 `;
 
 const Portraits = styled.div`
@@ -287,6 +269,27 @@ const PortraitHeader = styled.div`
         overflow: hidden;
         width: -webkit-fill-available;             
     }
+
+    @media screen and (max-width: 1000px){
+
+        span:first-child{
+            font-size: 16px;      
+            width: unset;
+            margin-left: 4px;  
+        }
+
+        span:last-child{
+            font-size: 28px;
+            margin-left: 16px;
+        }
+    }
+
+    @media screen and (max-width: 706px){
+        span:last-child{            
+            margin-left: 0;
+        }
+    }
+
 `;
 
 const RivalStats = styled.div`

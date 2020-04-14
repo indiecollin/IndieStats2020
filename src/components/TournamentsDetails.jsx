@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
 import theme from '../styles/Theme';
+import MoreInfo from './TournamentResponsiveDetails.jsx';
 import ClearX from './ClearX.jsx';
+import CaretIcon from './svgs/CaretIcon.jsx'; 
 import SortArrows from './SortArrows.jsx';
 import Smashgg from '../../public/images/smash.gg.png';
 import Facebook from '../../public/images/facebook.png';
@@ -12,6 +14,7 @@ const header = '#B7C5CE';
 const tableRow = '#D9DFFF';
 const win = '#90EE90';
 const loss = '#F08080';
+const expanderFill = '#BFBFBF';
 
 const overflowEllipsis = `
     text-overflow: ellipsis;
@@ -20,8 +23,10 @@ const overflowEllipsis = `
 `;
 
 const playerSearchPos = {
-    top: '12.5px',
-    left: '232px'
+    top: '11.5px',
+    left: '232px',
+    tabletLeft: '140px',
+    mobileLeft: '252px'
 };
 
 const playerSorterPos = {right: '98px'}
@@ -32,8 +37,7 @@ const TournamentHub = styled.div`
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 2fr;
-    position: relative;                            
-    width: 932px;
+    position: relative;
     min-height: 500px;
     margin: 20px auto 40px;
     overflow: hidden;
@@ -41,8 +45,8 @@ const TournamentHub = styled.div`
 `;
 
 const Header = styled.div`
-    background-color: ${() => header};
-    z-index: 50;    
+    background-color: ${header};
+    z-index: 50;
     
     &>div{
         height: 100%;
@@ -77,10 +81,56 @@ const Header = styled.div`
             }                
         }   
     }
+
+    @media screen and (max-width: 960px){        
+        margin: 0 auto;
+        &>div {
+            h2{
+                margin: 0 auto;
+                font-size: 22px;
+            }
+            div{
+                margin: 0 auto;
+                justify-content: space-around;
+            }
+        }        
+    }
+
+    @media screen and (max-width: 706px){
+        margin: 0;
+
+        &>div{
+            padding: 36px 4px 0 4px;
+
+            h2{font-size: 20px;}
+
+            div{
+                margin: 0;
+                min-width: 240px;
+
+                p{font-size: 14px;}
+            } 
+        }
+    }
+
+    @media screen and (max-width: 480px){
+        grid-template-columns: 1fr;
+        grid-column: 1 / -1;
+        flex-direction: column;        
+        max-width: 320px;
+
+        &>div{
+            grid-column: 1 / 3;
+            grid-row: 2;
+            padding: 0;            
+            margin: 0 auto;
+        }                
+    }
+
 `;
 
 const Banner = styled.div`
-    background-color: ${() => header};
+    background-color: ${header};
     z-index: 50;
     grid-column: 1 / 2;
     grid-row: 1;
@@ -91,11 +141,27 @@ const Banner = styled.div`
         margin: 0 auto;
         max-width: 192px;
     }
+
+    @media screen and (max-width: 960px){
+        img{ 
+            margin: 0 auto;
+            max-width: 160px;
+        }
+    }
+
+    @media screen and (max-width: 480px){
+        grid-column: 1 / -1;
+        padding: 8px 25%;
+        img{
+            width: 100%;
+            margin:0 auto;
+        }        
+    }
 `;
 
 const Search = styled.div`
     position: relative;
-    background-color: ${() => header};
+    background-color: ${header};
     z-index: 50;    
     grid-column: 1 / -1;
     grid-row: 2;
@@ -108,7 +174,29 @@ const Search = styled.div`
 
     button{
         z-index: 100;
-        left: ${() => playerSearchPos.left};
+        left: ${playerSearchPos.left};
+    }
+
+    @media screen and (max-width: 960px){        
+        padding-left: 0;
+        input{
+            width: 160px;
+        }
+        button{
+            left: ${playerSearchPos.tabletLeft};
+        }
+    }
+
+    @media screen and (max-width: 480px){    
+        padding: 8px 15%;
+        grid-row: 3;
+
+        input{
+            width: 100%;
+        }
+        button{
+            left: ${playerSearchPos.mobileLeft};
+        }
     }
 `;
 
@@ -159,7 +247,7 @@ const TableWrapper = styled.div`
     }
 
     tr{
-    min-height: 28px;
+        min-height: 28px;
 
         &:nth-child(2n) td{
             background-color: ${()=> tableRow};
@@ -192,29 +280,52 @@ const TableWrapper = styled.div`
 
     td:nth-last-child(1){//update when adding responsiveness
         border-radius: 0 6px 6px 0;
-    }        
+    }
+
+    @media screen and (max-width: 960px){        
+        margin: 0 auto;
+        table td:last-child{
+            border-radius: 0 6px 6px 0;
+        }        
+    }
+
+    @media screen and (max-width: 706px){
+        position: relative;
+        table>div{margin: 0 auto;}
+    }
+
+    @media screen and (max-width: 480px){
+        grid-row: 4;
+        padding: 0;
+        max-height: 800px;
+        
+
+        table > div{                
+            padding-right: 0;
+            &::-webkit-scrollbar {
+                width: 0px;  /* remove scrollbar space */            
+            }
+        }
+        
+        .more-info {width: 100%;}
+    }
 `;
 
-const columnStyles = (props => {    
-     (`
-        position: ${props => props.position === 'relative' ? 'relative' : 'unset'};
-        width: ${props => props.width + 'px'};
-        max-width: ${props => props.maxWidth ? props.maxWidth + 'px' : 'unset'};`
-    );
-});
+const columnStyles = (props) => (`
+    position: ${props.position === 'relative' ? 'relative' : 'unset'};
+    width: ${props.width + 'px'};
+    max-width: ${props.maxWidth ? props.maxWidth + 'px' : 'unset'};
+    @media screen and (max-width: 960px){
+        ${props.mobile ? '' : 'display: none;'}}        
+    }
+`);
 
-const ColumnHeader = styled.th`
-    /* ${props => columnStyles(props)} */
-    position: ${props => props.position === 'relative' ? 'relative' : 'unset'};
-    width: ${props => props.width + 'px'};
-    max-width: ${props => props.maxWidth ? props.maxWidth + 'px' : 'unset'};
+const ColumnHeader = styled.th`    
+    ${props => columnStyles(props)}
 `;
 
-const ColumnData = styled.td`
-    /* ${props => columnStyles(props)} */
-    position: ${props => props.position === 'relative' ? 'relative' : 'unset'};
-    width: ${props => props.width + 'px'};
-    max-width: ${props => props.maxWidth ? props.maxWidth + 'px' : 'unset'};
+const ColumnData = styled.td`    
+    ${props => columnStyles(props)}
 `;
 
 const Matches = styled(ColumnData)`    
@@ -224,62 +335,60 @@ const Matches = styled(ColumnData)`
     align-items: center;                     
 `;
 //maybe just export match icon instead
-const matchIconStyles = `
+const matchIconStyles = (props) =>(`
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${props => props.theme.black};
+    color: ${props.theme.black};
     font-size: 12px;
     font-weight: 550;
     border-radius: 2.5px;
     width: 16px;
     height: 16px;
     margin-right: 2px;
-    background-color: ${props => props.win ? win : loss};
-`;
+    background-color: ${props.win ? win : loss};
+`);
+
+export { matchIconStyles };//used in mobile component
 
 const MatchIcon = styled.span`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: ${props => props.theme.black};
-    font-size: 12px;
-    font-weight: 550;
-    border-radius: 2.5px;
-    width: 16px;
-    height: 16px;
-    margin-right: 2px;
-    background-color: ${props => props.win ? win : loss};    
+    ${props => matchIconStyles(props)}
 `;
 
 const LinkColumn = styled(ColumnData)`
     cursor: ${props => props.link ? 'pointer' : 'unset'};
     ${props => props.overflow ? overflowEllipsis : ''}
-
 `;
 
-const infoExpanderStyles = `
+const infoExpanderStyles = (props) =>(`
     width: 40px;
     display: none;            
 
     svg{
         width: 20px;
         height: 20px;
-        fill: ${props => props.theme.scrollbarPrimary};
-        stroke: ${props => props.theme.black};
+        fill: ${expanderFill};//should I use the prop instead?
+        stroke: ${props.theme.black};
         stroke-width: 8px;
         cursor: pointer;
         position: relative;
         margin: unset;
     }
-`;
+
+    @media screen and (max-width: 960px){
+        display: table-cell;
+        &> svg{
+            visibility: visible;
+        }                        
+    }
+`);
 
 const InfoExpanderHeader = styled.th`    
-    ${() => infoExpanderStyles}
+    ${props => infoExpanderStyles(props)}
 `;
 
 const InfoExpanderData = styled.td`    
-    ${() => infoExpanderStyles}
+    ${props => infoExpanderStyles(props)}
 `;
 
 class TournamentsDetails extends Component{
@@ -307,7 +416,7 @@ class TournamentsDetails extends Component{
                             <p>{this.props.tournament.entrantCount} Entrants</p>                    
                             <a href={this.props.tournament.bracketLink}><img src={Smashgg}></img></a>
                             <a href='#'><img src={Facebook}></img></a>   
-                            {/* {this.props.tournament.eventPage ? <p>Event Page: {this.props.tournament.eventPage}</p> : null}                 */}
+                            {/* {this.props.tournament.eventPage ? <p>Event Page: {this.props.tournament.eventPage}</p> : null} */}
                         </div>                
                     </div> 
                 </Header>
@@ -323,11 +432,11 @@ class TournamentsDetails extends Component{
                         <div>
                             <tbody>                    
                                 <tr>
-                                    <ColumnHeader width='160' position='relative'>
+                                    <ColumnHeader width='160' position='relative' mobile = {true}>
                                         Player
                                         <SortArrows position = {playerSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
                                     </ColumnHeader>
-                                    <ColumnHeader width='60' position='relative'>
+                                    <ColumnHeader width='60' position='relative' mobile = {true}>
                                         Place
                                         <SortArrows position = {placeSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
                                     </ColumnHeader>
@@ -335,11 +444,11 @@ class TournamentsDetails extends Component{
                                         Seed
                                         <SortArrows position = {seedSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
                                     </ColumnHeader>
-                                    <ColumnHeader width='64'>Record</ColumnHeader>
+                                    <ColumnHeader width='64' mobile = {true}>Record</ColumnHeader>
                                     <ColumnHeader width='200'>Matches</ColumnHeader>
                                     <ColumnHeader width='160'>Loss To</ColumnHeader>
                                     <ColumnHeader width='160'>Eliminator</ColumnHeader>
-                                    {/* <th className='info-expander'>More</th> */}
+                                    <InfoExpanderHeader>More</InfoExpanderHeader>
                                 </tr>
                                 {this.props.tournament.players
                                 // .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering                    
@@ -358,22 +467,23 @@ class TournamentsDetails extends Component{
                                     //let loserClasses = p.loser ? 'loser true' : 'loser'
                                     //let eliminatorClasses = p.eliminator ? 'eliminator true' : 'eliminator'
                                     return <tr key={p.gamerTag}>
-                                        <LinkColumn width='160'>{p.gamerTag}</LinkColumn>
-                                        <ColumnData width='60'>{p.placement}</ColumnData>
+                                        <LinkColumn width='160' link = {p.gamerTag} mobile = {true}>{p.gamerTag}</LinkColumn>
+                                        <ColumnData width='60' mobile = {true}>{p.placement}</ColumnData>
                                         <ColumnData width='60'>{p.seed}</ColumnData>
-                                        <ColumnData width='64'>{p.wins+' - '+p.losses}</ColumnData>
+                                        <ColumnData width='64' mobile = {true}>{p.wins+' - '+p.losses}</ColumnData>
                                         <Matches>                                        
                                             {p.matches.split('').map(m => <MatchIcon win = {m == 'W'}>{m}</MatchIcon>)}
                                         </Matches>
                                         <LinkColumn width='160' link = {p.loser}>{p.loser ? p.loser : '-----'}</LinkColumn>
-                                        <LinkColumn width='160' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                    
-                                        {/* <td className='info-expander' onClick={() => this.toggleMoreInfo(p)}><CaretIcon></CaretIcon></td> */}
+                                        <LinkColumn width='160' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                        
+                                        <InfoExpanderData><CaretIcon/></InfoExpanderData>
                                     </tr>
                                 })}
                                 {/* <tr className='last-row'></tr> what is this for? */}
                             </tbody>
                         </div>
-                    </table> 
+                    </table>
+                    {/* <MoreInfo player = {this.props.tournament.players[0]}/> */}
                 </TableWrapper>
             </TournamentHub>
         );

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import CaretIcon from './svgs/CaretIcon.jsx';
+import {matchIconStyles} from './TournamentsDetails.jsx';
 
 const moreInfoText = '#FFE7DF';
 const moreInfoBackground ='#E84035';
@@ -9,17 +10,14 @@ const moreInfoPlacePrimary = '#E0D2B4';
 const moreInfoPlaceSecondary = '#E2AC6B';
 const moreInfoDataHeader = '#400D0C';
 const moreInfoData = '#AC1B20';
-const win = '#90EE90';
-const loss = '#F08080';
 
 const MobileDetails = styled.div`    
     position: absolute;
     top: 0;           
     transition: margin .33s linear;                  
-    //width: 90%;
-    width: 356px;
+    width: 90%;    
     background-color: ${props => props.theme.black};
-    color: ${() => moreInfoText};
+    color: ${moreInfoText};
     //margin-top: -436px;
     display: grid;
     grid-template-columns: 1fr 64px;     
@@ -27,6 +25,10 @@ const MobileDetails = styled.div`
     p{
         white-space: nowrap;                    
         user-select: none;                    
+    }
+
+    @media screen and (max-width: 480px){
+        width: 100%;
     }
 
     /* &.active{//what this do?
@@ -57,7 +59,7 @@ const HeaderClip = styled.span`
     grid-row: 2;
     grid-column: 1;
     height: 36px;
-    background-color: ${() => moreInfoBackground};
+    background-color: ${moreInfoBackground};
     clip-path: polygon(0% 0%, 0% 100%, 82.5% 100%, 90% 0%);
 `;
 
@@ -65,7 +67,7 @@ const HeaderPadding = styled.span`
     grid-row: 3;
     grid-column: 1 / -1;
     height: 16px;
-    background-color: ${() => moreInfoHeader};
+    background-color: ${moreInfoHeader};
 `;
 const Placement = styled.span`
     grid-row: 1 / 3;
@@ -74,14 +76,14 @@ const Placement = styled.span`
     font-weight: 550;
     font-size: 52px;
     color: transparent;
-    background: -webkit-linear-gradient(${() => '315deg, ' + moreInfoPlacePrimary + ' 0%, ' + moreInfoPlaceSecondary + ' 74%'});
+    background: -webkit-linear-gradient(${'315deg, ' + moreInfoPlacePrimary + ' 0%, ' + moreInfoPlaceSecondary + ' 74%'});
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 `;
 
 const Details = styled.div`
-    background-color: ${() => moreInfoBackground};
+    background-color: ${moreInfoBackground};
         grid-column: 1 / -1;
         display: flex;
         flex-direction: column;
@@ -101,43 +103,25 @@ const DetailsHeader = styled.span`
     font-size: 18px;
 `;
 
-const detailsInfoStyles = (props => {
-    (`
-        background-color: ${() => moreInfoData};
-        padding: 4px;
-        font-size: 22px;
-        font-weight: 550;
-   `);
-});
-//add link prop for losers and eliminators
-const DetailsInfo = styled.span`
-    background-color: ${() => moreInfoData};
+const detailsInfoStyles = () => (`
+    background-color: ${moreInfoData};
     padding: 4px;
     font-size: 22px;
     font-weight: 550;
+`);
+//add link prop for losers and eliminators
+const DetailsInfo = styled.span`
+    ${detailsInfoStyles()}
     ${props => props.clipped ? `clip-path: polygon(5% 100%, 100% 100%, 100% 0, 0 0); text-align: right;` : ''}    
 `;
 
 const Matches = styled.div`
     display: flex;
-    background-color: ${() => moreInfoData};
-    padding: 4px;
-    font-size: 22px;
-    font-weight: 550;
+    ${detailsInfoStyles()}
 `;
 
 const MatchIcon = styled.span`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: ${props => props.theme.black};
-    font-size: 12px;
-    font-weight: 550;
-    border-radius: 2.5px;
-    width: 16px;
-    height: 16px;
-    margin-right: 2px;
-    background-color: ${props => props.win ? win : loss};    
+    ${props => matchIconStyles(props)}
 `;
 
 const Collapser = styled.span`
@@ -148,8 +132,8 @@ const Collapser = styled.span`
     svg{
         width: 24px;
         height: 24px;
-        fill: ${() => moreInfoBackground};
-        stroke: ${() => moreInfoDataHeader};
+        fill: ${moreInfoBackground};
+        stroke: ${moreInfoDataHeader};
         stroke-width: 20px;
         transform: rotate(-180deg);
         cursor: pointer;
@@ -159,7 +143,7 @@ const Collapser = styled.span`
     }
 `;
 
-const TournamentMobileDetails = (props) =>{
+const TournamentResponsiveDetails = (props) =>{
     return(
         <MobileDetails>
             <GamerTag>{props.player.gamerTag}</GamerTag>
@@ -193,4 +177,4 @@ const TournamentMobileDetails = (props) =>{
     )
 };
 
-export default TournamentMobileDetails;
+export default TournamentResponsiveDetails;

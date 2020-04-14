@@ -23,10 +23,23 @@ const NewsContainer = styled.div`
     &>div{
         display: grid;
         grid-template-columns: minmax(256px, 1fr) 4fr;
-        grid-gap: 20px;
-        grid-column-gap: 36px;        
-        margin: 0 auto;        
-        padding-top: 90px;
+        grid-column-gap: 36px;
+        //grid-gap: 20px;
+        margin: 0 40px;        
+        padding-top: 90px;        
+    }
+
+    @media screen and (max-width: 960px){
+        &>div{            
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 480px){
+        &>div{            
+            margin: 0 auto;
+        }
     }
 `;
 

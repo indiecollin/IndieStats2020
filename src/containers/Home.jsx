@@ -79,12 +79,20 @@ const HomeContainer = styled.div`
   &>div{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
-    grid-gap: 20px;    
+    row-gap: 36px;
+    column-gap: 20px;
     margin: 0 auto;
-    padding-top: 90px;
+    padding-top: 90px;//temp
     max-width: 940px;
   }
 
+  @media screen and (max-width: 480px) {
+    &>div{
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      padding-top: 72px;//temp
+      row-gap: 20px;
+    }
+  }
 `;
 
 const Home = (props) => {

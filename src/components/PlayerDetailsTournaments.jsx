@@ -10,50 +10,13 @@ const highlightTheme = '#850303';
 const TournamentDetails = styled.div`    
     grid-column: 2 / 5;    
     display: flex;
-    flex-direction: column;
-    width: 608px;//temp
-    min-width: 600px;//temp
+    flex-direction: column;    
     min-height: 560px;     
     margin: 0 auto 20px;
 
-    /* @media screen and (max-width: 706px){
-        min-width: unset;       
-        padding: 0 8px;
-
-        .players-tournaments-grid{
-            grid-template-columns: minmax(180px, 1fr) minmax(140px, 1fr);  
-            grid-template-rows: repeat(2, min-content) 88px;
-
-            .banner{
-                grid-row: 1;
-                grid-column: 1 / -1;
-                margin: 0 auto;
-            }
-    
-            .name{grid-row: 2;}
-    
-            .top3{
-                grid-row: 3;
-                grid-column: 2 / 3;
-                margin-right: 8px;
-            }
-    
-            .player-info{            
-                grid-row: 3;
-                grid-column: 1 / 2;                           
-                div{
-                    margin-left: 0;     
-                }             
-                .metrics{max-width: 100px}
-            }
-        }
+    @media screen and (max-width: 1320px){
+        grid-column: 1 / -1;
     }
-
-    @media screen and (max-width: 480px){
-        max-width: 360px;
-        margin: 0 auto;
-        padding: 0;
-    } */
 `;
 
 const TournamentListing = styled.div`        
@@ -68,7 +31,7 @@ const TournamentListing = styled.div`
     border-bottom: 1.5px solid ${() => highlightTheme};
     cursor: pointer;
 
-    img{
+    &>img{
         grid-row: 2 / 3;
         padding: 8px;
     }
@@ -78,6 +41,21 @@ const TournamentListing = styled.div`
         color: ${props => props.theme.white};
         font-weight: 550;
     }        
+
+    @media screen and (max-width: 706px){
+        grid-template-columns: minmax(180px, 1fr) minmax(140px, 1fr);  
+        grid-template-rows: repeat(2, min-content) 88px;
+
+        &>img{
+            grid-row: 1;
+            grid-column: 1 / -1;
+            margin: 0 auto;
+        }
+
+        &>span{
+            grid-row: 2;
+        }
+    }
 `;
 
 const PlayerInfo = styled.div`    
@@ -89,20 +67,31 @@ const PlayerInfo = styled.div`
     
     span:first-child{
         display: inline-block;//should it just me a different element instead of forcing a span to be block?s
-        background-color: ${() => highlightTheme};
+        background-color: ${highlightTheme};
         color: ${props => props.theme.white};   
         width: 80px;        
         height: 100%;   
         clip-path: polygon(0% 0%, 0 100%, 90% 100%, 100% 0%);
     }
     span:last-child{
-        color: ${() => highlightTheme};
+        color: ${highlightTheme};
         display: inline-block;
         width: 120px;
         height: 100%;
         text-align: center;  
         font-weight: 550; 
-    }            
+    }
+
+    @media screen and (max-width: 706px){
+        grid-row: 3;
+        grid-column: 1 / 2;                           
+        div{
+            margin-left: 0;     
+        }
+        span:last-child{
+            max-width: 100px;
+        }
+    }         
 `;
 
 const Top3 = styled.div`
@@ -116,17 +105,13 @@ const Top3 = styled.div`
     
     div{
         display: flex;
-        background-color: ${() => highlightTheme};
+        background-color: ${highlightTheme};
         align-items: center;
-        height: 24px;//didn't need this before, weird
 
         img{
             width: 24px;
             height: 24px;
-        }
-        span{
-
-        }        
+        }   
     }   
 
     div:first-child{
@@ -137,8 +122,14 @@ const Top3 = styled.div`
         clip-path: polygon(0% 0%, 0% 100%, 85% 100%, 100% 0%);
     }
     
+    @media screen and (max-width: 706px){
+        grid-row: 3;
+        grid-column: 2 / 3;
+        margin-right: 8px;
+    }
+
 `;
-//can be it's own component
+//can be its own component
 const Pagination = styled.div`        
     align-self: center;
     display: flex;   
@@ -193,9 +184,9 @@ class PlayerDetailsTournaments extends Component{
                             <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
                         </PlayerInfo>
                         <Top3>
-                            <div><img src = {First}/><span></span>{t.top3[0]}</div>
-                            <div><img src = {Second}/><span></span>{t.top3[1]}</div>
-                            <div><img src = {Third}/><span></span>{t.top3[2]}</div>
+                            <div><img src = {First}/>{t.top3[0]}</div>
+                            <div><img src = {Second}/>{t.top3[1]}</div>
+                            <div><img src = {Third}/>{t.top3[2]}</div>
                         </Top3>
                     </TournamentListing>                
                 })}

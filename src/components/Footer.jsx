@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const background = '#313232';
+
 const StyledFooter = styled.footer`
-    background-color: ${props => props.theme.navBarPrimary};
+    background-color: ${background};
     display: flex;
     align-items: center;
     position: relative;
@@ -13,7 +15,7 @@ const StyledFooter = styled.footer`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 60px;    
+    padding: 8px 60px;
     color: ${props => props.theme.lightGrey};
 
     span{        
@@ -33,6 +35,10 @@ const StyledFooter = styled.footer`
             color: ${props => props.theme.hoverRed};
             border-color: ${props => props.theme.hoverRed};
         }
+    }
+
+    @media screen and (max-width: 480px) {        
+        padding: 8px 12px;
     }
 `;
 

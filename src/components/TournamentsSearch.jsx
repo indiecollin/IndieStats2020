@@ -1,23 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import theme from '../styles/Theme';
-import DatePicker from 'react-date-picker';
+import DatePicker from 'react-date-picker/dist/entry.nostyle';
 import SearchIcon from './svgs/SearchIcon.jsx';
 import Tooltip from './Tooltip.jsx';
-
-const background = '#AC3C3C';
 
 const HubWrapper = styled.div`    
     width: 256px;        
     position: absolute;
     left: 75%;    
-    top: 120px;        
-    height: 752px;//derived from grid height
+    top: 100px;        
+    height: 790px;//derived from grid height
 
-    /* @media screen and (max-width: 1300px) { 
-        display: none;         
+     @media screen and (max-width: 1300px) { 
+        display: none;  
     }     
-
+    /*
     .side-panel{
         .search-tournaments{
             display: block;
@@ -27,8 +25,8 @@ const HubWrapper = styled.div`
 
 const SearchHub = styled.div`    
     position: sticky;
-    top: 110px;        
-    background-color: ${() => background};
+    top: 100px;        
+    background-color: ${props => props.theme.tourneyColor};
     
     padding-top: 20px;
 

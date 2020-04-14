@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import NewsIcon from './svgs/NewsIcon.jsx';
 import ArrowIcon from './svgs/ArrowIcon.jsx';
 
-const headerColor = '#F3F711';
 const headerBackground = '#697279';
 const articleHeaderSecondary = '#EEDF0F';
 
@@ -16,86 +15,36 @@ const NewsFlash = styled.div`
         padding: 4px 8px;
         text-align: center;
         background-color: ${props => props.theme.stripeBlack};
-        color: ${() => headerColor};
-        border-bottom: solid 4px ${() => headerColor};
-    } 
-
-     &>div{
-         margin-top: 20px;
-
-         &>div{
-            display: flex;
-            background-color: ${() => headerBackground};
-
-            img{
-                max-width: 256px;
-                max-height: 144px;
-                margin: 0 auto;
-
-            }
-            &>div{
-                display: flex;
-                flex-direction: column;
-                background-color: ${props => props.theme.white};
-
-                p{
-                    font-size: 14px;
-                    font-weight: 550;
-                    padding: 8px 20px;
-                }
-                &>div{
-                    align-self: flex-end;
-                    margin-top: auto;  
-                    margin-bottom: 12px;
-                    margin-right: 12px;
-                    padding: 4px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    background-color: ${() => headerColor};
-                    border: 1.5px solid ${props => props.theme.stripeBlack};
-                    color: ${props => props.theme.stripeBlack};
-
-                    span{                                                
-                        svg{                                        
-                            fill: ${props => props.theme.stripeBlack};                 
-                        }           
-                    }
-
-                    &:hover {
-                        span{
-                            color: ${props => props.theme.hoverRed};
-                        }
-                         svg{                        
-                            fill: ${props => props.theme.hoverRed};
-                        }
-                    }
-
-                }                
-            }
-        }         
+        color: ${props => props.theme.newsColor};
+        border-bottom: solid 4px ${props => props.theme.newsColor};
     }
 
-    /* @media screen and (max-width: 824px) {    
+    &>div{
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        margin-top: 20px;
+    }
+
+    @media screen and (max-width: 824px) {    
         width: 320px;
         margin: 0 auto;
 
-        .content-container{
-            flex-direction: column;            
+        &>div{
+            margin-top: 8px;
         }
-    }  */
+    } 
 `;
 
 const ArticleHeader = styled.div`
     display: flex;
+    grid-column: 1 / -1;
     align-items: center;
     height: 32px;
-    background: linear-gradient(${'110deg, '+ headerColor + ' 87.9%, '+ articleHeaderSecondary + ' 88%, '+ articleHeaderSecondary + ' 97.9%, ' + headerBackground + ' 98%, ' + headerBackground + ' 100%'});
+    background: linear-gradient(${props => '110deg, '+ props.theme.newsColor + ' 87.9%, '+ articleHeaderSecondary + ' 88%, '+ articleHeaderSecondary + ' 97.9%, ' + headerBackground + ' 98%, ' + headerBackground + ' 100%'});
     color: ${props => props.theme.stripeBlack};
 
     span{
             margin: 0 16px;
-
             svg{                            
                 width: 20px;
                 height: 20px;              
@@ -106,6 +55,64 @@ const ArticleHeader = styled.div`
     div{
         margin: 0 16px;                
     } 
+`;
+
+const ArticleContent = styled.div`    
+    display: flex;
+    grid-column: 1 / -1;
+    background-color: ${() => headerBackground};
+
+    img{
+        max-width: 256px;
+        max-height: 144px;
+        margin: 0 auto;
+    }
+
+    &>div{
+        display: flex;
+        flex-direction: column;
+        background-color: ${props => props.theme.white};
+
+        p{
+            font-size: 14px;
+            font-weight: 550;
+            padding: 8px 20px;
+        }
+
+        &>div{
+            align-self: flex-end;
+            margin-top: auto;  
+            margin-bottom: 12px;
+            margin-right: 12px;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            background-color: ${props => props.theme.newsColor};
+            border: 1.5px solid ${props => props.theme.stripeBlack};
+            color: ${props => props.theme.stripeBlack};
+
+            span{                                                
+                svg{                                        
+                    fill: ${props => props.theme.stripeBlack};                 
+                }           
+            }
+
+            &:hover {
+                span{
+                    color: ${props => props.theme.hoverRed};
+                }
+                    svg{                        
+                    fill: ${props => props.theme.hoverRed};
+                }
+            }
+
+        }                
+    }
+
+    @media screen and (max-width: 824px) {        
+        flex-direction: column;
+    }
 `;
 
 class HomeNewsFlash extends Component{
@@ -125,33 +132,33 @@ class HomeNewsFlash extends Component{
         return(
             <NewsFlash>
                 <h3>News Flash</h3>
-                <div className='article'>
+                <div>
                     <ArticleHeader>
-                        <span className='news-icon'><NewsIcon/></span><h4>{this.props.articles[0].name}</h4>
+                        <span><NewsIcon/></span><h4>{this.props.articles[0].name}</h4>
                     </ArticleHeader>
-                    <div className='content-container'>
+                    <ArticleContent>
                         <img src = {this.state.thumbnails[0]}/>             
-                        <div className='content'>   
+                        <div>   
                             <p>{this.props.articles[0].abstract}</p>
-                            <div className='more'>
-                                <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+                            <div>
+                                <span>More</span><span><ArrowIcon /></span>
                             </div>
                         </div>
-                    </div>
+                    </ArticleContent>
                 </div>
-                <div className='article'>
+                <div>
                     <ArticleHeader>
-                        <span className='news-icon'><NewsIcon/></span><h4>{this.props.articles[1].name}</h4>
+                        <span><NewsIcon/></span><h4>{this.props.articles[1].name}</h4>
                     </ArticleHeader>
-                    <div className='content-container'>
+                    <ArticleContent>
                         <img src = {this.state.thumbnails[1]}/>             
-                        <div className='content'>   
+                        <div>
                             <p>{this.props.articles[1].abstract}</p>
-                            <div className='more'>
-                                <span>More</span><span className='arrow-icon'><ArrowIcon /></span>
+                            <div>
+                                <span>More</span><span><ArrowIcon /></span>
                             </div>
                         </div>
-                    </div>
+                    </ArticleContent>
                 </div>
             </NewsFlash>
         )

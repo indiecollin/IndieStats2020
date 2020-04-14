@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
+import theme from '../styles/Theme';
 
 import First from '../../public/images/gold-medal.png';
 import Second from '../../public/images/silver-medal.png';
@@ -11,16 +12,17 @@ import CalendarIcon from '../../public/images/calendar-icon.png';
 import LocationIcon from '../../public/images/location-icon.png';
 import Smashgg from '../../public/images/smash.gg.png';
 import SeasonIcon from '../../public/images/season-icon.png';
+import SearchIcon from './svgs/SearchIcon.jsx';
+import TournamentSearch from './TournamentsSearch.jsx';
 
-const link = '#5858A5';
-const listingSelected = '#FF8C8C';
+const listingSelected = '#FF8C8C';//will probably change this color
 const seedPrimary ='#A2A4C7';
 const seedSecondary = '#807387';
+const searching = false;
 
 const TournamentsListing = styled.div`
     grid-column: 2 / 3; 
-    position: relative;   
-    width: 600px;
+    position: relative;
     height: 788px;      
     overflow: scroll;
     overflow-x: hidden;      
@@ -48,9 +50,37 @@ const TournamentsListing = styled.div`
         background-color: ${props => props.theme.scrollbarSecondary};
         border-left: 2px solid ${props => props.theme.stripeGrey};
         border-right: 2px solid ${props => props.theme.stripeGrey};
-    }
+    } 
 
-    //insert media queries here
+@media screen and (max-width: 960px){
+padding-left: 12px;        
+max-width: 420px;
+min-width: 320px;        
+}
+
+@media screen and (max-width: 706px){
+margin: 0 auto;
+grid-column: 1 / -1;
+}
+
+@media screen and (max-width: 480px){ 
+padding-right: 12px;
+&::-webkit-scrollbar {
+    width: 0px !important;  /* remove scrollbar space */
+}
+
+.search-wrapper .search-menu .search-tournaments{
+    right: 32px;
+    .search-hub .search-by-player .tooltip-wrapper .tooltip-text{
+        width: 108px;
+        padding: 8px 4px;
+    }
+    .react-date-picker__calendar--open{
+        max-width: 320px;
+        left: -32px !important;//sue me!
+    }
+}
+}
 `;
 
 const Header = styled.div`
@@ -65,11 +95,17 @@ const Header = styled.div`
         height: 36px;
         padding-top: 8px;             
     }
+
+    @media screen and (max-width: 1300px){
+        width: 100%;    
+        position: absolute;
+    }
 `;
 
 const TournamentListing = styled.div`
     display: grid;                                              
-    grid-template-columns: 4fr 4fr 3fr;                              
+    grid-template-columns: 4fr 4fr 3fr;
+    margin-top: 24px;                         
     margin-bottom: 20px;
     margin-left: 12px;
     background-color: ${props => props.selected ? listingSelected : props.theme.white};
@@ -89,13 +125,32 @@ const TournamentListing = styled.div`
         background-color: ${() => listingSelected};
     }        
 
-    &>img{              
+    &>img{            
         grid-column: 1 / 2;
         grid-row: 2;            
         padding-top: 8px;
         padding-right: 16px;  
         max-width: 192px; 
-    }                 
+    }
+    
+    @media screen and (max-width: 960px){
+        grid-template-columns: minmax(160px, 1fr) 1fr;
+        margin-left: 0;
+        margin-right: 0;
+        
+        &>img{
+            padding: 4px;
+        }
+    }
+
+    @media screen and (max-width: 480px){
+        max-width: 320px; 
+
+        &>img{
+            width: 160px;
+        }        
+    }
+
 `;
 
 const Placements = styled.div`
@@ -103,6 +158,7 @@ const Placements = styled.div`
     grid-row: 3;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     padding: 4px;            
 
     &>div{
@@ -122,7 +178,12 @@ const Placements = styled.div`
             white-space: nowrap;
             overflow: hidden;
         }
-    }                                                           
+    }    
+
+    @media screen and (max-width: 960px){
+        grid-row: 2;
+        grid-column: 2 / 3;        
+    }                                                
 `;
 
 const Info = styled.div`    
@@ -145,10 +206,21 @@ const Info = styled.div`
             margin-top: 12px;
         }
     }
+
+    @media screen and (max-width: 960px){
+        grid-row: 3;
+        &>div{
+            padding-left: 8px;
+
+            &:not(:first-child){
+                margin-top: 8px;
+            }
+        }
+    }
 `;
 
 const Link =  styled.span`
-    color: ${() => link};
+    color: ${props => props.theme.link};
 `;
 
 const Seeds = styled.div`
@@ -184,7 +256,94 @@ const Seeds = styled.div`
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-    }            
+    }
+
+    @media screen and (max-width: 960px){
+        grid-row: 3;
+        grid-column: 2 / 3;
+        padding-left: 4px;
+
+        h4{
+            margin-top: 0;
+        }
+    }     
+`;
+
+const SearchWrapper = styled.div`
+    display: none;
+    position: sticky;
+    top: 20px;  
+
+    &>div{                
+        position: relative;                
+        width: 100%;
+        height: 32px;
+        margin-left: auto;
+
+        &>div{
+            display: block;
+            right: 60px;
+            top: 20px;
+            left: unset;
+            height: min-content;
+        }
+
+        //button{}
+    }
+
+    &>button, &>div>button{
+        display: block; 
+        position: relative;                               
+        margin-left: auto;
+        margin-right: 8px;                     
+        width: 32px;
+        height: 32px;                
+        border-radius: 50%;
+        border: solid 1px ${props => props.theme.grey};
+        cursor: pointer;
+        z-index: 50;
+        outline: none;
+        ${props => props.searching ? 
+            (props) => (`
+                span{
+                height: 1px;
+                width: 20px;
+                background-color: ${props.theme.darkGrey};
+                display: inline-block;
+                position: absolute;
+                left: 5px;
+                top: 14.5px;
+
+                &:first-child{
+                    transform: rotate(45deg);
+                }
+
+                &:last-child{
+                    transform: rotate(-45deg);
+                }
+            }`)
+            : 
+            null
+        }                            
+    }
+
+    @media screen and (max-width: 1300px){
+        display: block;
+    }
+
+    @media screen and (max-width: 480px){
+        .search-wrapper .search-menu .search-tournaments{
+            right: 32px;
+            .search-hub .search-by-player .tooltip-wrapper .tooltip-text{
+                width: 108px;
+                padding: 8px 4px;
+            }
+            .react-date-picker__calendar--open{
+                max-width: 320px;
+                left: -32px !important;//sue me!
+            }
+        }
+    }
 `;
 
 class TournamentsList extends Component{
@@ -196,14 +355,27 @@ class TournamentsList extends Component{
     }
 
     componentDidMount(){            
-        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
-        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));      
+        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));
     }
 
     render(){
         return (
             <TournamentsListing>
                 <Header><h3>Past Tournaments</h3></Header>
+                <SearchWrapper searching={searching}>
+                {searching ?
+                <div>
+                    <TournamentSearch/>
+                    <button>
+                        <span>&nbsp;</span>
+                        <span>&nbsp;</span>
+                    </button>                    
+                </div> :
+                <button>
+                    <span><SearchIcon fill={theme.black}/></span>
+                </button>}
+                </SearchWrapper>
                 {this.props.tournaments.map((t, i) => {
                     return <TournamentListing>
                         <span>{t.name}</span>

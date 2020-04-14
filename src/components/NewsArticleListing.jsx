@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import SearchIcon from './svgs/SearchIcon.jsx';
 
-const headerColor = '#F3F711';
-
 const ArticleListing = styled.div`    
     display: flex;
     flex-direction: column;
@@ -21,13 +19,12 @@ const ArticleListing = styled.div`
         padding: 12px 148px 12px 20px;
         background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'}); 
         color: ${props => props.theme.white};
-        text-align: center;
-        margin: 0;//removes defaults
+        text-align: center;        
 
         &:before{
             content: '';
             position: absolute;
-            background-color: ${() => headerColor};
+            background-color: ${props => props.theme.newsColor};
             width: 4px;
             height: 40px;
             top: 6px;
@@ -35,7 +32,7 @@ const ArticleListing = styled.div`
         }     
     }    
 
-    /* @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){
         max-width: 500px;
         max-height: 392px;
         flex-direction: row;
@@ -44,56 +41,42 @@ const ArticleListing = styled.div`
         h2{
             width: 100%;
             text-align: left;
-        }
-        .search{
-            flex-basis: 100%;
-            margin: 12px 0;
-            input{
-                margin-left: auto;
-            }
-            button{
-                margin-right: auto;
-            }
-        }
-        .listing{
-            min-width: 240px;
-            margin: 0 auto;
-        }
+        }                
     }
 
     @media screen and (max-width: 480px){
         width: 300px;        
-    } */
+    }
 `;
 
 const Search = styled.div`
-        margin: 12px auto;
-        display: flex;     
+    margin: 12px auto;
+    display: flex;         
 
+    button{
+        width: 20px;
+        height: 20px;
+        cursor: pointer;                
+    }
+
+    @media screen and (max-width: 960px){    
+        flex-basis: 100%;
+        margin: 12px 0;
         input{
-            padding: 0;//removes default
-        }   
-
+            margin-left: auto;
+        }
         button{
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            
-            svg{
-                position: relative;
-                bottom: 1px;
-                right: 6px;
-            }
-        }                
+            margin-right: auto;
+        }
+    }       
 `;
 
-const Thumbnail = styled.div`    
+const Thumbnail = styled.div`  
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;        
-    cursor: pointer;
-    width: 100%;
+    cursor: pointer;    
 
     img{
         width: 192px;
@@ -102,11 +85,10 @@ const Thumbnail = styled.div`
     }    
     
     &:hover{
-
         background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'}); 
 
         img{
-            outline: 2px solid ${() => headerColor};
+            outline: 2px solid ${props => props.theme.newsColor};
         }
 
         span{
@@ -117,6 +99,11 @@ const Thumbnail = styled.div`
     span{
         font-weight: 550;
     }    
+
+    @media screen and (max-width: 960px){        
+        min-width: 240px;
+        margin: 0 auto;
+    }
 `;
 
 class NewsArticleListing extends Component {

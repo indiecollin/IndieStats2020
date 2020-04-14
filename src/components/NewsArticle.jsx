@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-const headerColor = '#F3F711';
-
 const Article = styled.div`
 
     display: flex;
@@ -11,13 +9,14 @@ const Article = styled.div`
     background-color: ${props => props.theme.white};
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 32px;
     max-width: 960px;
 
     h2{
         text-align: center;   
         padding: 12px 0;
         margin-bottom: 20px;
-        background-color: ${() => headerColor};
+        background-color: ${props => props.theme.newsColor};
         color: ${props => props.theme.stripeBlack};
     }
 
@@ -28,8 +27,7 @@ const Article = styled.div`
         //med
         min-width: 300px;
         max-width: 600px;
-        width: 100%;
-        //margin: 0 auto;
+        width: 100%;        
     }
 
     p{
@@ -37,28 +35,26 @@ const Article = styled.div`
         padding: 8px 48px;
     }    
 
-/* @media screen and (max-width: 960px) { 
-    .article{
+    @media screen and (max-width: 960px) {     
         max-width: 760px;
-    }    
-}
-
-@media screen and (max-width: 480px) {              
-    margin: 0 auto;
-        .article {
-        //margin: 0;
+    }
+    @media screen and (max-width: 480px) {              
         width: 300px;
-        img.med{
+
+        h2{
+            font-size: 18px;
+        }
+
+        img{//med
             padding: 0 8px;
-            width: 300px;            
+            width: 300px;
         }
         p{
             width: 300px;
             padding: 8px;
             margin: 0 auto;
         }
-    }
-} */
+    } 
 `;
 
 class NewsArticle extends Component{

@@ -10,27 +10,17 @@ const iconDims = 28;
 const StatDetails = styled.div`     
     grid-column: 2 / 5;
     margin: 0 auto 20px;
-    min-width: 500px;
-    width: 500px;//temp
+    max-width: 500px;
+    width: 100%;
     height: 320px;
+    padding-left: 24px;
     padding-right: 24px;
     overflow-y: scroll;   
 
     span{
         font-size: 24px;
         font-weight: 700;
-    }
-
-    /* @media screen and (max-width: 706px){
-         min-width: unset;
-         margin: 0 8px;
-         padding-right: 12px;
-
-         .stats-row .row-header,.stats-row .row-stat{
-            font-size: 16px;
-            padding: 8px 4px;               
-         }
-    } */        
+    }       
 
     &::-webkit-scrollbar-track
     {        
@@ -51,12 +41,24 @@ const StatDetails = styled.div`
         border-left: 2px solid ${props => props.theme.scrollbarPrimary};
         border-right: 2px solid ${props => props.theme.scrollbarPrimary};
     }
+
+    @media screen and (max-width: 1320px) {
+        grid-column: 1 / -1;
+    }
+
+    @media screen and (max-width: 706px){
+        width: 100%;
+        margin: 0 8px;
+        padding-left: 0;
+        padding-right: 12px;
+        margin: 20px 0;
+    } 
 `;
 
 const StatDetailsHeader = styled.div`
     display: flex;
     align-items: center;
-    background-color: ${() => header};
+    background-color: ${header};
     color: ${props => props.theme.white};
     padding: 8px 0;
     border-radius: 8px;
@@ -64,7 +66,13 @@ const StatDetailsHeader = styled.div`
     svg{                
         margin-left: 12px;
         margin-right: 20px;
-    }    
+    }
+
+    @media screen and (max-width: 706px){
+        //font-size: 16px;
+        //padding: 8px 4px;
+    }
+
 `;
 
 const StatDetailsRow = styled.div`    
@@ -82,16 +90,26 @@ const StatDetailsRow = styled.div`
     }
 
     div:first-child{            
-        background-color: ${()=> rowHeader};
+        background-color: ${rowHeader};
         color: ${props => props.theme.white};
-        width: 60%;
+        width: 47%;
         clip-path: polygon(0% 0%, 0 100%, 95% 100%, 100% 0%);
     }
 
     div:last-child{
-        color: ${()=> rowHeader};
+        color: ${rowHeader};
         margin: 0 8px 0 auto;
-    }    
+        max-width: 53%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    @media screen and (max-width: 706px){
+        //font-size: 16px;
+        //padding: 8px 4px;
+    }
+
 `;
 
 const PlayerDetailsStats = (props) => {

@@ -1,12 +1,26 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
-import theme from '../styles/Theme';
 import SmashBallIcon from './svgs/SmashBallIcon.jsx';
 import PlayersIcon from './svgs/PlayersIcon.jsx';
 import BracketIcon from './svgs/BracketIcon.jsx';
 import EnvelopeIcon from './svgs/EnvelopeIcon.jsx';
 import InfoIcon from './svgs/InfoIcon.jsx';
+
+const navBarPrimary = '#313232';
+const navBarSecondary = '#3F4141';
+const navBarHover = '#FFFF00';
+const navBarColor = '#E8E8E8';
+const homeNavPrimary = '#1C9E00';
+const homeNavSecondary = '#68E300';
+const playersNavPrimary = '#F81C64';
+const playersNavSecondary = '#FF498C';
+const tournamentsNavPrimary = '#F90101';
+const tournamentsNavSecondary = '#C30203';
+const newsNavPrimary = '#FA6200';
+const newsNavSecondary = '#FFC70D';
+const aboutNavPrimary = '#0579FF';
+const aboutNavSecondary = '#00B5F3';
 
 const iconDims = 28;
 
@@ -21,6 +35,16 @@ const StyledNavBar = styled.nav`
     align-items: center;
     margin: 0 auto;
     max-width: 860px;
+
+    @media screen and (max-width: 706px) {
+        max-width: 420px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    @media screen and (max-width: 480px) {        
+        max-width: 360px;        
+    }
 `;
 
 const NavList = styled.ul`
@@ -28,8 +52,12 @@ const NavList = styled.ul`
     display: flex;
     justify-content: space-between;
     margin: 0;
-    padding: 0 16px;   
+    padding: 0 16px;
     list-style-type: none;
+
+    @media screen and (max-width: 706px) {
+        padding: 0 8px;
+    }
 `;
 
 const NavLink = styled.li`
@@ -45,7 +73,7 @@ const NavLink = styled.li`
         }
     } 
 
-    :last-child a{        
+    :last-child span{        
         border-radius: 0 20px 20px 0;
 
         &::before, &::after{
@@ -54,7 +82,7 @@ const NavLink = styled.li`
         }            
     }
 
-    a{
+    a, &>span{
         width: 120px;
         display: flex;
         flex-direction: column;        
@@ -62,7 +90,7 @@ const NavLink = styled.li`
         position: relative;
         padding-top: 4px;            
         margin: 4px 0;
-        color: ${props => props.theme.navBarColor};
+        color: ${() => navBarColor};
         text-decoration: none;
         cursor: pointer;            
 
@@ -76,7 +104,7 @@ const NavLink = styled.li`
             display: block;        
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;    
-            background: repeating-linear-gradient(${props => '125deg, ' + props.theme.navBarPrimary +  ' 0 4px, ' + props.theme.navBarSecondary + ' 4px 5px'});                
+            background: repeating-linear-gradient(${() => '125deg, ' + navBarPrimary +  ' 0 4px, ' + navBarSecondary + ' 4px 5px'});                
             z-index: -100;
         }
 
@@ -104,7 +132,7 @@ const NavLink = styled.li`
                 position: absolute;
                 top: 0; bottom: 0; left: 0; right: 0;                    
                 transform: scale(1.06, 1.1);
-                background-color: ${props => props.theme.navBarHover};
+                background-color: ${() => navBarHover};
                 z-index: -200;                 
             }               
         }        
@@ -112,7 +140,15 @@ const NavLink = styled.li`
         span{
             font-size: 18px;
             font-weight: 550;
-        }        
+        }   
+
+        @media screen and (max-width: 706px) {
+            padding: 8px 0;
+            width: 56px;
+            span{
+                display: none;
+            }
+        }
     }     
 `;
 
@@ -124,35 +160,35 @@ class NavBar extends Component{
         return (
             <StyledNavBar>
                 <NavList>
-                    <NavLink primGradient = {theme.homeNavPrimary} secGradient = {theme.homeNavSecondary}>
-                        <a href=''>
-                            <SmashBallIcon dims = {iconDims} fill={theme.navBarColor}/>
+                    <NavLink primGradient = {homeNavPrimary} secGradient = {homeNavSecondary}>
+                        <Link to='/'>
+                            <SmashBallIcon dims = {iconDims} fill={navBarColor}/>
                             <span>Home</span>
-                        </a>
+                        </Link>
                     </NavLink>
-                    <NavLink primGradient = {theme.playersNavPrimary} secGradient = {theme.playersNavSecondary}>
-                        <a href=''>                            
-                            <PlayersIcon dims = {iconDims} fill={theme.navBarColor}/>
+                    <NavLink primGradient = {playersNavPrimary} secGradient = {playersNavSecondary}>
+                        <Link to='/players'>                           
+                            <PlayersIcon dims = {iconDims} fill={navBarColor}/>
                             <span>Players</span>                            
-                        </a>
+                        </Link>
                     </NavLink>
-                    <NavLink primGradient = {theme.tournamentsNavPrimary} secGradient = {theme.tournamentsNavSecondary}>
-                        <a href=''>
-                            <BracketIcon dims = {iconDims} fill={theme.navBarColor}/>
+                    <NavLink primGradient = {tournamentsNavPrimary} secGradient = {tournamentsNavSecondary}>
+                        <Link to='/tournaments'>
+                            <BracketIcon dims = {iconDims} fill={navBarColor}/>
                             <span>Tournaments</span>
-                        </a>
+                        </Link>
                     </NavLink>
-                    <NavLink primGradient = {theme.newsNavPrimary} secGradient = {theme.newsNavSecondary}>
-                        <a href=''>
-                            <EnvelopeIcon dims = {iconDims} fill={theme.navBarColor}/>
+                    <NavLink primGradient = {newsNavPrimary} secGradient = {newsNavSecondary}>
+                        <Link to='/news'>
+                            <EnvelopeIcon dims = {iconDims} fill={navBarColor}/>
                             <span>News</span>
-                        </a>
+                        </Link>
                     </NavLink>
-                    <NavLink primGradient = {theme.aboutNavPrimary} secGradient = {theme.aboutNavSecondary}>
-                        <a href=''>
-                            <InfoIcon dims = {iconDims} fill={theme.navBarColor}/>
+                    <NavLink primGradient = {aboutNavPrimary} secGradient = {aboutNavSecondary}>
+                        <span>
+                            <InfoIcon dims = {iconDims} fill={navBarColor}/>
                             <span>About</span>
-                        </a>
+                        </span>
                     </NavLink>
                 </NavList>                        
             </StyledNavBar>

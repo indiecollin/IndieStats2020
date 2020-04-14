@@ -4,7 +4,6 @@ import TournamentsUpcoming from '../components/TournamentsUpcoming.jsx';
 import TournamentsList from '../components/TournamentsList.jsx';
 import TournamentsSearch from '../components/TournamentsSearch.jsx';
 import TournamentsDetails from '../components/TournamentsDetails.jsx';
-import TournamentMobileDetails from '../components/TournamentMobileDetails.jsx';
 
 const upcoming = [
   {
@@ -16,7 +15,7 @@ const upcoming = [
   },
   {
     "name": "WNF 100",
-    "banner": "WNF96px.png",
+    "banner": "WNF96px.png",    
     "eventDate": "2020-03-29T00:00:00.000Z",
     "venue": "eSports Arena",
     "complete": false
@@ -1078,7 +1077,13 @@ const tournament = {
 };
 
 const TournamentsContainer = styled.main`    
-    padding-top: 120px;
+    padding-top: 100px;
+    margin: 0 auto;
+    width: min-content;
+
+    @media screen and (max-width: 706px){
+      width: unset;
+    }
 `;
 
 const TournamentsGrid = styled.div`
@@ -1087,6 +1092,25 @@ const TournamentsGrid = styled.div`
   gap: 20px 20px;  
   margin-left: 3%;
   margin-right: 3%;
+
+  @media screen and (max-width: 1300px) {            
+        grid-template-columns: minmax(268px, 1fr) minmax(600px, 2fr);            
+        margin: 0 auto;                      
+        //padding-right: 20px;       
+    }    
+
+    @media screen and (max-width: 960px){
+        grid-template-columns: 264px minmax(408px, 1fr);
+        gap: 8px 20px;//subject to change
+    }
+
+    @media screen and (max-width: 706px){
+        grid-template-columns: 1fr;         
+    }
+    @media screen and (max-width: 480px) {    
+        display: flex;
+        flex-direction: column;
+    }
 `;
 
 const Tournaments = (props) => (
@@ -1094,8 +1118,7 @@ const Tournaments = (props) => (
       <TournamentsGrid>
         <TournamentsUpcoming tournaments = {upcoming}/>
         <TournamentsList tournaments = {tournaments}/>        
-        <TournamentsDetails tournament = {tournament}/>
-        {/* <TournamentMobileDetails player = {tournament.players[0]}/> */}
+        <TournamentsDetails tournament = {tournament}/>        
       </TournamentsGrid>
       <TournamentsSearch/>
     </TournamentsContainer>

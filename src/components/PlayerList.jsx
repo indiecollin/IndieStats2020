@@ -15,18 +15,28 @@ const clearXPos = {
 
 const leftSorterPos = {
     left: '4px'
-}
+};
 
 const rightSorterPos = {
     right: '4px'
-}
+};
 
+const background = '#DBE6EC';
 
 const PlayerListWrapper = styled.div`
     position: fixed;
-    top: 90px;    
+    top: 100px;    
     z-index: 100; 
-    left:  7.6%;
+    left:  4%;
+    
+    @media screen and (max-width: 1320px) {        
+        position: relative;
+        margin-left: auto;
+        left: unset;
+    }
+    @media screen and (max-width: 706px) {        
+        margin-right: auto;                
+    }
     /* @media screen and (max-width: 1440px) {left: 40px;}
     @media screen and (max-width: 1276px) {
         position: static;
@@ -50,8 +60,7 @@ const StyledPlayerList = styled.div`
     //max-height: 300px;
     transition: max-height 0.5s linear;
     overflow: hidden;
-    background: linear-gradient(${props => props.theme.white + ', ' + props.theme.navBarColor});//rename?
-
+    background: ${props => props.theme.white};
     //use a prop
     /* &.expanded{
         max-height: 540px;
@@ -86,7 +95,7 @@ const ListSearch = styled.input`
 const PlayerListing = styled.div`    
     height: 36px;
     min-height: 36px;
-    background-color: ${props => props.theme.optionsBackground};
+    background-color: ${background};
     display: flex;
     margin: 0 8px;
     text-align: center;
@@ -126,7 +135,7 @@ class PlayerList extends Component {
     render(){
         return <PlayerListWrapper>
             <StyledPlayerList>
-                <OptionSwitch selected = {this.props.all} left='Ranks' right='All'/>                
+                <OptionSwitch selected = {this.props.all} left='Ranks' right='All' background/>                
                 <SearchWrapper>
                     <NavTriangle left={true}/>
                     <ListSearch disabled = {!this.props.all} placeholder = {this.props.all ? 'Search Player' : ''}/>                                

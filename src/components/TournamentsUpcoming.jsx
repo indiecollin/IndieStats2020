@@ -8,9 +8,6 @@ import LocationIcon from '../../public/images/location-icon.png';
 import Smashgg from '../../public/images/smash.gg.png';
 import SeasonIcon from '../../public/images/season-icon.png';
 
-const bannerBackground = '#AC3C3C';
-const link = '#5858A5';
-
 const UpcomingTournamentsContainer = styled.div`
     width: 280px;
     margin: 0 auto;
@@ -18,7 +15,7 @@ const UpcomingTournamentsContainer = styled.div`
 `;
 
 const UpcomingTournaments = styled.div`
-    height: 752px;
+    max-height: 790px;//may update when carousel added
     margin: 0 auto;
     padding: 0 16px;
     overflow: hidden;   
@@ -65,7 +62,11 @@ const UpcomingListing = styled.div`
     user-select: none;    
     display: grid;
     grid-template-columns: 48px 1fr;                        
-    background-color: ${() => bannerBackground};
+    background-color: ${props => props.theme.tourneyColor};
+
+    @media screen and (max-width: 706px){
+        grid-column: 1 / -1;                
+    }
 `;
 
 const TournamentBanner = styled.img`
@@ -114,7 +115,7 @@ const DataInfo = styled.span`
 `;
 
 const TournamentLink = styled(DataInfo)`
-    color: ${()=> link};
+    color: ${props => props.theme.link};
 `;
 
 class TournamentsUpcoming extends Component{

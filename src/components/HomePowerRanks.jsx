@@ -11,12 +11,11 @@ const PowerRanks = styled.div`
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-self: center;    
-    margin-bottom: 20px;
+    justify-self: center;        
 
     h2{
         position: relative;
-        background-color: ${()=> headerPrimary};
+        background-color: ${headerPrimary};
         clip-path: polygon(0% 0%, 3% 100%, 97% 100%, 100% 0%);
         margin-bottom: 8px;
         color: ${props => props.theme.white};          
@@ -27,7 +26,7 @@ const PowerRanks = styled.div`
             display: block;
             position: absolute;
             content:'';
-            background-color: ${()=> headerSecondary};
+            background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
             left: 2px;
@@ -38,37 +37,35 @@ const PowerRanks = styled.div`
             display: block;
             position: absolute;
             content:'';
-            background-color: ${()=> headerSecondary};
+            background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
             top: 0;
             right: 2px;
             transform: skew(-25deg);
         }
-    }  
+    }
                
-    &>div{             
+    &>div{           
         display: flex;
         flex-direction: column;         
         position: relative;        
         text-align: center;    
         align-self: center;       
-        border: solid 2px ${()=> headerSecondary};
-        background-color: ${()=> background};
+        border: solid 2px ${headerSecondary};
+        background-color: ${background};
         justify-content: space-around;
         padding: 0 32px;
-        max-width: 384px;        
-        height: 240px;   
+        min-width: 396px;
+        height: 244px;
         
-        &>div{
-            width: 320px;
+        &>div{            
             display: flex;        
             flex-direction: column;           
             justify-content: space-evenly;
             height: 100%;
 
-            &>img{         
-                //min-width: 64px;                
+            &>img{                         
                 height: 32px;
                 width: 32px;                 
             }
@@ -86,17 +83,17 @@ const PowerRanks = styled.div`
 
             div{           
                 min-width: 108px;    
-                display: flex;                
-                justify-content: space-evenly;         
+                display: flex;
+
                 img{         
                     height: 32px;
                     width: 32px;                    
                 }
             }
         }       
+
         button{
-            position: absolute;
-            top: 108px;
+            position: absolute;            
             &:first-child{
                 left: 0;
             }            
@@ -105,6 +102,34 @@ const PowerRanks = styled.div`
             }
         } 
     }
+
+    @media screen and (max-width: 480px) {    
+        width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+
+        h2{
+            width: 320px;
+        }
+
+        &>div{
+            width: 300px;
+            min-width: unset;
+            padding: 0 16px;
+            height: 180px;
+
+            &>div{                
+                img{
+                    min-width: 32px;
+                }
+
+                span{
+                    font-size: 16px;                
+                    min-width: 128px;
+                }                
+            }                                 
+        }        
+    } 
 `;
 
 class HomePowerRanks extends Component{    
@@ -160,8 +185,7 @@ class HomePowerRanks extends Component{
                         //.filter((player, index) => {return (index >= this.props.playerListStart && index <= this.props.playerListEnd)})
                         .map((player, i) =>{
                             return (                            
-                                <div key = {player.gamerTag}>
-                                    {/*player.sponsor ? <img src = {() => import( /* webpackChunkName: "imageTest" *//* './ImageTest.jsx').then(module => {})}/> : <span/>*/}
+                                <div key = {player.gamerTag}>                                    
                                     {player.sponsor ? <img src = {this.state.playerIcons[i].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
                                     <span>{player.gamerTag}</span>
                                     <div>
@@ -182,41 +206,3 @@ class HomePowerRanks extends Component{
 }
 
 export default HomePowerRanks;
-
-// @media screen and (max-width: 480px) {    
-//     width: 320px;
-//     margin-left: auto;
-//     margin-right: auto;
-
-//     .header{
-//         width: 320px;
-//     }
-
-//     .table{
-//         width: 300px;
-//         padding: 0 16px;
-
-//         .row{
-//             .sponsor{
-//                 min-width: 36px;
-//             }
-
-//             .gamer-tag{
-//                 font-size: 16px;                
-//                 min-width: 128px;                
-//             }
-
-//             .mains{
-//                 min-width: 80px;
-//             }
-//         }
-
-//         .side-triangle-icon{
-//             right: -12px;
-//              &.left{
-//                 left: -12px;
-//              }             
-//         }
-
-//     }
-// } 

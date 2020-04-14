@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 import PlayerList from '../components/PlayerList.jsx';
 import HubCard from '../components/HubCard.jsx';
-
-
+import Expander from '../components/Expander.jsx';
 import PlayerDetailsStats from '../components/PlayerDetailsStats.jsx';
 import PlayerDetailsTournaments from '../components/PlayerDetailsTournaments.jsx';
 import PlayerDetailsRivals from '../components/PlayerDetailsRivals.jsx';
@@ -216,20 +215,65 @@ const matchHistory = [
 
 const PlayersContainer = styled.main`    
     min-height: 100vh;    
+    display: flex;
+    flex-direction: row;
+    flex-flow: row wrap;
+    //margin-bottom: 50px;
+
+    @media screen and (max-width: 706px) {        
+      flex-flow: column;
+    }
 `;
 
 const PlayerInfo = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(320px, 0.8fr)) minmax(0, 0.4fr);
-  gap: 20px 8px;
+  //grid-template-columns: 320px minmax(0, 0.5fr) repeat(auto-fit, 300px);
+  //grid-template-columns: 400px repeat(3, minmax(320px, 0.8fr)) minmax(0, 0.4fr);
+  grid-template-columns: minmax(0, 1.05fr) repeat(3, minmax(320px, 0.8fr));
+  
+  row-gap: 20px;
   flex-wrap: wrap;
   justify-items: center;  
   position: relative;
-  margin: 0 auto 40px;
-  margin-top: 90px;
-  margin-bottom: auto;
-  padding: 0;
-  transition: max-height 0.5s linear;  
+  margin: 90px auto auto auto;
+  //transition: max-height 0.5s linear;
+
+  &>div:last-child{
+    grid-column: 2;
+    display: none;
+  }
+
+  @media screen and (max-width: 1320px) {
+    grid-template-columns: 1fr;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+
+    &>div:last-child{
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 706px) {
+    margin-left: auto;
+  }
+`;
+
+const PlayerDetails = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) repeat(3, minmax(320px, 0.8fr));
+  min-width: 500px;
+  margin: 20px auto;
+
+  @media screen and (max-width: 1320px) {
+    grid-template-columns: 1fr;
+    flex-basis: 100%;
+  }
+
+  @media screen and (max-width: 500px) {
+    min-width: unset;
+    margin: 20px 0;
+  }
 `;
 
 const Players = (props) => (
@@ -240,10 +284,13 @@ const Players = (props) => (
           <HubCard type = 'stats' preview = {statsPreview} gridColumn = '2 / 3'/>
           <HubCard type = 'tournaments' preview = {tournamentsPreview} gridColumn = '3 / 4'/>
           <HubCard type = 'rivals' preview = {rivalsPreview} gridColumn = '4 / 5'/>
+          <Expander expanded = {true}/>         
+        </PlayerInfo>
+        <PlayerDetails>
           {/* <PlayerDetailsStats stats = {playerStats}/> */}
           {/* <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> */}
           <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/>
-        </PlayerInfo>
+        </PlayerDetails>        
     </PlayersContainer>
   );
 

@@ -29,6 +29,11 @@ const HubWrapper = styled.div`
         border-top: 6px solid ${props=> props.theme.black};
         box-sizing: content-box; 
     }
+
+    @media screen and (max-width: 1320px) {        
+        grid-column: 2 / -1;
+        margin-top: 20px;
+    }
 `;
 
 const Hub =  styled.div`
@@ -58,7 +63,7 @@ const Hub =  styled.div`
         right: 0;
         height: 13px;//don't like it but it works
         width: 20px;
-        z-index: -1;
+        //z-index: -1;
     }
 
     *:first-child{

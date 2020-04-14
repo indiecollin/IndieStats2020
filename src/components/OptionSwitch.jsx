@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const textStroke = '#226377';
+
 const Options = styled.div`    
     display: flex;        
     background-color: ${props => props.theme.white}; 
@@ -26,12 +28,12 @@ const Options = styled.div`
 const OptionsButton = styled.button`
     border: 1.5px solid ${props => props.theme.stripeGrey};
     border-radius: 10px;
-    -webkit-text-stroke: ${props => props.theme.optionsTextStroke} 0.5px;
+    -webkit-text-stroke: ${() => textStroke} 0.5px;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 19px;
     width: 100%;
-    background-color: ${props => props.selected ? props.theme.white : props.theme.optionsBackground};
+    background-color: ${props => props.selected ? props.theme.white : props.background};
     outline: none;                        
     position: ${props => props.selected ? 'relative' : 'static'};
     cursor: ${props => props.selected ? 'default' : 'pointer'};
@@ -46,8 +48,8 @@ const OptionsButton = styled.button`
 const OptionSwitch = (props) => {
     return(
         <Options>
-            <OptionsButton selected = {!props.selected}>{props.left}</OptionsButton>
-            <OptionsButton selected = {props.selected}>{props.right}</OptionsButton>
+            <OptionsButton selected = {!props.selected} background = {props.background}>{props.left}</OptionsButton>
+            <OptionsButton selected = {props.selected} background = {props.background}>{props.right}</OptionsButton>
         </Options>
     );
 };

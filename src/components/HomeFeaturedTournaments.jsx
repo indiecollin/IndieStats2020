@@ -9,7 +9,7 @@ import { render } from 'react-dom';
 const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
-const listingGrey = '#DBE6EC';
+//const listingGrey = '#DBE6EC';
 
 const FeaturedTournaments = styled.div`  
     display: flex;
@@ -19,9 +19,9 @@ const FeaturedTournaments = styled.div`
     max-width: 424px;
     margin: 0 auto;
     
-    h2 {                    
+    h2 {                 
         position: relative;
-        background-color: ${() => headerPrimary};
+        background-color: ${headerPrimary};
         clip-path: polygon(0% 0%, 3% 100%, 97% 100%, 100% 0%);
         color: ${props => props.theme.white};      
         text-align: center;
@@ -32,7 +32,7 @@ const FeaturedTournaments = styled.div`
             display: block;
             position: absolute;
             content:'';
-            background-color: ${() => headerSecondary};
+            background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
             left: 2px;
@@ -43,7 +43,7 @@ const FeaturedTournaments = styled.div`
             display: block;
             position: absolute;
             content:'';
-            background-color: ${() => headerSecondary};
+            background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
             top: 0;
@@ -60,38 +60,24 @@ const FeaturedTournaments = styled.div`
         padding: 8px 12px;          
         font-weight: 550;                
         align-self: center;
-        border: solid 2px ${() => headerSecondary};
-        background-color: ${() => background};                                                              
+        border: solid 2px ${headerSecondary};
+        background-color: ${background};                                                              
     }
 
-    /* @media screen and (max-width: 480px) {    
+    @media screen and (max-width: 480px) {
         width: 320px;
         margin-left: auto;
         margin-right: auto;
         
-        .header{
+        h2{
             width: 320px;            
         }
 
-        .table{
+        &>div{
             width: 300px;
-            padding: 12px 0;       
-                 
-
-            .transition-group .row .details{
-                font-size: 14px;
-                margin-left: 4px;
-                width: 160px;            
-            }
-
-            .side-triangle-icon{
-                right: -12px;
-                &.left{
-                   left: -12px;
-                }                
-           }
+            padding: 4px;
         }
-    }  */
+    } 
 `;
 
 const TournamentListing = styled.div`
@@ -124,6 +110,19 @@ const TournamentListing = styled.div`
             }                    
         }
     } 
+
+    @media screen and (max-width: 480px) {        
+        img{
+            width: 128px;
+            height: 64px;
+        }
+
+        &>div>div{
+            font-size: 14px;
+            margin-left: 4px;
+            width: 160px;
+        }        
+    }
 `;
 
 const Controls = styled.div`
@@ -132,17 +131,27 @@ const Controls = styled.div`
     margin-bottom: 0;
 
     &>div{
-        flex-direction: row;
+        flex-direction: row;                    
     }
 
     &>button{
         position: relative;
-        top: 2;
+        top: 5px;
 
         &:first-child{
             left: -4px;            
         }
     }
+
+    @media screen and (max-width: 480px) {        
+        &>div{
+            width: 100%;
+            button{
+                font-size: 18px;
+            }            
+        }
+    }
+
 `;
 
 class HomeFeaturedTournaments extends Component{
@@ -189,7 +198,7 @@ class HomeFeaturedTournaments extends Component{
                         }                
                         <Controls>
                             <NavTriangle left={true}/>
-                                <OptionSwitch selected = {this.props.past} left = 'Upcoming' right = 'Recent'/>                        
+                                <OptionSwitch selected = {this.props.past} left = 'Upcoming' right = 'Recent' background={background}/>                        
                             <NavTriangle left={false}/>           
                         </Controls>
                     </div> 
