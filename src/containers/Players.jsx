@@ -9,16 +9,209 @@ import PlayerDetailsTournaments from '../components/PlayerDetailsTournaments.jsx
 import PlayerDetailsRivals from '../components/PlayerDetailsRivals.jsx';
 
 const powerRanks = [
-    {gamerTag:"VoiD", setWins: 0, setLosses: 0},
-    {gamerTag:"Nicko", setWins: 0, setLosses: 0},
-    {gamerTag:"ImHip", setWins: 0, setLosses: 0},
-    {gamerTag:"Eon", setWins: 0, setLosses: 0},
-    {gamerTag:"Larry Lurr", setWins: 0, setLosses: 0},
-    {gamerTag:"Zenyou", setWins: 0, setLosses: 0},
-    {gamerTag:"Razo", setWins: 0, setLosses: 0},
-    {gamerTag:"Charliedaking", setWins: 0, setLosses: 0},
-    {gamerTag:"K9sbruce", setWins: 0, setLosses: 0},
-    {gamerTag:"Elegant", setWins: 0, setLosses: 0}
+    {gamerTag:"VoiD", powerRank: 1, setWins: 0, setLosses: 0},
+    {gamerTag:"Nicko", powerRank: 2, setWins: 0, setLosses: 0},
+    {gamerTag:"ImHip", powerRank: 3, setWins: 0, setLosses: 0},
+    {gamerTag:"Eon", powerRank: 4, setWins: 0, setLosses: 0},
+    {gamerTag:"Larry Lurr", powerRank: 5, setWins: 0, setLosses: 0},
+    {gamerTag:"Zenyou", powerRank: 6, setWins: 0, setLosses: 0},
+    {gamerTag:"Razo", powerRank: 7, setWins: 0, setLosses: 0},
+    {gamerTag:"Charliedaking", powerRank: 8, setWins: 0, setLosses: 0},
+    {gamerTag:"K9sbruce", powerRank: 9, setWins: 0, setLosses: 0},
+    {gamerTag:"Elegant", powerRank: 10, setWins: 0, setLosses: 0},
+    {gamerTag:"Cookieslayer", powerRank: 11, setWins: 0, setLosses: 0},
+    {gamerTag:"Rex", powerRank: 12, setWins: 0, setLosses: 0},
+    {gamerTag:"Ki", powerRank: 13, setWins: 0, setLosses: 0},
+    {gamerTag:"Armando", powerRank: 14, setWins: 0, setLosses: 0},
+    {gamerTag:"MastaMario", powerRank: 15, setWins: 0, setLosses: 0},
+    {gamerTag:"Cyro", powerRank: 16, setWins: 0, setLosses: 0},
+    {gamerTag:"Jonny Westside", powerRank: 17, setWins: 0, setLosses: 0},
+    {gamerTag:"SweetT", powerRank: 18, setWins: 0, setLosses: 0},
+    {gamerTag:"Nitro", powerRank: 19, setWins: 0, setLosses: 0},
+    {gamerTag:"Slither2Hunter", powerRank: 20, setWins: 0, setLosses: 0}    
+];
+
+const players = [
+    {
+      "gamerTag": "_LokiandThor_",
+      "gameLosses": 23,
+      "gameWins": 1,
+      "setLosses": 12,
+      "setWins": 1
+    },
+    {
+      "gamerTag": "Ace_of_Spades",
+      "gameLosses": 4,
+      "gameWins": 0,
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "Alexis",
+      "gameLosses": 8,
+      "gameWins": 3,
+      "setLosses": 4,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "Arrow",
+      "gameLosses": 17,
+      "gameWins": 22,
+      "setLosses": 6,
+      "setWins": 9
+    },
+    {
+      "gamerTag": "Azzy",
+      "gameLosses": 4,
+      "gameWins": 0,
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "Bluco",
+      "gameLosses": 0,
+      "gameWins": -2,
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "BoomShakaLarka",
+      "gameLosses": 10,
+      "gameWins": 15,
+      "setLosses": 4,
+      "setWins": 7
+    },
+    {
+      "gamerTag": "Candy",
+      "gameLosses": 35,
+      "gameWins": 55,
+      "setLosses": 14,
+      "setWins": 24
+    },
+    {
+      "gamerTag": "Chazo",
+      "gameLosses": 13,
+      "gameWins": 33,
+      "setLosses": 6,
+      "setWins": 14
+    },
+    {
+      "gamerTag": "Chrono",
+      "gameLosses": 6,
+      "gameWins": 4,
+      "setLosses": 2,
+      "setWins": 2
+    },
+    {
+      "gamerTag": "Cookieslayer",
+      "mains": "young_link3",
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "Czes",
+      "gameLosses": 4,
+      "gameWins": 0,
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "Deao",
+      "gameLosses": 4,
+      "gameWins": 2,
+      "setLosses": 2,
+      "setWins": 1
+    },
+    {
+      "gamerTag": "Distraction",
+      "gameLosses": 4,
+      "gameWins": 4,
+      "setLosses": 2,
+      "setWins": 2
+    },
+    {
+      "gamerTag": "Drago",
+      "gameLosses": 5,
+      "gameWins": 4,
+      "setLosses": 2,
+      "setWins": 2
+    },
+    {
+      "gamerTag": "Elegant",
+      "gameLosses": 19,
+      "gameWins": 35,
+      "setLosses": 6,
+      "setWins": 14,
+      "mains": "luigi7",
+      "sponsor": null,
+      "powerRank": 10
+    },
+    {
+      "gamerTag": "F0ggy",
+      "gameLosses": 12,
+      "gameWins": 7,
+      "setLosses": 6,
+      "setWins": 3
+    },
+    {
+      "gamerTag": "Fonzie",
+      "gameLosses": 11,
+      "gameWins": 18,
+      "setLosses": 4,
+      "setWins": 8
+    },
+    {
+      "gamerTag": "FubarZEE",
+      "gameLosses": 3,
+      "gameWins": 2,
+      "setLosses": 2,
+      "setWins": 2
+    },
+    {
+      "gamerTag": "Gohan",
+      "gameLosses": 34,
+      "gameWins": 40,
+      "setLosses": 14,
+      "setWins": 18
+    },
+    {
+      "gamerTag": "hawk-chan",
+      "gameLosses": 4,
+      "gameWins": 3,
+      "setLosses": 2,
+      "setWins": 1
+    },
+    {
+      "gamerTag": "HotDish",
+      "gameLosses": 4,
+      "gameWins": 0,
+      "setLosses": 2,
+      "setWins": 0
+    },
+    {
+      "gamerTag": "ImHip",
+      "gameLosses": 24,
+      "gameWins": 63,
+      "setLosses": 5,
+      "setWins": 25,
+      "mains": "olimar2,duck_hunt1,inkling3",
+      "sponsor": null,
+      "powerRank": 3
+    },
+    {
+      "gamerTag": "Jason",
+      "gameLosses": 11,
+      "gameWins": 4,
+      "setLosses": 6,
+      "setWins": 2
+    },
+    {
+      "gamerTag": "Jimmy",
+      "gameLosses": 8,
+      "gameWins": 10,
+      "setLosses": 4,
+      "setWins": 4
+    }
 ];
 
 const playerInfo = {
@@ -278,7 +471,7 @@ const PlayerDetails = styled.div`
 
 const Players = (props) => (
     <PlayersContainer>
-        <PlayerList players = {powerRanks} all = {false}/>
+        <PlayerList players = {players} powerRanks = {powerRanks}/>
         <PlayerInfo>
           <HubCard type = 'player' player = {playerInfo} gridColumn = '3 / 4'/>
           <HubCard type = 'stats' preview = {statsPreview} gridColumn = '2 / 3'/>

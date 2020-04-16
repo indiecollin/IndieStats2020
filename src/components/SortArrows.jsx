@@ -30,8 +30,8 @@ class SortArrows extends Component{
     render(){
         return(
             <React.Fragment>
-                <UpSort position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></UpSort>
-                <DownSort position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></DownSort>
+                <UpSort onClick = {(e) => this.props.upsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></UpSort>
+                <DownSort onClick = {(e) => this.props.downsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></DownSort>
             </React.Fragment>
         );
     };

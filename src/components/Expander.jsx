@@ -35,7 +35,7 @@ class Expander extends Component{
 
     render(){
         return(
-            <ExpanderWrapper>
+            <ExpanderWrapper onClick = {this.props.onClick}>
                 <StyledExpander expanded = {this.props.expanded}>
                     <span><CaretIcon dims = {caretDims} fill = {theme.white}/></span>
                 </StyledExpander>

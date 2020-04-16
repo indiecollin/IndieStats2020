@@ -41,15 +41,19 @@ const OptionsButton = styled.button`
     &:hover{        
         border: 1.5px solid ${props => props.selected ? props.theme.stripeGrey : props.theme.hoverRed};
         background-color: ${props => props.theme.white};
-    }  
+    }
+
+    &:disabled{
+        color: ${props => props.theme.black}
+    }
 `;
 
 
 const OptionSwitch = (props) => {
     return(
         <Options>
-            <OptionsButton selected = {!props.selected} background = {props.background}>{props.left}</OptionsButton>
-            <OptionsButton selected = {props.selected} background = {props.background}>{props.right}</OptionsButton>
+            <OptionsButton onClick = {props.onToggle} selected = {!props.selected} background = {props.background} disabled = {!props.selected}>{props.left}</OptionsButton>
+            <OptionsButton onClick = {props.onToggle} selected = {props.selected} background = {props.background} disabled = {props.selected}>{props.right}</OptionsButton>
         </Options>
     );
 };

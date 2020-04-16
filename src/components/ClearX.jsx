@@ -4,14 +4,15 @@ import styled from 'styled-components';
 import XIcon from './svgs/XIcon.jsx';
 
 const StyledClearX = styled.button`
+    display: ${props => props.visible ? 'block' : 'none'};
     position: absolute;
-    visibility: ${props => props.visible ? 'visible' : 'hidden'};
     width: ${props => props.dims ?  props.dims + 'px' : '16px'};
     height: ${props => props.dims ? props.dims + 'px' : '16px'};
     top: ${props => props.position.top};
     right: ${props => props.position.right};
     background: transparent;
     border: none;
+    outline: none;
     svg{
         position: absolute;     
         margin: auto;            
@@ -28,7 +29,7 @@ class ClearX extends Component{
 
     render(){
         return(
-            <StyledClearX dims = {this.props.dims} visible = {this.props.visible} position = {this.props.position}>
+            <StyledClearX onClick = {this.props.onClick} dims = {this.props.dims} visible = {this.props.visible} position = {this.props.position}>
                 <XIcon dims = {this.props.dims}></XIcon>
             </StyledClearX>
         );
