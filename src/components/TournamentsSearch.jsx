@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import theme from '../styles/Theme';
 import DatePicker from 'react-date-picker/dist/entry.nostyle';
+import styles from '../styles/datepicker.css';
 import SearchIcon from './svgs/SearchIcon.jsx';
 import Tooltip from './Tooltip.jsx';
 
