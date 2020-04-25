@@ -24,6 +24,11 @@ export default createGlobalStyle`
         box-sizing: border-box; 
     }
 
+    button{
+        border: none;
+        background-color: unset;
+    }
+
     html {
         width: 100vw;
         overflow-x: hidden; 

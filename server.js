@@ -27,7 +27,7 @@ app.get('*', (req, res)=>{
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, intitial-scale=1.0">
         <meta http-equiv="X-UA-Comptaible" content="ie=edge">
-        <link href='style.css' rel = 'stylesheet'/>
+        <link href='styles.css' rel = 'stylesheet'/>
       </head>
       <body class = 'preload' style = 'background-color: #EEEEEE;'>
         <div id = 'app' style = 'visibility: hidden;'>${content}</div>
