@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-// import {Switch, Route, withRouter} from 'react-router-dom';
 import {Switch, Route} from 'react-router';
 import { connect } from 'react-redux';
-import loadable from 'react-loadable';
 import {ThemeProvider} from 'styled-components';
 
 import * as actionTypes from '../actions';
@@ -11,17 +9,30 @@ import GlobalStyles from '../styles/GlobalStyles';
 
 import NavBar from './NavBar.jsx';
 import Footer from './Footer.jsx';
-//import Modal from './Modal.jsx';
-// import ContactUs from './ContactUs.jsx';
+import Backdrop from './Backdrop.jsx';
+import ContactUs from './ContactUs.jsx';
 import Home from '../containers/Home.jsx';
 import Players from '../containers/Players.jsx';
 import Tournaments from '../containers/Tournaments.jsx';
 import News from '../containers/News.jsx';
+import AboutModal from './/AboutModal.jsx';
 
 class App extends Component { 
     
     constructor(props, context){
         super(props, context);
+        this.state = {
+            showBackdrop: false
+        }
+        this.toggleBackdrop = this.toggleBackdrop.bind(this);
+    }
+
+    componentDidMount(){
+        document.getElementsByTagName('body')[0].classList.remove('preload');
+    }
+
+    toggleBackdrop(content){
+        this.setState({showBackdrop: content});
     }
 
     render() {
@@ -29,16 +40,17 @@ class App extends Component {
             <ThemeProvider theme = {theme}>
                 <React.Fragment>
                     <GlobalStyles/>
-                    <NavBar/>
-                    {/* <Modal>Testing</Modal> */}
-                    {/* <ContactUs/> */}                 
+                    <NavBar about = {this.toggleBackdrop}/>
+                    <Backdrop show = {this.state.showBackdrop} onClick = {this.toggleBackdrop}>
+                        {this.state.showBackdrop === 'about' ? <AboutModal closeModal = {this.toggleBackdrop}/> : <ContactUs close = {this.toggleBackdrop}/> }
+                    </Backdrop>                                
                     <Switch>                        
                         <Route path='/' exact><Home/></Route>
                         <Route path='/players' exact><Players/></Route>
                         <Route path='/tournaments' exact><Tournaments/></Route>
                         <Route path='/news' exact><News/></Route>
                     </Switch>
-                    <Footer/>
+                    <Footer contactUs = {this.toggleBackdrop}/>
                 </React.Fragment>
             </ThemeProvider>
         )

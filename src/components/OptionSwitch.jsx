@@ -52,8 +52,8 @@ const OptionsButton = styled.button`
 const OptionSwitch = (props) => {
     return(
         <Options>
-            <OptionsButton onClick = {props.onToggle} selected = {!props.selected} background = {props.background} disabled = {!props.selected}>{props.left}</OptionsButton>
-            <OptionsButton onClick = {props.onToggle} selected = {props.selected} background = {props.background} disabled = {props.selected}>{props.right}</OptionsButton>
+            <OptionsButton onClick = {props.onToggle} selected = {props.selected} background = {props.background} disabled = {props.selected}>{props.left}</OptionsButton>
+            <OptionsButton onClick = {props.onToggle} selected = {!props.selected} background = {props.background} disabled = {!props.selected}>{props.right}</OptionsButton>
         </Options>
     );
 };

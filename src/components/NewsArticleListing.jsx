@@ -75,6 +75,7 @@ const Thumbnail = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 256px;
     margin-bottom: 20px;        
     cursor: pointer;    
 

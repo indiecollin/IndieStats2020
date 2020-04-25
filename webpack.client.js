@@ -8,8 +8,9 @@ module.exports = {
     devtool:'inline-source-map',
     entry: './src/client.js',
     output: {
-        filename: 'client_bundle.js',
-        path: path.resolve(__dirname, 'dist/public'),
+        path: path.resolve(__dirname, 'dist/public'),        
+        filename: 'bundle.[chunkhash].js',
+        chunkFilename: '[name].[chunkhash].js', 
         publicPath: '/'
     },
     module: {
@@ -49,5 +50,30 @@ module.exports = {
             __isBrowser__: 'true'
         }),
         new ExtractTextPlugin('style.css')
-    ]
+    ],
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                default: false,
+                vendors: false,
+                vendor: {
+                    // sync + async chunks
+                    chunks: 'all',
+                    // import file path containing node_modules
+                    test: /node_modules/,
+                    name: 'vendor',
+                    priority: 20
+                },
+                common: {
+                    name: 'common',
+                    minChunks: 2,
+                    //chunks: 'async',
+                    chunks: 'all',
+                    priority: 10,
+                    reuseExistingChunk: true,
+                    enforce: true
+                }
+            }
+        }
+    },
 };

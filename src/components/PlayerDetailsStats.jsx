@@ -42,7 +42,7 @@ const StatDetails = styled.div`
         border-right: 2px solid ${props => props.theme.scrollbarPrimary};
     }
 
-    @media screen and (max-width: 1320px) {
+    @media screen and (max-width: 1180px) {
         grid-column: 1 / -1;
     }
 
@@ -125,10 +125,10 @@ const PlayerDetailsStats = (props) => {
                 <div>Game Record</div><div>{props.stats.gameWins + ' - ' + props.stats.gameLosses}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Average Place</div><div>{props.stats.avgPlacement}</div>
+                <div>Avg Place</div><div>{props.stats.avgPlacement}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Average Seed</div><div>{props.stats.avgSeed}</div>
+                <div>Avg Seed</div><div>{props.stats.avgSeed}</div>
             </StatDetailsRow>
             <StatDetailsRow>
                 <div>Tournaments</div><div>{props.stats.tournamentsAttended}</div>

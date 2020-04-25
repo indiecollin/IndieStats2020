@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import { CSSTransition } from 'react-transition-group';
 import NavTriangle from './NavTriangle.jsx';
 
 const headerPrimary = '#C00071';
 const headerSecondary = '#E31B73';
 const background =  '#FBCFE8';
+const playersPerPage = 5;
 
 const PowerRanks = styled.div`
     max-width: 424px;    
@@ -57,13 +59,14 @@ const PowerRanks = styled.div`
         justify-content: space-around;
         padding: 0 32px;
         min-width: 396px;
-        height: 244px;
+        height: 244px;        
         
         &>div{            
             display: flex;        
             flex-direction: column;           
             justify-content: space-evenly;
             height: 100%;
+            opacity: ${props => props.sliding ? '0' : '1' };
 
             &>img{                         
                 height: 32px;
@@ -82,8 +85,9 @@ const PowerRanks = styled.div`
             }
 
             div{           
-                min-width: 108px;    
                 display: flex;
+                min-width: 108px;
+                justify-content: space-evenly;
 
                 img{         
                     height: 32px;
@@ -116,7 +120,7 @@ const PowerRanks = styled.div`
             width: 300px;
             min-width: unset;
             padding: 0 16px;
-            height: 180px;
+            height: 180px;            
 
             &>div{                
                 img{
@@ -136,8 +140,13 @@ class HomePowerRanks extends Component{
     constructor(props){
         super(props);
         this.state = {
-            playerIcons: [...Array(5).fill({})]//might not need these
+            playerIcons: [...Array(5).fill({})],            
+            pageStart: 0,
+            pageEnd: 4,
+            sliding: false
         }
+        this.pageLeft = this.pageLeft.bind(this);
+        this.pageRight = this.pageRight.bind(this);
     }
 
     componentDidMount(){                
@@ -173,32 +182,57 @@ class HomePowerRanks extends Component{
             });
         });        
     }    
+
+    pageLeft(){
+        this.setState(prevState => {
+            return {
+                pageStart:  Math.max(0, prevState.pageStart - playersPerPage),
+                pageEnd:  Math.max(playersPerPage - 1, prevState.pageEnd - playersPerPage),
+                sliding: true
+            }
+        });
+        setTimeout(() => this.setState({sliding: false}),0);
+    }
+
+    pageRight(){        
+        this.setState(prevState => {
+            return {
+                pageStart:  Math.min(this.props.ranks.length - playersPerPage, prevState.pageStart + playersPerPage),
+                pageEnd:  Math.min(this.props.ranks.length - 1, prevState.pageEnd + playersPerPage),
+                sliding: true
+            }
+        });
+        setTimeout(() => this.setState({sliding: false}),0);
+    }
+
     render(){      
         return(
-            <PowerRanks>            
+            <PowerRanks sliding = {this.state.sliding}>            
                 <h2>Power Ranks</h2>
                 <div>
-                    <NavTriangle left={true}/>
-                    <div>                
+                    <NavTriangle left={true} onClick = {this.pageLeft} disabled = {!this.state.pageStart}/>
+                    <div>
                     {
                         this.props.ranks
-                        //.filter((player, index) => {return (index >= this.props.playerListStart && index <= this.props.playerListEnd)})
+                        .filter((p, i) => {return (i >= this.state.pageStart && i <= this.state.pageEnd)})
                         .map((player, i) =>{
-                            return (                            
+                            return (                        
+                                <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {300} classNames = 'slide' component = {null}>
                                 <div key = {player.gamerTag}>                                    
-                                    {player.sponsor ? <img src = {this.state.playerIcons[i].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
+                                    {player.sponsor ? <img src = {this.state.playerIcons[i+this.state.pageStart].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
                                     <span>{player.gamerTag}</span>
                                     <div>
-                                        {player.primary?<img src= {this.state.playerIcons[i].primary}/>:null}
-                                        {player.secondary?<img src= {this.state.playerIcons[i].secondary}/>:null}
-                                        {player.tertiary?<img src= {this.state.playerIcons[i].tertiary}/>:null}                                    
+                                        {player.primary?<img src= {this.state.playerIcons[i+this.state.pageStart].primary}/>:null}
+                                        {player.secondary?<img src= {this.state.playerIcons[i+this.state.pageStart].secondary}/>:null}
+                                        {player.tertiary?<img src= {this.state.playerIcons[i+this.state.pageStart].tertiary}/>:null}                                    
                                     </div>
-                                </div>                            
+                                </div>
+                                </CSSTransition>                
                             )
                         })
-                    }                             
-                    </div>
-                    <NavTriangle left={false}/>
+                    }
+                    </div>                                           
+                    <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= this.props.ranks.length-1}/>
                 </div>
             </PowerRanks>
         );

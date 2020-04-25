@@ -12,14 +12,14 @@ const moreInfoDataHeader = '#400D0C';
 const moreInfoData = '#AC1B20';
 
 const MobileDetails = styled.div`    
+    display: none;
     position: absolute;
     top: 0;           
     transition: margin .33s linear;                  
     width: 90%;    
     background-color: ${props => props.theme.black};
-    color: ${moreInfoText};
-    //margin-top: -436px;
-    display: grid;
+    color: ${moreInfoText};    
+    margin-top: ${props => props.show ? '0' : '-436px'};    
     grid-template-columns: 1fr 64px;     
 
     p{
@@ -27,17 +27,13 @@ const MobileDetails = styled.div`
         user-select: none;                    
     }
 
+    @media screen and (max-width: 960px){
+        display: grid;
+    }
+
     @media screen and (max-width: 480px){
         width: 100%;
     }
-
-    /* &.active{//what this do?
-        margin-top: 0;
-        p{
-            color: unset;
-            user-select: unset;                        
-        }                                           
-    }  */
 `;
 
 const GamerTag = styled.span`
@@ -144,37 +140,35 @@ const Collapser = styled.span`
 `;
 
 const TournamentResponsiveDetails = (props) =>{
-    return(
-        <MobileDetails>
-            <GamerTag>{props.player.gamerTag}</GamerTag>
-            <HeaderClip></HeaderClip>
-            <HeaderPadding></HeaderPadding>
-            <Placement>{props.player.placement}</Placement>
-            <Details>
-                <DetailsWrapper>
-                    <DetailsHeader>Record</DetailsHeader>
-                    <DetailsInfo>{props.player.wins + ' - ' + props.player.losses}</DetailsInfo>
-                </DetailsWrapper>
-                <DetailsWrapper>
-                    <DetailsHeader>Matches</DetailsHeader>
-                    <Matches>{props.player.matches.split('').map(m => <MatchIcon win = {m == 'W'}>{m}</MatchIcon>)}</Matches>
-                </DetailsWrapper>
-                <DetailsWrapper>
-                    <DetailsHeader>Seed</DetailsHeader>
-                    <DetailsInfo clipped = {true}>{props.player.seed}</DetailsInfo>
-                </DetailsWrapper>
-                <DetailsWrapper>
-                    <DetailsHeader>Loss To</DetailsHeader>
-                    <DetailsInfo clipped = {true}>{props.player.loser ? props.player.loser : '-----' }</DetailsInfo>
-                </DetailsWrapper>
-                <DetailsWrapper>
-                    <DetailsHeader>Eliminator</DetailsHeader>
-                    <DetailsInfo clipped = {true}>{props.player.eliminator ? props.player.eliminator : '-----'}</DetailsInfo>
-                </DetailsWrapper>
-            </Details>
-            <Collapser><CaretIcon></CaretIcon></Collapser>
-        </MobileDetails>
-    )
+    return <MobileDetails player = {props.player} show = {props.show}>
+        <GamerTag>{props.player.gamerTag}</GamerTag>
+        <HeaderClip></HeaderClip>
+        <HeaderPadding></HeaderPadding>
+        <Placement>{props.player.placement}</Placement>
+        <Details>
+            <DetailsWrapper>
+                <DetailsHeader>Record</DetailsHeader>
+                <DetailsInfo>{props.player.wins + ' - ' + props.player.losses}</DetailsInfo>
+            </DetailsWrapper>
+            <DetailsWrapper>
+                <DetailsHeader>Matches</DetailsHeader>
+                { props.player ? <Matches>{props.player.matches.split('').map((m,i) => <MatchIcon key = {i} win = {m == 'W'}>{m}</MatchIcon>)}</Matches> : null}
+            </DetailsWrapper>
+            <DetailsWrapper>
+                <DetailsHeader>Seed</DetailsHeader>
+                <DetailsInfo clipped = {true}>{props.player.seed}</DetailsInfo>
+            </DetailsWrapper>
+            <DetailsWrapper>
+                <DetailsHeader>Loss To</DetailsHeader>
+                <DetailsInfo clipped = {true}>{props.player.loser ? props.player.loser : '-----' }</DetailsInfo>
+            </DetailsWrapper>
+            <DetailsWrapper>
+                <DetailsHeader>Eliminator</DetailsHeader>
+                <DetailsInfo clipped = {true}>{props.player.eliminator ? props.player.eliminator : '-----'}</DetailsInfo>
+            </DetailsWrapper>
+        </Details>
+        <Collapser onClick = {() => props.collapse()}><CaretIcon></CaretIcon></Collapser>
+    </MobileDetails>
 };
 
 export default TournamentResponsiveDetails;

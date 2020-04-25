@@ -1,20 +1,44 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-const playerCardGrey = '#BECFE3';
+const playerCardBase = '#BECFE3';
+const playerCardBaseHover = '#EAEAEA';
 const gamerTag =  'rgba(255, 127, 127, 0.8)';//get hex
-const hubColors = {
-    player:['#AD1C5F', '#CD5173', '#D3838E', '#CD7B6D', '#A30401', '#FE0000', '#BE2321', '#B20606', 'none', 'none', 'none', 'none'],
-    stats:['#2D5AD9', '#4588DF', '#58A6E4', '#36A1CF', '#0140A7', '#0068EB', '#1F52D2', '#063BC9', '#C5DDFF', '#576C99', '#BAD6FF', '#192F6B'],
-    tournaments:['#CAB799', '#D0B78E', '#D8C07A', '#CEB815', '#916600', '#F5AA00', '#B57F1F', '#AA7B07', '#FFD42F', '#9C7A20', '#FFD42D', '#573601'],
-    rivals:['#29AC9E', '#35C1A7', '#51C6AB', '#33BD5D', '#03691D', '#009D1C', '#1F862A', '#007C15', '#DADADA', '#5D5D5D', '#FFFFFF', '#292929']
+const hubColors = {//may reorder for organization purposes
+    player:['#AD1C5F', '#CD5173', '#D3838E', '#CD7B6D', '#A30401', '#FE0000', '#BE2321', '#B20606', 'none', 'none', 'none', 'none', '#E41E1D', '#F45C57', '#FC9D8B'],
+    stats:['#2D5AD9', '#4588DF', '#58A6E4', '#36A1CF', '#0140A7', '#0068EB', '#1F52D2', '#063BC9', '#C5DDFF', '#576C99', '#BAD6FF', '#192F6B', '#217AF2', '#34A0F8', '#51C5FE'],
+    tournaments:['#CAB799', '#D0B78E', '#D8C07A', '#CEB815', '#916600', '#F5AA00', '#B57F1F', '#AA7B07', '#FFD42F', '#9C7A20', '#FFD42D', '#573601', '#FAB70E', '#FBD415', '#FDE31A'],
+    rivals:['#29AC9E', '#35C1A7', '#51C6AB', '#33BD5D', '#03691D', '#009D1C', '#1F862A', '#007C15', '#DADADA', '#5D5D5D', '#FFFFFF', '#292929', '#1EA73D', '#30CA5A', '#4AE77E']
 };
 
+const cardPositions = {
+    player:'0',
+    stats:'288px',
+    tournaments:'576px',
+    rivals:'862px'
+}
+
+const hoverStyles = (props) => `
+    cursor: pointer;
+    &:hover{
+        background:
+        linear-gradient(to top, ${hubColors[props.type][14]} 5%, transparent 5%),            
+        linear-gradient(-135deg, ${playerCardBaseHover} 42%, transparent 42%),
+        linear-gradient(-148deg, ${hubColors[props.type][12]} 72.5%, transparent 70%), 
+        linear-gradient(-162deg, ${hubColors[props.type][13]} 80.5%, transparent 80.5%), 
+        linear-gradient(-180deg, ${hubColors[props.type][14]} 95%, transparent 95%);
+
+        &::after{
+            background-color: ${hubColors[props.type][12]};
+        }
+    }
+`;
+
 const HubWrapper = styled.div`
-    grid-column: ${props => props.gridColumn};
+    grid-column: ${props => props.grid};
     position: relative;    
     width: 300px;
-    height: 268px;    
+    height: 268px; 
     &::before{
         content: '';
         width: 100%;
@@ -30,9 +54,18 @@ const HubWrapper = styled.div`
         box-sizing: content-box; 
     }
 
-    @media screen and (max-width: 1320px) {        
+    @media screen and (max-width: 1360px) {  
+        grid-column: ${props => props.responsiveGrid};
+    }
+
+    @media screen and (max-width: 1180px) {        
         grid-column: 2 / -1;
-        margin-top: 20px;
+        margin: 20px auto 0;
+        transition: top 0.5s linear;
+        position: ${props => props.type === 'player' ? 'relative' : 'absolute'};               
+        z-index: ${props => props.type === 'player' ? 110 : 100};
+        top: ${props => cardPositions[props.type]};
+        ${props => props.type !== 'player' ? 'left: 10px' : '' }
     }
 `;
 
@@ -45,14 +78,14 @@ const Hub =  styled.div`
     max-height: 268px;
     background:
         linear-gradient(to top, ${props => hubColors[props.type][3]} 5%, transparent 5%),            
-        linear-gradient(-135deg, ${() => playerCardGrey} 42%, transparent 42%),
+        linear-gradient(-135deg, ${() => playerCardBase} 42%, transparent 42%),
         linear-gradient(-148deg, ${props => hubColors[props.type][0]} 72.5%, transparent 70%), 
         linear-gradient(-162deg, ${props => hubColors[props.type][1]} 80.5%, transparent 80.5%), 
-        linear-gradient(-180deg, ${props => hubColors[props.type][2]} 95%, transparent 95%);            
+        linear-gradient(-180deg, ${props => hubColors[props.type][2]} 95%, transparent 95%);         
     background-repeat: no-repeat; 
     clip-path: polygon(0% 18%, 0 100%, 100% 100%, 100% 0%, 18% 0%);
     position: relative;
-    z-index: 1;    
+    z-index: 1;
     
     &::after{
         background-color: ${props => hubColors[props.type][4]};
@@ -63,7 +96,12 @@ const Hub =  styled.div`
         right: 0;
         height: 13px;//don't like it but it works
         width: 20px;
-        //z-index: -1;
+        z-index: -1;
+    }
+
+    ${props => props.type === 'player' ? '' : hoverStyles(props)}
+    @media screen and (max-width: 1180px) {  
+        ${props => props.type === 'player' ? hoverStyles(props) : '' }
     }
 
     *:first-child{
@@ -173,9 +211,9 @@ class HubCard extends Component{
 
     render(){
         return(
-            <HubWrapper type = {this.props.type} gridColumn = {this.props.gridColumn}>
+            <HubWrapper type = {this.props.type} grid = {this.props.grid} responsiveGrid = {this.props.responsiveGrid} onClick = {this.props.onClick}>
                 <Hub type = {this.props.type}>
-                    {this.props.preview ? this.props.preview.map(content => <HubPreview type = {this.props.type}>{content}</HubPreview>) : null}
+                    {this.props.preview ? this.props.preview.map((content , i) => <HubPreview key = {i} type = {this.props.type}>{content}</HubPreview>) : null}
                     <span>{this.props.type !== 'player' ? this.props.type : this.props.player.main.slice(0,-1) }</span>
                     {this.props.type === 'player' ? <GamerTag>{this.props.player.gamerTag}</GamerTag> : null}
                     <HubFooter type = {this.props.type}><div><div></div></div></HubFooter>

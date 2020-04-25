@@ -5,53 +5,148 @@ import FeaturedTournaments from '../components/HomeFeaturedTournaments.jsx';
 import NewsFlash from '../components/HomeNewsFlash.jsx';
 
 const ranks = [
-    {
-      "gamerTag": "VoiD",
-      "primary": "pichu3.png",
-      "sponsor": "clg.png",
-      "secondary": "daisy6.png",
-      "tertiary": "roy5.png"
-    },
-    {
-      "gamerTag": "Nicko",
-      "primary": "shulk5.png",
-      "secondary": "chrom7.png"
-    },
-    {
-      "gamerTag": "ImHip",
-      "primary": "olimar2.png",
-      "secondary": "duck_hunt1.png",
-      "tertiary": "inkling3.png"
-    },
-    {
-      "gamerTag": "Eon",
-      "primary": "fox3.png",
-      "secondary": "pichu7.png"
-    },
-    {
-      "gamerTag": "Larry Lurr",
-      "primary": "falco3.png",
-      "secondary": "fox3.png",
-      "tertiary": "wolf4.png"
-    }
-  ];
-
-const tournaments = [
   {
-    "name": "FAD 100",
-    "banner": "FAD96px.png",
-    "date": "2020-03-30T00:00:00.000Z",
-    "venue": "Fire & Dice",
-    "complete": false
+    "gamerTag": "VoiD",
+    "primary": "pichu3.png",
+    "sponsor": "clg.png",
+    "secondary": "daisy6.png",
+    "tertiary": "roy5.png"
   },
   {
-    "name": "FPF 100",
-    "banner": "FPF96px.png",
-    "date": "2020-03-31T00:00:00.000Z",
-    "venue": "PlayLIVE Nation",
-    "complete": false
+    "gamerTag": "Nicko",
+    "primary": "shulk5.png",
+    "secondary": "chrom7.png"
+  },
+  {
+    "gamerTag": "ImHip",
+    "primary": "olimar2.png",
+    "secondary": "duck_hunt1.png",
+    "tertiary": "inkling3.png"
+  },
+  {
+    "gamerTag": "Eon",
+    "primary": "fox3.png",
+    "secondary": "pichu7.png"
+  },
+  {
+    "gamerTag": "Larry Lurr",
+    "primary": "falco3.png",
+    "secondary": "fox3.png",
+    "tertiary": "wolf4.png"
+  },
+  {
+    "gamerTag": "Zenyou",
+    "primary": "mario1.png",
+    "secondary": "cloud2.png"
+  },
+  {
+    "gamerTag": "Razo",
+    "primary": "daisy3.png"
+  },
+  {
+    "gamerTag": "Charliedaking",
+    "primary": "wolf1.png",
+    "secondary": "fox8.png",
+    "tertiary": "sheik2.png"
+  },
+  {
+    "gamerTag": "K9sbruce",
+    "primary": "wolf7.png",
+    "sponsor": "polarace.png",
+    "secondary": "lucina4.png"
+  },
+  {
+    "gamerTag": "Elegant",
+    "primary": "luigi7.png"
+  },
+  {
+    "gamerTag": "Cookieslayer",
+    "primary": "young_link3.png"
+  },
+  {
+    "gamerTag": "Rex",
+    "primary": "link5.png"
+  },
+  {
+    "gamerTag": "Ki",
+    "primary": "snake1.png"    
+  },
+  {
+    "gamerTag": "Armando",
+    "primary": "snake3.png",
+    "secondary": "meta_knight3.png",
+    "tertiary": "falco1.png"
+  },
+  {
+    "gamerTag": "MastaMario",
+    "primary": "mario3.png",
+    "sponsor": "ho.png"
   }
 ];
+
+const tournaments = 
+{  
+  upcoming: [
+    {
+      "name": "FAD 101",
+      "banner": "FAD96px.png",
+      "date": "2020-03-30T00:00:00.000Z",
+      "venue": "Fire & Dice"
+    },
+    {
+      "name": "FPF 101",
+      "banner": "FPF96px.png",
+      "date": "2020-03-31T00:00:00.000Z",
+      "venue": "PlayLIVE Nation"
+    },
+    {
+      "name": "HAT 101",
+      "banner": "2GG96px.png",
+      "date": "2020-03-30T00:00:00.000Z",
+      "venue": "Fire & Dice"
+    },
+    {
+      "name": "LooK 101",
+      "banner": "LooK96px.png",
+      "date": "2020-03-31T00:00:00.000Z",
+      "venue": "PlayLIVE Nation"      
+    }
+    ,
+    {
+      "name": "MSM 101",
+      "banner": "MSM96px.png",
+      "date": "2020-03-30T00:00:00.000Z",
+      "venue": "Fire & Dice"      
+    },
+    {
+      "name": "WNF 101",
+      "banner": "WNF96px.png",
+      "date": "2020-03-31T00:00:00.000Z",
+      "venue": "PlayLIVE Nation",      
+    }
+  ],
+  recent: [
+    {
+      "name": "FAD 100",
+      "banner": "FAD96px.png",
+      "date": "2020-03-30T00:00:00.000Z",
+      "venue": "Fire & Dice"
+    },
+    {
+      "name": "FPF 100",
+      "banner": "FPF96px.png",
+      "date": "2020-03-31T00:00:00.000Z",
+      "venue": "PlayLIVE Nation"
+    },
+    {
+      "name": "HAT 100",
+      "banner": "2GG96px.png",
+      "date": "2020-03-30T00:00:00.000Z",
+      "venue": "Fire & Dice"
+    }
+  ]
+};
+
 
 const articles = [
   {
@@ -108,3 +203,19 @@ const Home = (props) => {
 }
 
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

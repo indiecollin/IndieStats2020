@@ -6,10 +6,6 @@ require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
 import App from './src/components/App.jsx';
-// import path from 'path';
-// import webpackMiddleware from 'webpack-dev-middleware';
-// import webpack from 'webpack';
-// import webpackConfig from './webpack.config';
 
 const app = express();
 
@@ -27,31 +23,21 @@ app.get('*', (req, res)=>{
   const html = `
     <html>
       <head>
+        <title>Smash Stats</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, intitial-scale=1.0">
         <meta http-equiv="X-UA-Comptaible" content="ie=edge">
         <link href='style.css' rel = 'stylesheet'/>
       </head>
-      <body>
-        <div id = 'app'>${content}</div>
+      <body class = 'preload' style = 'background-color: #EEEEEE;'>
+        <div id = 'app' style = 'visibility: hidden;'>${content}</div>
+        <div id="modal-root"></div>
         <script src='client_bundle.js'></script>        
       </body>
     </html>
-  `
+  `;
 
   res.send(html);
 });
-
-// app.use(webpackMiddleware(webpack(webpackConfig)));
-// app.use('/assets', express.static(__dirname + '/public'));
-// //.use(express.static('public'))
-
-// app.get('/*', function(req, res) {
-//     res.sendFile(path.join(__dirname, './index.html'), function(err) {
-//       if (err) {
-//         res.status(500).send(err)
-//       }
-//     })
-// });
 
 app.listen(process.env.PORT, () => console.log('Listening on port: ' + process.env.PORT));

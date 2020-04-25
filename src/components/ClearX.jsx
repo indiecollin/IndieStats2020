@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-import XIcon from './svgs/XIcon.jsx';
+import XIcon from './svgs/CircledXIcon.jsx';
 
 const StyledClearX = styled.button`
     display: ${props => props.visible ? 'block' : 'none'};

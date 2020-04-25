@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 import styled, { ThemeConsumer } from 'styled-components';
 import ClearX from './ClearX.jsx';
-import BadgeIcon from '../../public/images/badge-icon0.png';
+import BadgeIcon0 from '../../public/smash_tag_icons/badge-icon0.png';
+import BadgeIcon1 from '../../public/smash_tag_icons/badge-icon1.png';
+import BadgeIcon2 from '../../public/smash_tag_icons/badge-icon2.png';
+import BadgeIcon3 from '../../public/smash_tag_icons/badge-icon3.png';
+import BadgeIcon4 from '../../public/smash_tag_icons/badge-icon4.png';
 
+const badgeIcons = [BadgeIcon0, BadgeIcon1, BadgeIcon2, BadgeIcon3, BadgeIcon4];
+const badgeIconBackgrounds = ['#3FC42B', '#000000', '#FFFFFF', '#FFCBA4', '#7F00FF'];
 const portraitHeader = '#00000C';
 const playerIcon = '#FE0000';
 const playerBackground = '#993130';
@@ -13,8 +19,7 @@ const matchWin = 'rgba(41, 153, 41, 0.808)';
 const matchLoss = 'rgba(192, 80, 60, 0.801)';
 const statsTranslucent = 'rgba(70, 67, 67, 0.685)';
 
-
-const SmashTagColors = [
+const smashTagColors = [
     '#F33906',
     '#FF7E09',
     '#FFCA0A',
@@ -30,13 +35,12 @@ const SmashTagColors = [
 ];
 
 const randomTagColor = (gamerTag) => {
-    //some logic
-    return SmashTagColors[0];
+    return  smashTagColors[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 12];
 }
 
 const rivalSearchClearXPos = {
-    top: '16.5px',
-    right: '16.5px'
+    top: '15.5px',
+    right: '15.5px'
 }
 
 const matchHistoryClearXPos = {
@@ -45,20 +49,19 @@ const matchHistoryClearXPos = {
 }
 
 const RivalDetails = styled.div`            
-    grid-column: 2 / 5;    
+    grid-column: 2 / 5;
     display: grid;
     grid-template-columns: 180px 1fr;
     max-height: 452px;
     margin: 0 auto 20px;    
 
-    @media screen and (max-width: 1320px){
-        grid-column: 1 / -1;
+    @media screen and (max-width: 1360px){
+        grid-template-columns: 160px 1fr;        
     }
 
-    
-    @media screen and (max-width: 1000px){
-        grid-template-columns: 160px 1fr;
-    }
+    @media screen and (max-width: 1180px){
+        
+    }        
     
     @media screen and (max-width: 706px){
         padding: 0; 
@@ -121,21 +124,21 @@ const RivalTag = styled.div`
     color: ${props => props.theme.white};                        
     background: linear-gradient(${props => 'to bottom, ' + props.theme.white + ' 30%, ' + randomTagColor(props.gamerTag) + ' 30%, ' + randomTagColor(props.gamerTag) + ' 100%'});
 
-    &::before{
-        top: 12px;
-        left: -8px;
+    &::before{        
+        top: 14px;
+        left: -6px;
         position: absolute;
         content: '';
         background-color: ${props => props.theme.white};
         border: solid ${props => props.theme.black};                
         border-width: 11px 3.5px;
         border-radius: 50%;                
-        width: 10px;
-        height: 10px; 
+        width: 16px;
+        height: 32px; 
     }
 
     img{
-        background-color: darkolivegreen;//fix
+        background-color: ${props => props.iconBG};
         border-radius: 4px;
         height: 36px;                
     }
@@ -162,7 +165,7 @@ const RivalTag = styled.div`
         overflow: hidden;                    
     }
 
-    @media screen and (max-width: 1000px){
+    @media screen and (max-width: 1360px){
         width: 140px;
         div, div > span{
             font-size: 14px;
@@ -216,10 +219,14 @@ const RivalInfo = styled.div`
 `;
 
 const Portraits = styled.div`
-        grid-row: 1 / 3;
-        grid-area: 1 / 1 / 3 / 2;
-        display: flex;
-        justify-content: space-around; 
+    grid-row: 1 / 3;
+    grid-area: 1 / 1 / 3 / 2;
+    display: flex;
+    justify-content: space-around; 
+
+    @media screen and (max-width: 1360px){
+        max-width: 680px;
+    }
 `;
 
 const Portrait = styled.div`
@@ -366,14 +373,7 @@ const MatchHistoryHeader = styled.div`
         &::-webkit-input-placeholder {
             text-align: center;
         }        
-    }  
-    
-
-    /* @include clear-x;
-    svg{
-        top: 10.5px;
-        right: 16px;
-    } */     
+    }      
 `;
 
 const MatchListings = styled.div`                                       
@@ -401,8 +401,14 @@ class PlayerDetailsRivals extends Component{
         super(props);
         this.state = {
             playerPortrait: '',
-            rivalPortrait: ''
+            rivalPortrait: '',
+            rivalQuery: '',
+            matchQuery: ''
         };
+        this.searchRivals = this.searchRivals.bind(this);
+        this.clearRivalSearch = this.clearRivalSearch.bind(this);
+        this.searchMatches = this.searchMatches.bind(this);
+        this.clearMatchSearch = this.clearMatchSearch.bind(this);
     }
 
     componentDidMount(){
@@ -412,21 +418,37 @@ class PlayerDetailsRivals extends Component{
 
         import(/* webpackMode: "eager" */ `../../public/rival_portraits/${this.props.rival.main}.png`).then(rivalImg => {
             this.setState({rivalPortrait: rivalImg.default});
-        });
+        });        
     }
+
+    searchRivals(e){
+        this.setState({rivalQuery: e.target.value})
+    }
+
+    clearRivalSearch(){
+        this.setState({rivalQuery: ''});
+    }
+
+    searchMatches(e){
+        this.setState({matchQuery: e.target.value})
+    }
+
+    clearMatchSearch(){
+        this.setState({matchQuery: ''});
+    }    
 
     render(){    
         return(
             <RivalDetails>
                 <RivalsListing rivals = {this.props.rivals}>
-                    <input type="text" placeholder='Search Rivals'/>
-                    <ClearX visible = {true} position = {rivalSearchClearXPos}/>
+                    <input type="text" value = {this.state.rivalQuery} onChange = {this.searchRivals} placeholder='Search Rivals'/>                    
+                    <ClearX onClick = {() => this.clearRivalSearch()} visible = {this.state.rivalQuery} position = {rivalSearchClearXPos}/>
                     <div>  
-                        {this.props.rivals.map(rival => {
-                            return <RivalTag>
-                                <img src={BadgeIcon}></img>                            
-                                <div><span>{(rival.wins === 1 ? (rival.wins + ' Win'): (rival.wins + ' Wins'))}</span></div>
-                                <span key = {rival.gamerTag}>{rival.gamerTag}</span>
+                        {this.props.rivals.map((r,i) => {
+                            return <RivalTag key = {r.gamerTag} gamerTag = {r.gamerTag} iconBG = {badgeIconBackgrounds[i]}>
+                                <img src={badgeIcons[i]}></img>                            
+                                <div><span>{(r.wins === 1 ? (r.wins + ' Win'): (r.wins + ' Wins'))}</span></div>
+                                <span>{r.gamerTag}</span>
                             </RivalTag>
                         })}   
                     </div>
@@ -473,18 +495,18 @@ class PlayerDetailsRivals extends Component{
                                 <MatchHistory>
                                     <MatchHistoryHeader>
                                         <span>Match History</span>
-                                        <input type="text" placeholder='Search Tournaments'/>
-                                        <ClearX visible = {true} position = {matchHistoryClearXPos}/>
+                                        <input type="text" value = {this.state.matchQuery} onChange = {this.searchMatches} placeholder='Search Tournaments'/>
+                                        <ClearX visible = {this.state.matchQuery} onClick = {() => this.clearMatchSearch()} position = {matchHistoryClearXPos}/>
                                     </MatchHistoryHeader>
                                     <MatchListings>
-                                        {this.props.matchHistory.map(match => {
-                                            return <Match win = {match.win}>
-                                                <span>{match.tournamentName}</span>
-                                                <span>{match.title}</span>  
+                                        {this.props.matchHistory.map(m => {
+                                            return <Match win = {m.win} key = {m.tournamentName + m.title}>
+                                                <span>{m.tournamentName}</span>
+                                                <span>{m.title}</span>  
                                                 <div>
-                                                    <span>{match.playerScore}</span>
+                                                    <span>{m.playerScore}</span>
                                                     <span>-</span>
-                                                    <span>{match.rivalScore}</span>  
+                                                    <span>{m.rivalScore}</span>  
                                                 </div>
                                             </Match>
                                         })}

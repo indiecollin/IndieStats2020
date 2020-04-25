@@ -26,13 +26,15 @@ const background = '#DBE6EC';
 const PlayerListWrapper = styled.div`
     position: fixed;
     top: 100px;    
+    height: min-content;
     z-index: 100; 
     left:  4%;
     
-    @media screen and (max-width: 1320px) {        
+    @media screen and (max-width: 1180px) {        
         position: relative;
         margin-left: auto;
         left: unset;
+        margin-bottom: 88px;
     }
     @media screen and (max-width: 706px) {        
         margin-right: auto;                
@@ -114,7 +116,7 @@ class PlayerList extends Component {
     constructor(props, context){
         super(props, context);
         this.state = {
-            all: true,
+            ranks: true,//mode
             expanded: true,
             page: 1,
             limit: 10,
@@ -132,8 +134,8 @@ class PlayerList extends Component {
         this.rightNavDisable = this.rightNavDisable.bind(this);
     }
     
-    searchPlayers(event){
-        this.setState({page: 1, query: event.target.value})
+    searchPlayers(e){
+        this.setState({page: 1, query: e.target.value})
     }
 
     clearPlayerSearch(){
@@ -141,11 +143,11 @@ class PlayerList extends Component {
     } 
 
     toggleMode(mode){
-        this.setState({page: 1, all: mode, query: ''})        
+        this.setState({page: 1, ranks: mode, query: ''})        
     }
 
-    setSort(sort, inverse, event){
-        event.stopPropagation()
+    setSort(sort, inverse, e){
+        e.stopPropagation()
         this.setState({page: 1, sort: sort, inverse: inverse})        
     }
 
@@ -156,7 +158,7 @@ class PlayerList extends Component {
     }
 
     rightNavDisable(){
-        if(!this.state.all){
+        if(this.state.ranks){
            return this.state.page === parseInt(this.props.powerRanks.filter(p => p.powerRank).length/this.state.limit)
         }
         else{
@@ -187,18 +189,18 @@ class PlayerList extends Component {
     render(){
         return <PlayerListWrapper>
             <StyledPlayerList expanded = {this.state.expanded}>
-                <OptionSwitch selected = {this.state.all} left='Ranks' onToggle = {() => this.toggleMode(!this.state.all)} right='All' background/>                
+                <OptionSwitch selected = {this.state.ranks} left='Ranks' right='All' onToggle = {() => this.toggleMode(!this.state.ranks)} background/>                
                 <SearchWrapper>
                     <NavTriangle onClick = {() => this.page(false)} left={true} disabled = {this.state.page-1 === 0}/>
-                    <ListSearch value={this.state.query} onChange={this.searchPlayers} placeholder = {this.state.all ? 'Search Players' : ''} disabled = {!this.state.all}/>                                
+                    <ListSearch value={this.state.query} onChange={this.searchPlayers} placeholder = {this.state.ranks ? '' : 'Search Players'} disabled = {this.state.ranks}/>                                
                     <ClearX onClick = {() => this.clearPlayerSearch()} visible = {this.state.query} position = {clearXPos}/>
                     <NavTriangle onClick = {() => this.page(true)} left={false} disabled = {this.rightNavDisable()}/>
                 </SearchWrapper>
                 {
-                    (this.state.all ? this.props.players : this.props.powerRanks)
-                    .filter(p => this.state.all || p.powerRank)//power rank filtering                
+                    (this.state.ranks ? this.props.powerRanks : this.props.players)
+                    .filter(p => !this.state.ranks || p.powerRank)//power rank filtering                
                     .sort((p1, p2) => {                     
-                        if(!this.state.all){
+                        if(this.state.ranks){
                             return p1.powerRank - p2.powerRank                        
                         }
                         else if(this.state.sort){
@@ -213,11 +215,11 @@ class PlayerList extends Component {
                     .map((p, i) =>
                         <PlayerListing key = {p.gamerTag + i}>
                             <div>                                
-                                {!i && this.state.all ? <SortArrows upsort = {(e) => this.setSort(true, false, e)} downsort = {(e) => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
+                                {!i && !this.state.ranks ? <SortArrows upsort = {(e) => this.setSort(true, false, e)} downsort = {(e) => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
                                 {p.gamerTag}
                             </div>
                             <div>
-                                {!i && this.state.all ? <SortArrows upsort = {(e) => this.setSort(false, false, e)} downsort = {(e) => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
+                                {!i && !this.state.ranks ? <SortArrows upsort = {(e) => this.setSort(false, false, e)} downsort = {(e) => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
                                 {p.setWins + ' - ' + p.setLosses}
                             </div>                        
                         </PlayerListing>                    

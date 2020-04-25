@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
 import Expander from './Expander.jsx';
-import CalendarIcon from '../../public/images/calendar-icon.png';
-import LocationIcon from '../../public/images/location-icon.png';
-import Smashgg from '../../public/images/smash.gg.png';
-import SeasonIcon from '../../public/images/season-icon.png';
+import CalendarIcon from '../../public/assets/calendar-icon.png';
+import LocationIcon from '../../public/assets/location-icon.png';
+import Smashgg from '../../public/assets/smash.gg.png';
+import SeasonIcon from '../../public/assets/season-icon.png';
 
 const UpcomingTournamentsContainer = styled.div`
     width: 280px;
     margin: 0 auto;
-    padding-bottom: 20px;
+    padding-bottom: 20px;        
 `;
 
 const UpcomingTournaments = styled.div`
@@ -38,11 +38,9 @@ const UpcomingTournaments = styled.div`
 `;
 
 const UpcomingListingsWrapper = styled.div`
-    max-height: 752px;//temp
-    min-height: 752px;
+    max-height: ${props => props.expanded ? '752px' : '0' };//temp    
     overflow: scroll;
-    transition: max-height .5s linear;
-    padding-bottom: 240px;
+    transition: max-height .5s linear;    
     //cursor: pointer;
 
     &::-webkit-scrollbar {
@@ -121,24 +119,103 @@ const TournamentLink = styled(DataInfo)`
 class TournamentsUpcoming extends Component{
     constructor(props){
         super(props);
+        this.listingRef = React.createRef();
         this.state = {
-            banners: []
+            banners: [],
+            expanded: true,
+            cycle: false,
+            listingHovered: false,
+            listingClickY: null,
+            listingScrollUp: null,
+            tournaments: [
+                {
+                  "name": "HAT 100",
+                  "banner": "HAT96px.png",
+                  "eventDate": "2020-03-28T00:00:00.000Z",
+                  "venue": "TCL Chinese 6 Theatres",
+                  "complete": false
+                },
+                {
+                  "name": "WNF 100",
+                  "banner": "WNF96px.png",    
+                  "eventDate": "2020-03-29T00:00:00.000Z",
+                  "venue": "eSports Arena",
+                  "complete": false
+                },
+                {
+                  "name": "FAD 100",
+                  "banner": "FAD96px.png",
+                  "eventDate": "2020-03-30T00:00:00.000Z",
+                  "venue": "Fire & Dice",
+                  "complete": false
+                },
+                {
+                  "name": "FPF 100",
+                  "banner": "FPF96px.png",
+                  "eventDate": "2020-03-31T00:00:00.000Z",
+                  "venue": "PlayLIVE Nation",
+                  "complete": false
+                }
+              ]
         };
     }
 
-    componentDidMount(){            
-        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
-        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));
-    }    
+    componentDidMount(){       
+        let imports = this.state.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
+        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));               
+        //let listing = document.getElementsByClassName('listing-wrapper')[0] 
+
+        this.listingRef.current.addEventListener('scroll', () =>{               
+            if(this.state.cycle){      
+                window.scrollTo(window.scrollX, this.state.scrollY);
+                this.setState({cycle: false})
+            }          
+        })
+
+        this.listingRef.current.addEventListener('mouseover', ()=>{
+            this.setState({listingHovered: true})
+        })
+
+        this.listingRef.current.addEventListener('mouseleave' , ()=>{            
+            this.setState({
+                listingHovered: false            
+            })
+        })
+
+        //if(window.innerWidth > 706){
+            this.interval = setInterval(()=>{        
+                let first = this.listingRef.current.children[0]
+                if(!this.state.listingHovered){
+                    this.listingRef.current.scrollTop++
+                }            
+                if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
+                    this.setState((prevState) => {
+                        return{
+                            cycle: true,
+                            scrollY: window.scrollY,
+                            tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
+                            banners: prevState.banners.concat(prevState.banners.splice(0,1))
+                        }
+                    }); 
+                    //this.props.dispatch(actions.cycleUpcomingTournaments())  
+                    this.listingRef.current.scrollTop = 0;
+                }
+            }, 10);  
+        //} 
+    }
+        
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
 
     render(){
         return (
             <UpcomingTournamentsContainer>
                 <UpcomingTournaments>
                     <h3>Upcoming Tournaments</h3>
-                    <UpcomingListingsWrapper>                        
+                    <UpcomingListingsWrapper expanded = {this.state.expanded} ref = {this.listingRef}>                        
                         {
-                            this.props.tournaments.map((t, i) => {
+                            this.state.tournaments.map((t, i) => {
                                 return <UpcomingListing key = {t.name}>
                                     <TournamentBanner src={this.state.banners[i]} />
                                     <TournamentName>{t.name}</TournamentName>
@@ -152,7 +229,7 @@ class TournamentsUpcoming extends Component{
                         }                
                     </UpcomingListingsWrapper>
                 </UpcomingTournaments>
-                <Expander/>
+                <Expander expanded={this.state.expanded} onClick = {() => this.setState({expanded: !this.state.expanded})}/>
             </UpcomingTournamentsContainer>
         );
     };

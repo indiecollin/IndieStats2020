@@ -43,7 +43,7 @@ const StyledNavBar = styled.nav`
     }
 
     @media screen and (max-width: 480px) {        
-        max-width: 360px;        
+        max-width: 320px;        
     }
 `;
 
@@ -184,8 +184,8 @@ class NavBar extends Component{
                             <span>News</span>
                         </Link>
                     </NavLink>
-                    <NavLink primGradient = {aboutNavPrimary} secGradient = {aboutNavSecondary}>
-                        <span>
+                    <NavLink primGradient = {aboutNavPrimary} secGradient = {aboutNavSecondary} className = 'ignore-react-onclickoutside'>
+                        <span onClick = {() => this.props.about('about')}>
                             <InfoIcon dims = {iconDims} fill={navBarColor}/>
                             <span>About</span>
                         </span>

@@ -9,7 +9,7 @@ import { render } from 'react-dom';
 const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
-//const listingGrey = '#DBE6EC';
+const tournamentsPerPage = 2;
 
 const FeaturedTournaments = styled.div`  
     display: flex;
@@ -143,7 +143,7 @@ const Controls = styled.div`
         }
     }
 
-    @media screen and (max-width: 480px) {        
+    @media screen and (max-width: 480px) {
         &>div{
             width: 100%;
             button{
@@ -154,20 +154,61 @@ const Controls = styled.div`
 
 `;
 
+const Spacer = styled.div`//liked this better than setting a min-height on the whole component 
+    min-height: 80px;
+    margin-bottom: 16px;
+    @media screen and (max-width: 480px) {
+        min-height: 64px;
+    }
+`;
+
 class HomeFeaturedTournaments extends Component{
     constructor(props){
         super(props);
         this.state = {
-            banners: []
-        }
+            upcoming: true,//mode
+            banners: [],
+            pageStart: 0,
+            pageEnd: 1            
+        };
+        this.pageLeft = this.pageLeft.bind(this);
+        this.pageRight = this.pageRight.bind(this); 
     }
 
-    componentDidMount(){
-        
-        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
+    componentDidMount(){        
+        let imports = this.props.tournaments.upcoming.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
+        imports = imports.concat(this.props.tournaments.recent.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`)));
         Promise.all(imports).then(images => {                                 
             this.setState({banners: images.map(banner => banner.default)})            
         });     
+    }
+
+    pageLeft(){
+        this.setState(prevState => {
+            return {
+                pageStart:  Math.max(0, prevState.pageStart - tournamentsPerPage),
+                pageEnd:  Math.max(tournamentsPerPage - 1, prevState.pageEnd - tournamentsPerPage)
+            }
+        });
+    }
+
+    pageRight(){
+        this.setState(prevState => {
+            return {
+                pageStart:  prevState.pageStart + tournamentsPerPage,
+                pageEnd:  Math.min((this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length - 1, prevState.pageEnd + tournamentsPerPage)
+            }
+        });
+    }
+
+    toggleMode(){
+        this.setState(prevState => {
+            return {
+                upcoming: !prevState.upcoming,
+                pageStart: 0,
+                pageEnd: 1
+            }
+        });
     }
 
     render(){
@@ -176,11 +217,12 @@ class HomeFeaturedTournaments extends Component{
                 <h2>Tournaments</h2>
                     <div>                                            
                         {
-                            this.props.tournaments
+                            (this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent)
+                            .filter((t, i) => i >= this.state.pageStart && i <= this.state.pageEnd)
                             .map((t,i) => {
                                 return (
                                     <TournamentListing key = {t.name}>
-                                        <img src = {this.state.banners[i]}/>
+                                        <img src = {this.state.banners[i + this.state.pageStart + (this.state.upcoming ? 0 : this.props.tournaments.upcoming.length)]}/>
                                         <div>
                                             <div>
                                                 <span><span>{t.name}</span></span>
@@ -195,11 +237,12 @@ class HomeFeaturedTournaments extends Component{
                                     </TournamentListing>
                                 )
                             })
-                        }                
-                        <Controls>
-                            <NavTriangle left={true}/>
-                                <OptionSwitch selected = {this.props.past} left = 'Upcoming' right = 'Recent' background={background}/>                        
-                            <NavTriangle left={false}/>           
+                        }
+                        {(this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length - 1 === this.state.pageStart ? <Spacer/> : null}
+                        <Controls>                            
+                            <NavTriangle left={true} onClick = {this.pageLeft} disabled = {!this.state.pageStart}/>
+                                <OptionSwitch selected = {this.state.upcoming} left = 'Upcoming' right = 'Recent' onToggle = {() => this.toggleMode()} background={background}/>
+                            <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= (this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length-1}/>
                         </Controls>
                     </div> 
             </FeaturedTournaments>

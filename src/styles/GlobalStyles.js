@@ -1,5 +1,5 @@
 import {createGlobalStyle} from 'styled-components';
-import backgroundImage from '../../public/images/players.jpg';
+import backgroundImage from '../../public/assets/players.jpg';
 
 const backgroundOverlayPrimary = 'rgba(255, 255, 255, 0.801)';
 const backgroundOverlaySecondary = 'rgba(216, 216, 216, 0.801)';
@@ -32,4 +32,25 @@ export default createGlobalStyle`
     body {
         box-sizing: border-box; 
     }
+
+    .preload * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -ms-transition: none !important;
+        -o-transition: none !important;
+    }
+
+    #app{
+        visibility: visible !important;
+    }
+
+    .slide-exit{
+        transform: translate(-100%);
+    }
+    
+    .slide-exit-active {
+        transform: translate(0%);            
+        transition: transform 300ms linear;        
+    }
+
 `;

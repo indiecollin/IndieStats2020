@@ -7,8 +7,8 @@ import MoreInfo from './TournamentResponsiveDetails.jsx';
 import ClearX from './ClearX.jsx';
 import CaretIcon from './svgs/CaretIcon.jsx'; 
 import SortArrows from './SortArrows.jsx';
-import Smashgg from '../../public/images/smash.gg.png';
-import Facebook from '../../public/images/facebook.png';
+import Smashgg from '../../public/assets/smash.gg.png';
+import Facebook from '../../public/assets/facebook.png';
 
 const header = '#B7C5CE';
 const tableRow = '#D9DFFF';
@@ -82,7 +82,7 @@ const Header = styled.div`
         }   
     }
 
-    @media screen and (max-width: 960px){        
+    @media screen and (max-width: 960px){
         margin: 0 auto;
         &>div {
             h2{
@@ -212,10 +212,33 @@ const TableWrapper = styled.div`
         border-collapse: collapse;
         margin-bottom: auto;
 
-        &>div{
+        thead{
+            display: table;
             padding-right: 16px;
-            height: 600px;
+
+            th{
+                text-align: left;
+                height: 32px;
+            }   
+        }
+
+        tbody{
+            display: block;            
+            height: 600px;                   
             overflow-y: scroll;
+
+            td{
+                padding: 4px 0 4px 2px;
+            }
+
+            td:first-child {
+                border-radius: 6px 0 0 6px;
+            }
+
+            td:nth-last-child(2){
+                border-radius: 0 6px 6px 0;
+            }
+
             &::-webkit-scrollbar-track
             {
                 border-radius: 10px;
@@ -237,50 +260,29 @@ const TableWrapper = styled.div`
                 border-left: 2px solid ${props => props.theme.scrollbarPrimary};
                 border-right: 2px solid ${props => props.theme.scrollbarPrimary};
             }
-        }
-
-    }
-
-    th{
-        text-align: left;
-        height: 32px;
-    }
+        }        
+    }    
 
     tr{
         min-height: 28px;
 
+        th, td{
+            //this might cover all overflow related things
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            min-height: 28px;
+        }
+
         &:nth-child(2n) td{
-            background-color: ${()=> tableRow};
+            background-color: ${tableRow};
         }
     }
 
     /* .last-row{//not sure what this is for
         height: 100%;
     } */
-
-    th, td{
-        //this might cover all overflow related things
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        min-height: 28px;
-    }
-
-    td{
-        padding: 4px 8px;
-
-        &.gamer-tag, &.loser.true, &.eliminator.true{
-            cursor: pointer;   
-        }
-    }
-
-    td:first-child {
-        border-radius: 6px 0 0 6px;
-    }
-
-    td:nth-last-child(1){//update when adding responsiveness
-        border-radius: 0 6px 6px 0;
-    }
+    
 
     @media screen and (max-width: 960px){        
         margin: 0 auto;
@@ -297,15 +299,17 @@ const TableWrapper = styled.div`
     @media screen and (max-width: 480px){
         grid-row: 4;
         padding: 0;
-        max-height: 800px;
-        
+        max-height: 800px;                
 
-        table > div{                
+        table tbody{
             padding-right: 0;
             &::-webkit-scrollbar {
                 width: 0px;  /* remove scrollbar space */            
             }
         }
+        /* table td:first-child{
+            width: 140px;
+        } */
         
         .more-info {width: 100%;}
     }
@@ -322,6 +326,7 @@ const columnStyles = (props) => (`
 
 const ColumnHeader = styled.th`    
     ${props => columnStyles(props)}
+    position: sticky;
 `;
 
 const ColumnData = styled.td`    
@@ -361,7 +366,7 @@ const LinkColumn = styled(ColumnData)`
 `;
 
 const infoExpanderStyles = (props) =>(`
-    width: 40px;
+    width: ${props.width};
     display: none;            
 
     svg{
@@ -385,6 +390,7 @@ const infoExpanderStyles = (props) =>(`
 
 const InfoExpanderHeader = styled.th`    
     ${props => infoExpanderStyles(props)}
+    position: sticky;
 `;
 
 const InfoExpanderData = styled.td`    
@@ -395,19 +401,32 @@ class TournamentsDetails extends Component{
     constructor(props){
         super(props);
         this.state = {
-            banner: ''
-        };
+            banner: '',
+            expandMoreInfo: false,
+            moreInfoPlayer: false,
+            query: ''
+        };        
+        this.searchPlayers = this.searchPlayers.bind(this);
+        this.clearPlayerSearch = this.clearPlayerSearch.bind(this);
     }
 
     componentDidMount(){
         import(/* webpackMode: "eager" */ `../../public/tournament_banners/${this.props.tournament.shortName.split(' ')[0]}96px.png`).then(image =>{
             this.setState({banner: image.default});
         });      
+    };    
+
+    searchPlayers(e){
+        this.setState({query: e.target.value});
     };
+
+    clearPlayerSearch(){
+        this.setState({query: ''});
+    }
 
     render(){
         return(
-            <TournamentHub>
+            <TournamentHub className = 'tournament-details'>
                 <Header>
                     <div>
                         <h2>{this.props.tournament.name}</h2>
@@ -424,13 +443,12 @@ class TournamentsDetails extends Component{
                     <img src = {this.state.banner}/>
                 </Banner>
                 <Search>
-                    <input type='text' placeholder='Search Player' />
-                    <ClearX visible = {true} position = {playerSearchPos}/>
+                    <input type='text' value = {this.state.query} onChange = {this.searchPlayers} placeholder='Search Player' />
+                    <ClearX visible = {this.state.query} onClick = {() => this.clearPlayerSearch()} position = {playerSearchPos}/>
                 </Search>            
                 <TableWrapper>
-                    <table>
-                        <div>
-                            <tbody>                    
+                    <table>                        
+                            <thead>
                                 <tr>
                                     <ColumnHeader width='160' position='relative' mobile = {true}>
                                         Player
@@ -444,12 +462,14 @@ class TournamentsDetails extends Component{
                                         Seed
                                         <SortArrows position = {seedSorterPos} baseColor = {theme.black} hoverColor = {theme.hoverRed}/>
                                     </ColumnHeader>
-                                    <ColumnHeader width='64' mobile = {true}>Record</ColumnHeader>
-                                    <ColumnHeader width='200'>Matches</ColumnHeader>
+                                    <ColumnHeader width='60' mobile = {true}>Record</ColumnHeader>
+                                    <ColumnHeader width='184'>Matches</ColumnHeader>
                                     <ColumnHeader width='160'>Loss To</ColumnHeader>
                                     <ColumnHeader width='160'>Eliminator</ColumnHeader>
-                                    <InfoExpanderHeader>More</InfoExpanderHeader>
+                                    <InfoExpanderHeader width = '40'>More</InfoExpanderHeader>
                                 </tr>
+                            </thead>
+                            <tbody>                                                    
                                 {this.props.tournament.players
                                 // .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering                    
                                 // .sort((p1, p2) => {
@@ -463,27 +483,24 @@ class TournamentsDetails extends Component{
                                 //         default: return 1                            
                                 //     }
                                 // })
-                                .map(p =>{
-                                    //let loserClasses = p.loser ? 'loser true' : 'loser'
-                                    //let eliminatorClasses = p.eliminator ? 'eliminator true' : 'eliminator'
+                                .map(p =>{                                    
                                     return <tr key={p.gamerTag}>
                                         <LinkColumn width='160' link = {p.gamerTag} mobile = {true}>{p.gamerTag}</LinkColumn>
                                         <ColumnData width='60' mobile = {true}>{p.placement}</ColumnData>
                                         <ColumnData width='60'>{p.seed}</ColumnData>
-                                        <ColumnData width='64' mobile = {true}>{p.wins+' - '+p.losses}</ColumnData>
-                                        <Matches>                                        
-                                            {p.matches.split('').map(m => <MatchIcon win = {m == 'W'}>{m}</MatchIcon>)}
+                                        <ColumnData width='60' mobile = {true}>{p.wins+' - '+p.losses}</ColumnData>
+                                        <Matches width = '184'>                                        
+                                            {p.matches.split('').map((m, i) => <MatchIcon key = {i} win = {m == 'W'}>{m}</MatchIcon>)}
                                         </Matches>
                                         <LinkColumn width='160' link = {p.loser}>{p.loser ? p.loser : '-----'}</LinkColumn>
-                                        <LinkColumn width='160' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                        
-                                        <InfoExpanderData><CaretIcon/></InfoExpanderData>
+                                        <LinkColumn width='144' link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                        
+                                        <InfoExpanderData width = '40' onClick = {() => this.setState({moreInfoPlayer: p, expandMoreInfo: true})}><CaretIcon/></InfoExpanderData>
                                     </tr>
                                 })}
                                 {/* <tr className='last-row'></tr> what is this for? */}
-                            </tbody>
-                        </div>
+                            </tbody>                        
                     </table>
-                    {/* <MoreInfo player = {this.props.tournament.players[0]}/> */}
+                    <MoreInfo player = {this.state.moreInfoPlayer} show = {this.state.expandMoreInfo} collapse = {() => this.setState({expandMoreInfo: false})}/>
                 </TableWrapper>
             </TournamentHub>
         );

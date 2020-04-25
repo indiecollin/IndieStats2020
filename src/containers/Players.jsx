@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import PlayerList from '../components/PlayerList.jsx';
@@ -429,25 +429,42 @@ const PlayerInfo = styled.div`
   justify-items: center;  
   position: relative;
   margin: 90px auto auto auto;
-  //transition: max-height 0.5s linear;
+  min-width: 320px;
+  transition: height 0.5s linear;
 
   &>div:last-child{
     grid-column: 2;
     display: none;
   }
 
-  @media screen and (max-width: 1320px) {
+  @media screen and (max-width: 1360px) {  
+    grid-template-columns: minmax(0, 1.05fr) repeat(1, minmax(320px, 0.8fr));
+    padding-left: 300px;
+  }
+
+  @media screen and (max-width: 1180px) {
     grid-template-columns: 1fr;
+    margin-top: 102px;
     margin-left: 40px;
+    padding-left: unset;
     display: flex;
     flex-direction: column;
+    height: ${props => props.expanded ? '1172px' : '308px'};//320px
+
+    &>div:not(:last-child){
+      ${props => props.expanded ? '' : 'top: 0;'}
+    }
 
     &>div:last-child{
       display: block;
+      position: relative;
+      margin-top: auto;
+      transition: margin 0.5s linear;
     }
   }
 
   @media screen and (max-width: 706px) {
+    margin-top: 12px;
     margin-left: auto;
   }
 `;
@@ -458,9 +475,18 @@ const PlayerDetails = styled.div`
   min-width: 500px;
   margin: 20px auto;
 
-  @media screen and (max-width: 1320px) {
+  @media screen and (max-width: 1360px) {
     grid-template-columns: 1fr;
     flex-basis: 100%;
+    margin-left: 300px;    
+    padding-right: 8px;
+    &>div{
+      grid-column: 1 / -1;
+    }    
+  }
+
+  @media screen and (max-width: 1180px) {
+    margin-left: auto;
   }
 
   @media screen and (max-width: 500px) {
@@ -469,22 +495,34 @@ const PlayerDetails = styled.div`
   }
 `;
 
-const Players = (props) => (
-    <PlayersContainer>
-        <PlayerList players = {players} powerRanks = {powerRanks}/>
-        <PlayerInfo>
-          <HubCard type = 'player' player = {playerInfo} gridColumn = '3 / 4'/>
-          <HubCard type = 'stats' preview = {statsPreview} gridColumn = '2 / 3'/>
-          <HubCard type = 'tournaments' preview = {tournamentsPreview} gridColumn = '3 / 4'/>
-          <HubCard type = 'rivals' preview = {rivalsPreview} gridColumn = '4 / 5'/>
-          <Expander expanded = {true}/>         
-        </PlayerInfo>
-        <PlayerDetails>
-          {/* <PlayerDetailsStats stats = {playerStats}/> */}
-          {/* <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> */}
-          <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/>
-        </PlayerDetails>        
-    </PlayersContainer>
-  );
+const Players = (props) => {
+  const [expanded, setExpanded] = useState(true);
+  const [infoMode, setInfoMode] = useState('');
+  const selectMode = (expanded, infoMode) =>{
+    setExpanded(expanded);
+    setInfoMode(infoMode);
+  //   setTimeout(() => {      
+  //     window.scrollTo({
+  //         top: 600,
+  //         behavior: 'smooth',
+  //       });
+  // }, 0)
+  }
+  return <PlayersContainer>
+    <PlayerList players = {players} powerRanks = {powerRanks}/>
+    <PlayerInfo expanded = {expanded}>
+      <HubCard type = 'player' player = {playerInfo} grid = '3 / 4' responsiveGrid = '1/2' onClick = {() => setExpanded(!expanded)}/>
+      <HubCard type = 'stats' preview = {statsPreview} grid = '2 / 3' responsiveGrid = '2/3' onClick = {() => selectMode(false, 'stats')}/>
+      <HubCard type = 'tournaments' preview = {tournamentsPreview} grid = '3 / 4' responsiveGrid = '1/2' onClick = {() => selectMode(false,'tournaments')}/>
+      <HubCard type = 'rivals' preview = {rivalsPreview} grid = '4 / 5' responsiveGrid = '2/3' onClick = {() => selectMode(false,'rivals')}/>
+      <Expander expanded = {expanded} onClick = {() => setExpanded(!expanded)}/>         
+    </PlayerInfo>
+    <PlayerDetails>
+      {infoMode === 'stats' ? <PlayerDetailsStats stats = {playerStats}/> : null}
+      {infoMode === 'tournaments' ? <PlayerDetailsTournaments tournaments = {playerTournaments} page = {1}/> : null}
+      {infoMode === 'rivals' ? <PlayerDetailsRivals player = {player} rival = {rival} rivals = {rivals} matchHistory = {matchHistory}/>: null}
+    </PlayerDetails>        
+  </PlayersContainer>
+};
 
 export default Players;

@@ -1,11 +1,12 @@
 //MAY NEED TO USE STATE IN THIS COMPONENT TO HANDLE PAGING
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import First from '../../public/images/gold-medal.png';
-import Second from '../../public/images/silver-medal.png';
-import Third from '../../public/images/bronze-medal.png';
+import First from '../../public/assets/gold-medal.png';
+import Second from '../../public/assets/silver-medal.png';
+import Third from '../../public/assets/bronze-medal.png';
 
-const highlightTheme = '#850303';
+const background = '#B3CFDD'
+const highlightTheme = '#043C63';
 
 const TournamentDetails = styled.div`    
     grid-column: 2 / 5;    
@@ -14,7 +15,7 @@ const TournamentDetails = styled.div`
     min-height: 560px;     
     margin: 0 auto 20px;
 
-    @media screen and (max-width: 1320px){
+    @media screen and (max-width: 1180px){
         grid-column: 1 / -1;
     }
 `;
@@ -22,28 +23,30 @@ const TournamentDetails = styled.div`
 const TournamentListing = styled.div`        
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
-    grid-template-columns: 208px 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));    
+    grid-template-columns: 208px 1fr 152px;
     grid-template-rows: min-content 1fr;        
-    background-color: ${props => props.theme.black};
+    background-color: ${background};
     margin-bottom: 4px;
-    border-top: 1.5px solid ${() => highlightTheme};
-    border-bottom: 1.5px solid ${() => highlightTheme};
+    border-top: 1.5px solid ${highlightTheme};    
     cursor: pointer;
 
     &>img{
         grid-row: 2 / 3;
         padding: 8px;
     }
+    &>div{
+        border: none;
+    }
     &>span{
         grid-column: 1 / -1;           
         justify-self: center; 
-        color: ${props => props.theme.white};
+        color: ${props => '#043c63'};
         font-weight: 550;
     }        
 
-    @media screen and (max-width: 706px){
-        grid-template-columns: minmax(180px, 1fr) minmax(140px, 1fr);  
+    @media screen and (max-width: 706px){        
+        grid-template-columns: minmax(180px,1fr) minmax(140px,152px);
         grid-template-rows: repeat(2, min-content) 88px;
 
         &>img{
@@ -63,7 +66,7 @@ const PlayerInfo = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    background-color: ${props => props.theme.black};
+    background-color: ${background};
     
     span:first-child{
         display: inline-block;//should it just me a different element instead of forcing a span to be block?s
@@ -101,31 +104,33 @@ const Top3 = styled.div`
     color: ${props => props.theme.white};
     grid-row: 2 / 3;
     grid-column: 3 / 4;
-    margin: 4px 40px 4px 0;            
+    margin: 4px 8px 4px 0;            
     
     div{
         display: flex;
         background-color: ${highlightTheme};
         align-items: center;
+        clip-path: polygon(0% 0%, 0% 100%, 90% 100%, 100% 0%);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;        
 
         img{
             width: 24px;
             height: 24px;
         }   
-    }   
-
-    div:first-child{
-        clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 85% 0%);
-    }
-    
-    div:last-child{
-        clip-path: polygon(0% 0%, 0% 100%, 85% 100%, 100% 0%);
-    }
+    }           
     
     @media screen and (max-width: 706px){
         grid-row: 3;
         grid-column: 2 / 3;
         margin-right: 8px;
+    }
+
+    @media screen and (max-width: 480px){
+        div{
+            clip-path: unset;
+        }        
     }
 
 `;
@@ -138,16 +143,16 @@ const Pagination = styled.div`
 `;
 
 const PaginationButton = styled.button`
-      width: inherit;
+    width: inherit;
     height: 10px;
     margin-left: 4px;  
-    background-color: ${props => props.page === props.index+1 ? highlightTheme : props.theme.black};
+    background-color: ${props => props.page === props.index+1 ? highlightTheme : background};    
     border: none;
-    outline: none;        
+    outline: ${props => props.page === props.index+1 ? 'none': '1px solid #043c63'};        
     cursor: ${props => props.page === props.index+1 ? 'default' : 'pointer'};        
     
     &:hover{
-        background-color: ${() => highlightTheme};
+        background-color: ${highlightTheme};
     }
 
     &:first-child{

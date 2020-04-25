@@ -26,6 +26,7 @@ const StyledFooter = styled.footer`
     button{        
         background-color: transparent;
         border: solid 1px ${props => props.theme.white};
+        outline: none;
         padding: 6px 10px;
         margin-right: 8px;
         cursor: pointer;
@@ -42,11 +43,11 @@ const StyledFooter = styled.footer`
     }
 `;
 
-const Footer = () => {
+const Footer = (props) => {
     return(
         <StyledFooter>
             <span>© 2020 indieStats</span>
-            <button>Contact Us</button>
+            <button onClick = {() => props.contactUs('contact')} className = 'ignore-react-onclickoutside'>Contact Us</button>
         </StyledFooter>
     )    
 }

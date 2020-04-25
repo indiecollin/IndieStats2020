@@ -5,37 +5,6 @@ import TournamentsList from '../components/TournamentsList.jsx';
 import TournamentsSearch from '../components/TournamentsSearch.jsx';
 import TournamentsDetails from '../components/TournamentsDetails.jsx';
 
-const upcoming = [
-  {
-    "name": "HAT 100",
-    "banner": "HAT96px.png",
-    "eventDate": "2020-03-28T00:00:00.000Z",
-    "venue": "TCL Chinese 6 Theatres",
-    "complete": false
-  },
-  {
-    "name": "WNF 100",
-    "banner": "WNF96px.png",    
-    "eventDate": "2020-03-29T00:00:00.000Z",
-    "venue": "eSports Arena",
-    "complete": false
-  },
-  {
-    "name": "FAD 100",
-    "banner": "FAD96px.png",
-    "eventDate": "2020-03-30T00:00:00.000Z",
-    "venue": "Fire & Dice",
-    "complete": false
-  },
-  {
-    "name": "FPF 100",
-    "banner": "FPF96px.png",
-    "eventDate": "2020-03-31T00:00:00.000Z",
-    "venue": "PlayLIVE Nation",
-    "complete": false
-  }
-];
-
 const tournaments = [
     {    
       "name": "Mega Smash Mondays 132",
@@ -1116,7 +1085,7 @@ const TournamentsGrid = styled.div`
 const Tournaments = (props) => (
     <TournamentsContainer>
       <TournamentsGrid>
-        <TournamentsUpcoming tournaments = {upcoming}/>
+        <TournamentsUpcoming/>
         <TournamentsList tournaments = {tournaments}/>        
         <TournamentsDetails tournament = {tournament}/>        
       </TournamentsGrid>

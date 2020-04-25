@@ -4,18 +4,19 @@ import Moment from 'moment';
 Moment.locale('en');
 import theme from '../styles/Theme';
 
-import First from '../../public/images/gold-medal.png';
-import Second from '../../public/images/silver-medal.png';
-import Third from '../../public/images/bronze-medal.png';
-import PlayersIcon from '../../public/images/players-icon.png';
-import CalendarIcon from '../../public/images/calendar-icon.png';
-import LocationIcon from '../../public/images/location-icon.png';
-import Smashgg from '../../public/images/smash.gg.png';
-import SeasonIcon from '../../public/images/season-icon.png';
-import SearchIcon from './svgs/SearchIcon.jsx';
 import TournamentSearch from './TournamentsSearch.jsx';
+import First from '../../public/assets/gold-medal.png';
+import Second from '../../public/assets/silver-medal.png';
+import Third from '../../public/assets/bronze-medal.png';
+import PlayersIcon from '../../public/assets/players-icon.png';
+import CalendarIcon from '../../public/assets/calendar-icon.png';
+import LocationIcon from '../../public/assets/location-icon.png';
+import Smashgg from '../../public/assets/smash.gg.png';
+import SeasonIcon from '../../public/assets/season-icon.png';
+import SearchIcon from './svgs/SearchIcon.jsx';
+import XIcon from './svgs/XIcon.jsx';
 
-const listingSelected = '#FF8C8C';//will probably change this color
+const listingSelected = '#D3E6E8';
 const seedPrimary ='#A2A4C7';
 const seedSecondary = '#807387';
 const searching = false;
@@ -26,11 +27,7 @@ const TournamentsListing = styled.div`
     height: 788px;      
     overflow: scroll;
     overflow-x: hidden;      
-    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});     
-
-    /* .menu-button{
-        display: none;
-    } */    
+    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});    
 
     &::-webkit-scrollbar-track
     {        
@@ -53,33 +50,21 @@ const TournamentsListing = styled.div`
     } 
 
 @media screen and (max-width: 960px){
-padding-left: 12px;        
-max-width: 420px;
-min-width: 320px;        
+    padding-left: 12px;
+    max-width: 420px;
+    min-width: 320px;
 }
 
 @media screen and (max-width: 706px){
-margin: 0 auto;
-grid-column: 1 / -1;
+    margin: 0 auto;
+    grid-column: 1 / -1;
 }
 
 @media screen and (max-width: 480px){ 
-padding-right: 12px;
-&::-webkit-scrollbar {
-    width: 0px !important;  /* remove scrollbar space */
-}
-
-.search-wrapper .search-menu .search-tournaments{
-    right: 32px;
-    .search-hub .search-by-player .tooltip-wrapper .tooltip-text{
-        width: 108px;
-        padding: 8px 4px;
+    padding-right: 12px;
+    &::-webkit-scrollbar {
+        width: 0px !important;  /* remove scrollbar space */
     }
-    .react-date-picker__calendar--open{
-        max-width: 320px;
-        left: -32px !important;//sue me!
-    }
-}
 }
 `;
 
@@ -104,12 +89,11 @@ const Header = styled.div`
 
 const TournamentListing = styled.div`
     display: grid;                                              
-    grid-template-columns: 4fr 4fr 3fr;
-    margin-top: 24px;                         
+    grid-template-columns: 4fr 4fr 3fr;                       
     margin-bottom: 20px;
     margin-left: 12px;
     background-color: ${props => props.selected ? listingSelected : props.theme.white};
-    cursor: pointer;
+    cursor: pointer;    
 
     &>span{
         grid-column: 1 / -1;
@@ -122,7 +106,7 @@ const TournamentListing = styled.div`
     }
 
     &:hover{
-        background-color: ${() => listingSelected};
+        background-color: ${listingSelected};
     }        
 
     &>img{            
@@ -251,7 +235,7 @@ const Seeds = styled.div`
             margin-right: 4px;
             font-weight: 550;
             color: transparent;
-            background: -webkit-linear-gradient(${() => seedPrimary + ', ' + seedSecondary});
+            background: -webkit-linear-gradient(${seedPrimary + ', ' + seedSecondary});
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -287,8 +271,6 @@ const SearchWrapper = styled.div`
             left: unset;
             height: min-content;
         }
-
-        //button{}
     }
 
     &>button, &>div>button{
@@ -332,16 +314,8 @@ const SearchWrapper = styled.div`
     }
 
     @media screen and (max-width: 480px){
-        .search-wrapper .search-menu .search-tournaments{
-            right: 32px;
-            .search-hub .search-by-player .tooltip-wrapper .tooltip-text{
-                width: 108px;
-                padding: 8px 4px;
-            }
-            .react-date-picker__calendar--open{
-                max-width: 320px;
-                left: -32px !important;//sue me!
-            }
+        &>div>div{
+            right: 20px;
         }
     }
 `;
@@ -350,7 +324,8 @@ class TournamentsList extends Component{
     constructor(props){
         super(props);
         this.state = {
-            banners: []
+            banners: [],
+            searching: false
         }
     }
 
@@ -359,25 +334,34 @@ class TournamentsList extends Component{
         Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));
     }
 
+    selectTournament(e){
+        window.requestAnimationFrame(() => {
+            window.scrollTo({
+                top: document.getElementsByClassName('tournament-details')[0].offsetTop, 
+                behavior: "smooth"
+            })
+        })
+        e.stopPropagation();
+    }
+
     render(){
         return (
             <TournamentsListing>
                 <Header><h3>Past Tournaments</h3></Header>
-                <SearchWrapper searching={searching}>
-                {searching ?
+                <SearchWrapper searching={this.state.searching}>
+                {this.state.searching ?
                 <div>
                     <TournamentSearch/>
-                    <button>
-                        <span>&nbsp;</span>
-                        <span>&nbsp;</span>
+                    <button onClick = {() => this.setState({searching: false})}>
+                        <XIcon fill={theme.darkGrey}/>                        
                     </button>                    
                 </div> :
-                <button>
+                <button onClick = {() => this.setState({searching: true})}>
                     <span><SearchIcon fill={theme.black}/></span>
                 </button>}
                 </SearchWrapper>
                 {this.props.tournaments.map((t, i) => {
-                    return <TournamentListing>
+                    return <TournamentListing key={t.name} onClick = {(e) => this.selectTournament(e)}>
                         <span>{t.name}</span>
                         <img src = {this.state.banners[i]}/>
                         <Placements>
@@ -433,152 +417,3 @@ class TournamentsList extends Component{
 };
 
 export default TournamentsList;
-
-    /* @media screen and (max-width: 1300px){
-
-        .tournament-list-header{
-            width: 100%;    
-            position: absolute;
-        }
-
-        .search-wrapper{
-            position: sticky;
-            top: 20px;            
-
-            .search-menu{                
-                position: relative;                
-                width: 100%;
-                height: 32px;
-                margin-left: auto;
-
-                .search-tournaments{
-                    display: block;
-                    right: 60px;
-                    top: 20px;
-                    left: unset;
-                    height: min-content;
-                }
-            }
-            .menu-button{
-                display: block; 
-                position: relative;                               
-                margin-left: auto;
-                margin-right: 8px;                     
-                width: 32px;
-                height: 32px;                
-                border-radius: 50%;
-                border: solid 1px ${props => props.theme.grey};
-                cursor: pointer;
-                z-index: 50;
-                outline: none;
-
-                .info-icon, .search-icon{
-                    margin-right: 20px;                                                
-                    svg{                
-                        fill: black;                
-                        width: 16px;
-                        height: 16px;                                
-                    }            
-                }        
-                    
-                .search-icon svg{
-                    margin-left: 7px;
-                    margin-top: 4px;
-                }
-
-                &.open{
-
-                    span{
-                        height: 1px;
-                        width: 20px;
-                        background-color: ${props => props.theme.darkGrey};
-                        display: inline-block;
-                        position: absolute;
-                        left: 5px;
-                        top: 14.5px;
-                    }
-                    
-                    .x-left{
-                        transform: rotate(45deg);
-                    }
-            
-                    .x-right{
-                        transform: rotate(-45deg);
-                    }
-                }            
-            }
-        }
-    }    
-
-    @media screen and (max-width: 960px){
-
-        padding-left: 12px;        
-        max-width: 420px;
-        min-width: 320px;        
-
-        .tournament-listing{
-            grid-template-columns: minmax(160px, 1fr) 1fr;
-            margin: 0;
-            
-            .banner{
-                padding: 4px;
-            }
-
-            .placements{
-                grid-row: 2;
-                grid-column: 2 / 3;
-            }
-
-            .info{
-                grid-row: 3;
-
-                .data-wrapper{
-                    padding-left: 8px;
-
-                    &:not(:first-child){
-                        margin-top: 8px;
-                    }
-                }
-            }
-
-            .seeds{
-                grid-row: 3;
-                grid-column: 2 / 3;
-                padding-left: 4px;
-
-                h4{
-                    margin-top: 0;
-                }
-            }
-        }
-    }
-
-    @media screen and (max-width: 706px){
-        margin: 0 auto;
-    }
-
-    @media screen and (max-width: 480px){        
-        padding-right: 12px;
-        &::-webkit-scrollbar {
-            width: 0px !important;
-        }
-
-        .tournament-listing{
-            max-width: 320px; 
-
-            .banner{
-                width: 160px;
-            }
-        }
-        .search-wrapper .search-menu .search-tournaments{
-            right: 32px;
-            .search-hub .search-by-player .tooltip-wrapper .tooltip-text{
-                width: 108px;
-                padding: 8px 4px;
-            }
-            .react-date-picker__calendar--open{
-                max-width: 320px;
-                left: -32px !important;//sue me!
-            }
-        }
-    } */
