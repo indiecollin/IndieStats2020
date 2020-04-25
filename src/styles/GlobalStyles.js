@@ -27,6 +27,7 @@ export default createGlobalStyle`
     button{
         border: none;
         background-color: unset;
+        outline: none;
     }
 
     html {
