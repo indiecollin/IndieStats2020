@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {    
     "clean": "rimraf dist",    
+    "build": "webpack --config webpack.server.js",
     "webpack:client": "webpack --config webpack.client.js --watch",
     "webpack:server": "webpack --config webpack.server.js --watch",
     "webpack:start": "nodemon --watch dist --exec node dist/bundle.js",
