@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import onClickOutside from 'react-onclickoutside';
 import styled from 'styled-components';
-// import { connect } from 'react-redux'
-// import actions from '../actions/actions'
 
 const StyledBackdrop = styled.div`
     visibility: ${props => props.show? 'visible' : 'hidden'};

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {Switch, Route} from 'react-router';
-import { connect } from 'react-redux';
 import {ThemeProvider} from 'styled-components';
 
-import * as actionTypes from '../actions';
 import theme from '../styles/Theme';
 import GlobalStyles from '../styles/GlobalStyles';
 
@@ -60,11 +58,6 @@ class App extends Component {
 const mapStateToProps = state => {
     return {
         actionRan: state.actionRan
-    };
-}
-const mapDispatchToProps = dispatch => {
-    return{
-        onDoSomething: () => dispatch({type: actionTypes.DO_SOMETHING})
     };
 }
 

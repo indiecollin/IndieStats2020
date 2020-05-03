@@ -2,7 +2,6 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router';
-import { Provider } from 'react-redux';
 require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -10,7 +9,6 @@ import App from './src/components/App.jsx';
 import importerController from './api/controllers/importer';
 import playersController from './api/controllers/players';
 import tournamentsController from './api/controllers/tournaments';
-import  configureStore from './src/store';
 const app = express();
 
 app.use(bodyParser.json());
@@ -21,12 +19,9 @@ app.use('/api', tournamentsController);
 
 app.get('*', (req, res)=>{
   const context = {};  
-  let store = configureStore();
   const content = ReactDOMServer.renderToString(
     <StaticRouter location = {req.url} context = {context}>
-      <Provider store = {store}>
-        <App/>
-      </Provider>
+      <App/>
     </StaticRouter>
   );
 
