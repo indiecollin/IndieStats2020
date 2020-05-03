@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import theme from '../styles/Theme';
 import SmashBallIcon from './svgs/SmashBallIcon.jsx';
 
@@ -72,7 +73,6 @@ const StatDetailsHeader = styled.div`
         //font-size: 16px;
         //padding: 8px 4px;
     }
-
 `;
 
 const StatDetailsRow = styled.div`    
@@ -109,51 +109,49 @@ const StatDetailsRow = styled.div`
         //font-size: 16px;
         //padding: 8px 4px;
     }
-
 `;
 
 const PlayerDetailsStats = (props) => {
+    const [stats, setStats] = useState({});
+    useEffect(() => {
+        axios.all([ 
+            axios.get('http://localhost:9001/api/players/tournamentsAttended/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://localhost:9001/api/players/avgPlacement/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://localhost:9001/api/players/avgSeed/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://localhost:9001/api/players/mostLosses/' + encodeURIComponent(props.player.gamerTag))                                     
+        ])
+        .then(axios.spread((tournamentsAttended, avgPlacement, avgSeed, mostLosses) => {
+            setStats({
+                avgPlacement: avgPlacement.data.avgPlacement,
+                avgSeed: avgSeed.data.avgSeed,
+                tournaments: tournamentsAttended.data.count,
+                mostLosses: mostLosses.data.player
+            });
+        }));
+    },[props.player]);
     return <StatDetails>
         <StatDetailsHeader>
             <SmashBallIcon dims = {iconDims} fill={theme.white}/>
             <span>Stats</span>
         </StatDetailsHeader>                        
             <StatDetailsRow>
-                <div>Set Record</div><div>{props.stats.setWins + ' - ' + props.stats.setLosses}</div>
+                <div>Set Record</div><div>{props.player.setWins + ' - ' + props.player.setLosses}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Game Record</div><div>{props.stats.gameWins + ' - ' + props.stats.gameLosses}</div>
+                <div>Game Record</div><div>{props.player.gameWins + ' - ' + props.player.gameLosses}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Avg Place</div><div>{props.stats.avgPlacement}</div>
+                <div>Avg Place</div><div>{stats.avgPlacement}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Avg Seed</div><div>{props.stats.avgSeed}</div>
+                <div>Avg Seed</div><div>{stats.avgSeed}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Tournaments</div><div>{props.stats.tournamentsAttended}</div>
+                <div>Tournaments</div><div>{stats.tournaments}</div>
             </StatDetailsRow>
             <StatDetailsRow>
-                <div>Most Losses</div><div>{props.stats.mostLosses}</div>
-            </StatDetailsRow>            
-            {/* <StatDetailsRow>
-                <div>Set Record</div><div>{props.stats.setWins + ' - ' + props.stats.setLosses}</div>
-            </StatDetailsRow>
-            <StatDetailsRow>
-                <div>Game Record</div><div>{props.stats.gameWins + ' - ' + props.stats.gameLosses}</div>
-            </StatDetailsRow>
-            <StatDetailsRow>
-                <div>Average Place</div><div>{props.stats.avgPlacement}</div>
-            </StatDetailsRow>
-            <StatDetailsRow>
-                <div>Average Seed</div><div>{props.stats.avgSeed}</div>
-            </StatDetailsRow>
-            <StatDetailsRow>
-                <div>Tournaments</div><div>{props.stats.tournamentsAttended}</div>
-            </StatDetailsRow>
-            <StatDetailsRow>
-                <div>Most Losses</div><div>{props.stats.mostLosses}</div>
-            </StatDetailsRow>*/}
+                <div>Most Losses</div><div>{stats.mostLosses}</div>
+            </StatDetailsRow>                        
     </StatDetails>
 };
 

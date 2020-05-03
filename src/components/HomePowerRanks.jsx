@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
+import axios from 'axios';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 import NavTriangle from './NavTriangle.jsx';
@@ -143,45 +145,66 @@ class HomePowerRanks extends Component{
             playerIcons: [...Array(5).fill({})],            
             pageStart: 0,
             pageEnd: 4,
-            sliding: false
+            sliding: false,
+            ranks: []
         }
+        this.selectPlayer = this.selectPlayer.bind(this);
         this.pageLeft = this.pageLeft.bind(this);
         this.pageRight = this.pageRight.bind(this);
     }
 
-    componentDidMount(){                
-        let imports = this.props.ranks.map(player => {
-            let playerImports = [];
-            playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.primary}`));
-            if(player.sponsor){
-                playerImports.push(import(/* webpackMode: "eager" */ `../../public/sponsors/${player.sponsor}`));
-            }
-            if(player.secondary){
-                playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.secondary}`));
-                if(player.tertiary){
-                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.tertiary}`));
-                }
-            }
-            return playerImports;
-        });        
-        this.props.ranks.forEach((player, i) => {
-            Promise.all(imports[i]).then(images => {
-                let icons = {primary: images.shift().default};
+    componentDidMount(){                    
+        axios.all([ axios.get('http://localhost:9001/api/players/powerRanks')])
+        .then(axios.spread((powerRanks) => {
+            let players = powerRanks.data.map(playerData => {                
+                const mains = playerData.mains.split(',')
+                let player = {
+                    gamerTag: playerData.gamerTag,                    
+                    primary: mains[0] + '.png'
+                }                    
+                if(playerData.sponsor) player.sponsor = playerData.sponsor + '.png'                
+                if(mains[1]) player.secondary = mains[1] + '.png'
+                if(mains[2]) player.tertiary = mains[2] + '.png'
+                return player;         
+            });
+            this.setState({ranks: players});
+            let imports = players.map(player => {
+                let playerImports = [];
+                playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.primary}`));
                 if(player.sponsor){
-                    icons.sponsor = images.shift().default;                    
+                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/sponsors/${player.sponsor}`));
                 }
                 if(player.secondary){
-                    icons.secondary = images.shift().default;                    
+                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.secondary}`));
                     if(player.tertiary){
-                        icons.tertiary = images.shift().default;
+                        playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.tertiary}`));
                     }
                 }
-                let playerIcons = [...this.state.playerIcons];
-                playerIcons[i] = icons;
-                this.setState({playerIcons: playerIcons});
-            });
-        });        
-    }    
+                return playerImports;
+            });        
+            players.forEach((player, i) => {
+                Promise.all(imports[i]).then(images => {
+                    let icons = {primary: images.shift().default};
+                    if(player.sponsor){
+                        icons.sponsor = images.shift().default;                    
+                    }
+                    if(player.secondary){
+                        icons.secondary = images.shift().default;                    
+                        if(player.tertiary){
+                            icons.tertiary = images.shift().default;
+                        }
+                    }
+                    let playerIcons = [...this.state.playerIcons];
+                    playerIcons[i] = icons;
+                    this.setState({playerIcons: playerIcons});
+                });
+            }); 
+        }));       
+    };  
+
+    selectPlayer(gamerTag){
+        this.props.history.push({pathname: '/players/' + gamerTag})
+    }
 
     pageLeft(){
         this.setState(prevState => {
@@ -197,8 +220,8 @@ class HomePowerRanks extends Component{
     pageRight(){        
         this.setState(prevState => {
             return {
-                pageStart:  Math.min(this.props.ranks.length - playersPerPage, prevState.pageStart + playersPerPage),
-                pageEnd:  Math.min(this.props.ranks.length - 1, prevState.pageEnd + playersPerPage),
+                pageStart:  Math.min(this.state.ranks.length - playersPerPage, prevState.pageStart + playersPerPage),
+                pageEnd:  Math.min(this.state.ranks.length - 1, prevState.pageEnd + playersPerPage),
                 sliding: true
             }
         });
@@ -213,12 +236,12 @@ class HomePowerRanks extends Component{
                     <NavTriangle left={true} onClick = {this.pageLeft} disabled = {!this.state.pageStart}/>
                     <div>
                     {
-                        this.props.ranks
+                        this.state.ranks
                         .filter((p, i) => {return (i >= this.state.pageStart && i <= this.state.pageEnd)})
                         .map((player, i) =>{
                             return (                        
                                 <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {300} classNames = 'slide' component = {null}>
-                                <div key = {player.gamerTag}>                                    
+                                <div key = {player.gamerTag} onClick = {() => this.selectPlayer(player.gamerTag)}> 
                                     {player.sponsor ? <img src = {this.state.playerIcons[i+this.state.pageStart].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
                                     <span>{player.gamerTag}</span>
                                     <div>
@@ -232,11 +255,11 @@ class HomePowerRanks extends Component{
                         })
                     }
                     </div>                                           
-                    <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= this.props.ranks.length-1}/>
+                    <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= this.state.ranks.length-1}/>
                 </div>
             </PowerRanks>
         );
     }
 }
 
-export default HomePowerRanks;
+export default withRouter(HomePowerRanks);

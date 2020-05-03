@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const playerCardBase = '#BECFE3';
 const playerCardBaseHover = '#EAEAEA';
@@ -193,35 +194,53 @@ const GamerTag = styled.div`
     font-weight: 550;
 `;
 
-class HubCard extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            charImage: ''
-        };
-    }
-
-    componentDidMount(){
-        if(this.props.type === 'player'){
-            import(/* webpackMode: "eager" */ `../../public/main_portraits/${this.props.player.main}.png`).then(portrait => {
-                this.setState({charImage: portrait.default});
-            });
-        }
-    }
-
-    render(){
-        return(
-            <HubWrapper type = {this.props.type} grid = {this.props.grid} responsiveGrid = {this.props.responsiveGrid} onClick = {this.props.onClick}>
-                <Hub type = {this.props.type}>
-                    {this.props.preview ? this.props.preview.map((content , i) => <HubPreview key = {i} type = {this.props.type}>{content}</HubPreview>) : null}
-                    <span>{this.props.type !== 'player' ? this.props.type : this.props.player.main.slice(0,-1) }</span>
-                    {this.props.type === 'player' ? <GamerTag>{this.props.player.gamerTag}</GamerTag> : null}
-                    <HubFooter type = {this.props.type}><div><div></div></div></HubFooter>
-                    {this.props.type === 'player' ? <img src={this.state.charImage}></img> : null}
-                </Hub>        
-            </HubWrapper>
-        );
-    };
+const HubCard =  (props) =>{
+    const [charImage, setCharImage] = useState('');    
+    const [preview, setPreview] = useState([]);    
+    useEffect(() => {
+        if(!props.player.gamerTag) return;
+        switch(props.type){
+            case 'player':
+                import(/* webpackMode: "eager" */ `../../public/main_portraits/${props.player.mains ? props.player.mains.split(',')[0] : 'default' }.png`)
+                .then(portrait => {
+                    setCharImage(portrait.default);
+                });
+            break;
+            case 'stats':
+                const statsPreview = [
+                    <React.Fragment><span>Set Record</span><span>{props.player.setWins} - {props.player.setLosses}</span></React.Fragment>,
+                    <React.Fragment><span>Game Record</span><span>{props.player.gameWins} - {props.player.gameLosses}</span></React.Fragment>
+                ];
+                setPreview(statsPreview);
+            break;
+            case 'tournaments':
+                axios.get('http://localhost:9001/api/players/tournamentListings/' + encodeURIComponent(props.player.gamerTag))
+                .then(res => {
+                    const tournamentsPreview = res.data.map(t => t.shortName).slice(0,5);
+                    setPreview(tournamentsPreview);                                  
+                });
+            break;
+            case 'rivals':
+                axios.get('http://localhost:9001/api/players/rivals/' + encodeURIComponent(props.player.gamerTag))
+                .then(res => {
+                    const rivalsPreview = Object.entries(res.data)
+                    .sort((r1, r2) => r2[1].setLosses - r1[1].setLosses)
+                    .map(r => (<span>{r[0]}</span>)).slice(0,5);
+                    setPreview(rivalsPreview);
+                });
+            break;
+            default:
+        }            
+    }, [props.player]);   
+    return <HubWrapper type = {props.type} grid = {props.grid} responsiveGrid = {props.responsiveGrid} onClick = {props.onClick}>
+        <Hub type = {props.type}>
+            {preview.length ? preview.map((content , i) => <HubPreview key = {i} type = {props.type}>{content}</HubPreview>) : null}
+            <span>{props.type !== 'player' ? props.type : props.player && (props.player.mains ? props.player.mains.split(',')[0].slice(0,-1) : '') }</span>
+            {props.type === 'player' ? <GamerTag>{props.player && props.player.gamerTag}</GamerTag> : null}
+            <HubFooter type = {props.type}><div><div></div></div></HubFooter>
+            {props.type === 'player' ? <img src={charImage}></img> : null}
+        </Hub>        
+    </HubWrapper>            
 };
 
 export default HubCard;

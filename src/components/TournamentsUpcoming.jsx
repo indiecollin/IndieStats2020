@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Moment from 'moment';
 Moment.locale('en');
 import Expander from './Expander.jsx';
@@ -127,45 +128,20 @@ class TournamentsUpcoming extends Component{
             listingHovered: false,
             listingClickY: null,
             listingScrollUp: null,
-            tournaments: [
-                {
-                  "name": "HAT 100",
-                  "banner": "HAT96px.png",
-                  "eventDate": "2020-03-28T00:00:00.000Z",
-                  "venue": "TCL Chinese 6 Theatres",
-                  "complete": false
-                },
-                {
-                  "name": "WNF 100",
-                  "banner": "WNF96px.png",    
-                  "eventDate": "2020-03-29T00:00:00.000Z",
-                  "venue": "eSports Arena",
-                  "complete": false
-                },
-                {
-                  "name": "FAD 100",
-                  "banner": "FAD96px.png",
-                  "eventDate": "2020-03-30T00:00:00.000Z",
-                  "venue": "Fire & Dice",
-                  "complete": false
-                },
-                {
-                  "name": "FPF 100",
-                  "banner": "FPF96px.png",
-                  "eventDate": "2020-03-31T00:00:00.000Z",
-                  "venue": "PlayLIVE Nation",
-                  "complete": false
-                }
-              ]
+            tournaments: []
         };
     }
 
-    componentDidMount(){       
-        let imports = this.state.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
-        Promise.all(imports).then(images => this.setState({banners: images.map(banner => banner.default)}));               
-        //let listing = document.getElementsByClassName('listing-wrapper')[0] 
+    componentDidMount(){
+        const today = new Date().getTime();
+        const range = today + 1000 * 60 * 60 * 24 * 60;//last number is # of days
+        axios.get('http://localhost:9001/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
+        .then(tournaments => {
+            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+            Promise.all(imports).then(images => this.setState({tournaments: tournaments.data.map((t, i) =>  Object.assign({}, t, {banner: images[i].default}))}));
+        });                   
 
-        this.listingRef.current.addEventListener('scroll', () =>{               
+        this.listingRef.current.addEventListener('scroll', () =>{             
             if(this.state.cycle){      
                 window.scrollTo(window.scrollX, this.state.scrollY);
                 this.setState({cycle: false})
@@ -176,32 +152,29 @@ class TournamentsUpcoming extends Component{
             this.setState({listingHovered: true})
         })
 
-        this.listingRef.current.addEventListener('mouseleave' , ()=>{            
+        this.listingRef.current.addEventListener('mouseleave' , ()=>{
             this.setState({
                 listingHovered: false            
             })
         })
-
-        //if(window.innerWidth > 706){
-            this.interval = setInterval(()=>{        
-                let first = this.listingRef.current.children[0]
-                if(!this.state.listingHovered){
-                    this.listingRef.current.scrollTop++
-                }            
-                if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
-                    this.setState((prevState) => {
-                        return{
-                            cycle: true,
-                            scrollY: window.scrollY,
-                            tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
-                            banners: prevState.banners.concat(prevState.banners.splice(0,1))
-                        }
-                    }); 
-                    //this.props.dispatch(actions.cycleUpcomingTournaments())  
-                    this.listingRef.current.scrollTop = 0;
-                }
-            }, 10);  
-        //} 
+        
+        this.interval = setInterval(()=>{        
+            let first = this.listingRef.current.children[0]
+            if(!this.state.listingHovered){
+                this.listingRef.current.scrollTop++
+            }            
+            if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
+                this.setState((prevState) => {
+                    return{
+                        cycle: true,
+                        scrollY: window.scrollY,
+                        tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
+                        banners: prevState.banners.concat(prevState.banners.splice(0,1))
+                    }
+                });                    
+                this.listingRef.current.scrollTop = 0;
+            }
+        }, 10);  
     }
         
     componentWillUnmount() {
@@ -217,7 +190,7 @@ class TournamentsUpcoming extends Component{
                         {
                             this.state.tournaments.map((t, i) => {
                                 return <UpcomingListing key = {t.name}>
-                                    <TournamentBanner src={this.state.banners[i]} />
+                                    <TournamentBanner src={t.banner} />
                                     <TournamentName>{t.name}</TournamentName>
                                     <DataGrid></DataGrid>
                                     <DataIcon src={CalendarIcon} gridRow = '3/4'/><DataInfo gridRow = '3/4'>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</DataInfo>

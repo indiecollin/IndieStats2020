@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+
 
 import theme from '../styles/Theme';
 import ClearX from './ClearX.jsx';
@@ -116,6 +118,7 @@ class PlayerList extends Component {
     constructor(props, context){
         super(props, context);
         this.state = {
+            players: [],
             ranks: true,//mode
             expanded: true,
             page: 1,
@@ -124,8 +127,8 @@ class PlayerList extends Component {
             inverse: false,
             query: ''
         }        
-
-        this.selectPlayer = props.selectPlayer;
+        
+        this.selectPlayer = this.selectPlayer.bind(this);
         this.searchPlayers = this.searchPlayers.bind(this);
         this.clearPlayerSearch = this.clearPlayerSearch.bind(this);
         this.setSort = this.setSort.bind(this);
@@ -133,22 +136,27 @@ class PlayerList extends Component {
         this.expand = this.expand.bind(this);            
         this.rightNavDisable = this.rightNavDisable.bind(this);
     }
+
+    selectPlayer(player){
+        this.props.history.push({pathname: '/players/' + encodeURIComponent(player.gamerTag)});
+        this.props.setPlayer(player);
+    }
     
     searchPlayers(e){
-        this.setState({page: 1, query: e.target.value})
+        this.setState({page: 1, query: e.target.value});
     }
 
     clearPlayerSearch(){
-        this.setState({page: 1, query: ''})
+        this.setState({page: 1, query: ''});
     } 
 
     toggleMode(mode){
-        this.setState({page: 1, ranks: mode, query: ''})        
+        this.setState({page: 1, ranks: mode, query: ''});  
     }
 
     setSort(sort, inverse, e){
-        e.stopPropagation()
-        this.setState({page: 1, sort: sort, inverse: inverse})        
+        this.setState({page: 1, sort: sort, inverse: inverse});     
+        e.stopPropagation();
     }
 
     page(direction){       
@@ -157,13 +165,10 @@ class PlayerList extends Component {
         }));        
     }
 
-    rightNavDisable(){
-        if(this.state.ranks){
-           return this.state.page === parseInt(this.props.powerRanks.filter(p => p.powerRank).length/this.state.limit)
-        }
-        else{
-            return this.state.page-1 === parseInt((this.props.players.filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase())).length-1)/this.state.limit)
-        }        
+    rightNavDisable(){        
+        return this.state.page-1 === parseInt((this.props.players
+            .filter(p => !this.state.ranks || p.powerRank)
+            .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase())).length-1)/this.state.limit)
     }
 
     expand(expanding){//assumes mobile limit is half of desktop limit        
@@ -189,15 +194,15 @@ class PlayerList extends Component {
     render(){
         return <PlayerListWrapper>
             <StyledPlayerList expanded = {this.state.expanded}>
-                <OptionSwitch selected = {this.state.ranks} left='Ranks' right='All' onToggle = {() => this.toggleMode(!this.state.ranks)} background/>                
+                <OptionSwitch selected = {this.state.ranks} left='Ranks' right='All' onToggle = {() => this.toggleMode(!this.state.ranks)} background = {background}/>                
                 <SearchWrapper>
                     <NavTriangle onClick = {() => this.page(false)} left={true} disabled = {this.state.page-1 === 0}/>
                     <ListSearch value={this.state.query} onChange={this.searchPlayers} placeholder = {this.state.ranks ? '' : 'Search Players'} disabled = {this.state.ranks}/>                                
                     <ClearX onClick = {() => this.clearPlayerSearch()} visible = {this.state.query} position = {clearXPos}/>
                     <NavTriangle onClick = {() => this.page(true)} left={false} disabled = {this.rightNavDisable()}/>
                 </SearchWrapper>
-                {
-                    (this.state.ranks ? this.props.powerRanks : this.props.players)
+                {                    
+                    this.props.players
                     .filter(p => !this.state.ranks || p.powerRank)//power rank filtering                
                     .sort((p1, p2) => {                     
                         if(this.state.ranks){
@@ -213,13 +218,13 @@ class PlayerList extends Component {
                     .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering
                     .filter((p,i) => i >= ((this.state.page - 1) * this.state.limit) && i < (this.state.page) * this.state.limit )//pagination filtering
                     .map((p, i) =>
-                        <PlayerListing key = {p.gamerTag + i}>
+                        <PlayerListing key = {p.gamerTag + i} onClick = {() => this.selectPlayer(p)}>
                             <div>                                
-                                {!i && !this.state.ranks ? <SortArrows upsort = {(e) => this.setSort(true, false, e)} downsort = {(e) => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
+                                {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(true, false, e)} downsort = {e => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
                                 {p.gamerTag}
                             </div>
                             <div>
-                                {!i && !this.state.ranks ? <SortArrows upsort = {(e) => this.setSort(false, false, e)} downsort = {(e) => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
+                                {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(false, false, e)} downsort = {e => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
                                 {p.setWins + ' - ' + p.setLosses}
                             </div>                        
                         </PlayerListing>                    
@@ -232,4 +237,4 @@ class PlayerList extends Component {
     }
 }
 
-export default PlayerList;
+export default withRouter(PlayerList);

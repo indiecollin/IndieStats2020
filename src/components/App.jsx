@@ -46,9 +46,9 @@ class App extends Component {
                     </Backdrop>                                
                     <Switch>                        
                         <Route path='/' exact><Home/></Route>
-                        <Route path='/players' exact><Players/></Route>
-                        <Route path='/tournaments' exact><Tournaments/></Route>
-                        <Route path='/news' exact><News/></Route>
+                        <Route path='/players/:selected?' exact><Players/></Route>
+                        <Route path='/tournaments/:selected?' exact><Tournaments/></Route>
+                        <Route path='/news/:selected?' exact><News/></Route>
                     </Switch>
                     <Footer contactUs = {this.toggleBackdrop}/>
                 </React.Fragment>
@@ -69,4 +69,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default App;
-//export default connect(mapStateToProps, mapDispatchToProps) (withRouter(App));

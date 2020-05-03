@@ -141,7 +141,7 @@ const Collapser = styled.span`
 
 const TournamentResponsiveDetails = (props) =>{
     return <MobileDetails player = {props.player} show = {props.show}>
-        <GamerTag>{props.player.gamerTag}</GamerTag>
+        <GamerTag onClick = {() => props.selectPlayer(props.player.gamerTag)}>{props.player.gamerTag}</GamerTag>
         <HeaderClip></HeaderClip>
         <HeaderPadding></HeaderPadding>
         <Placement>{props.player.placement}</Placement>
@@ -160,11 +160,11 @@ const TournamentResponsiveDetails = (props) =>{
             </DetailsWrapper>
             <DetailsWrapper>
                 <DetailsHeader>Loss To</DetailsHeader>
-                <DetailsInfo clipped = {true}>{props.player.loser ? props.player.loser : '-----' }</DetailsInfo>
+                <DetailsInfo clipped = {true} onClick = {() => props.player.loser && props.selectPlayer(props.player.loser)}>{props.player.loser ? props.player.loser : '-----' }</DetailsInfo>
             </DetailsWrapper>
             <DetailsWrapper>
                 <DetailsHeader>Eliminator</DetailsHeader>
-                <DetailsInfo clipped = {true}>{props.player.eliminator ? props.player.eliminator : '-----'}</DetailsInfo>
+                <DetailsInfo clipped = {true} onClick = {() => props.player.eliminator && props.selectPlayer(props.player.eliminator)}>{props.player.eliminator ? props.player.eliminator : '-----'}</DetailsInfo>
             </DetailsWrapper>
         </Details>
         <Collapser onClick = {() => props.collapse()}><CaretIcon></CaretIcon></Collapser>

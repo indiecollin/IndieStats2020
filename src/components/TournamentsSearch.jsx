@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import theme from '../styles/Theme';
 import DatePicker from 'react-date-picker/dist/entry.nostyle';
@@ -212,19 +212,33 @@ const DateRange = styled.div`
 `;
 
 const TournamentsSearch = (props) => {
+    
+    const [tournament, setTournament] = useState('');
+    const [players, setPlayers] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    const search = () => {
+        const tournamentQuery = tournament ? '&search=' + encodeURI(tournament) : '';
+        const playersQuery = players ? '&players=' + encodeURI(players) : '';        
+        const startDateQuery = startDate ? '&startDate=' + startDate.getTime() : '';
+        const endDateQuery = endDate ? '&endDate=' + endDate.getTime() : '';
+        const queryString = tournamentQuery + playersQuery + startDateQuery + endDateQuery;
+        props.setQuery(queryString);
+    };
     return <HubWrapper>
         <SearchHub>
             <SearchBar>
-                <input type='text' placeholder='Tournament Search'/>
-                <button><Icon><SearchIcon fill = {theme.black}/></Icon></button>
+                <input type='text' value = {tournament} onChange = {e => setTournament(e.target.value)} placeholder='Tournament Search'/>
+                <button onClick = {() => search()}><Icon><SearchIcon fill = {theme.black}/></Icon></button>
             </SearchBar>
             <SearchBar>
-                <input type='text' placeholder='Player Search'/>
+                <input type='text' value = {players} onChange = {e => setPlayers(e.target.value)} placeholder='Player Search'/>
                 <Tooltip>Multi-player Search: Enter Gamer Tags Separated by Commas</Tooltip>
             </SearchBar>
             <DateRange>
-                <DatePicker locale = 'en-US' value = {new Date()} />
-                <DatePicker />
+                <DatePicker locale = 'en-US' value = {startDate} onChange = {setStartDate} />
+                <DatePicker locale = 'en-US' value = {endDate} onChange = {setEndDate}/>
             </DateRange>
         </SearchHub>
     </HubWrapper>

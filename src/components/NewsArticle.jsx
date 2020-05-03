@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
 const Article = styled.div`
@@ -57,27 +57,17 @@ const Article = styled.div`
     } 
 `;
 
-class NewsArticle extends Component{
+const NewsArticle = (props) =>{
+    const [article, setArticle] = useState();
 
-    constructor(props){
-        super(props);
-        this.state = {};
-    }
-
-    componentDidMount(){
-        import(/* webpackMode: "eager" */ `../articles/${this.props.article.content}`)
-        .then(article => this.setState({
-            selected: React.createElement(article.default)
-        }));
-    }
-
-    render(){
-        return(
-            <Article>
-                {this.state.selected}
-            </Article>
-        );
-    }
+    useEffect(() => {
+        import(/* webpackMode: "eager" */ `../articles/${props.articleTitle.replace('\'','')}.jsx`)
+        .then(article => setArticle(React.createElement(article.default)));
+    }, [props.articleTitle]);
+    
+    return <Article>
+        {article}
+    </Article>
 }
 
 export default NewsArticle;

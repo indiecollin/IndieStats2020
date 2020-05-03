@@ -1,14 +1,37 @@
 import React, {Component} from 'react';
-import styled, { ThemeConsumer } from 'styled-components';
+import styled from 'styled-components';
+import { withRouter } from 'react-router';
+import axios from 'axios';
+import ordinal from '../helpers/ordinal';
 import ClearX from './ClearX.jsx';
 import BadgeIcon0 from '../../public/smash_tag_icons/badge-icon0.png';
 import BadgeIcon1 from '../../public/smash_tag_icons/badge-icon1.png';
 import BadgeIcon2 from '../../public/smash_tag_icons/badge-icon2.png';
 import BadgeIcon3 from '../../public/smash_tag_icons/badge-icon3.png';
 import BadgeIcon4 from '../../public/smash_tag_icons/badge-icon4.png';
+import BadgeIcon5 from '../../public/smash_tag_icons/badge-icon5.png';
+import BadgeIcon6 from '../../public/smash_tag_icons/badge-icon6.png';
+import BadgeIcon7 from '../../public/smash_tag_icons/badge-icon7.png';
+import BadgeIcon8 from '../../public/smash_tag_icons/badge-icon8.png';
+import BadgeIcon9 from '../../public/smash_tag_icons/badge-icon9.png';
+import BadgeIcon10 from '../../public/smash_tag_icons/badge-icon10.png';
+import BadgeIcon11 from '../../public/smash_tag_icons/badge-icon11.png';
+import BadgeIcon12 from '../../public/smash_tag_icons/badge-icon12.png';
+import BadgeIcon13 from '../../public/smash_tag_icons/badge-icon13.png';
+import BadgeIcon14 from '../../public/smash_tag_icons/badge-icon14.png';
+import BadgeIcon15 from '../../public/smash_tag_icons/badge-icon15.png';
+import BadgeIcon16 from '../../public/smash_tag_icons/badge-icon16.png';
+import BadgeIcon17 from '../../public/smash_tag_icons/badge-icon17.png';
+import BadgeIcon18 from '../../public/smash_tag_icons/badge-icon18.png';
+import BadgeIcon19 from '../../public/smash_tag_icons/badge-icon19.png';
 
-const badgeIcons = [BadgeIcon0, BadgeIcon1, BadgeIcon2, BadgeIcon3, BadgeIcon4];
-const badgeIconBackgrounds = ['#3FC42B', '#000000', '#FFFFFF', '#FFCBA4', '#7F00FF'];
+const badgeIcons = [
+    BadgeIcon0,BadgeIcon1,BadgeIcon2,BadgeIcon3,BadgeIcon4,
+    BadgeIcon5,BadgeIcon6,BadgeIcon7,BadgeIcon8,BadgeIcon9,
+    BadgeIcon10,BadgeIcon11,BadgeIcon12,BadgeIcon13,BadgeIcon14,
+    BadgeIcon15,BadgeIcon16,BadgeIcon17,BadgeIcon18,BadgeIcon19
+];
+
 const portraitHeader = '#00000C';
 const playerIcon = '#FE0000';
 const playerBackground = '#993130';
@@ -19,7 +42,7 @@ const matchWin = 'rgba(41, 153, 41, 0.808)';
 const matchLoss = 'rgba(192, 80, 60, 0.801)';
 const statsTranslucent = 'rgba(70, 67, 67, 0.685)';
 
-const smashTagColors = [
+const badgeColors = [
     '#F33906',
     '#FF7E09',
     '#FFCA0A',
@@ -34,9 +57,24 @@ const smashTagColors = [
     '#0D0D0D'    
 ];
 
-const randomTagColor = (gamerTag) => {
-    return  smashTagColors[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 12];
-}
+const iconColors = [
+    '#E0381E',
+    '#5E5858',
+    '#3973B2',
+    '#EEB30D',
+    '#E37C05',
+    '#359DC4',
+    '#146CFF',
+    '#95C90D',
+    '#F999C9',
+    '#8583B4',
+    '#469961',
+    '#994137',
+    '#E43D8F',
+    '#87CBB2',
+    '#D73533',
+    '#F0E28A'
+];
 
 const rivalSearchClearXPos = {
     top: '15.5px',
@@ -122,7 +160,7 @@ const RivalTag = styled.div`
     border-width: 4px 8px;
     cursor: pointer;
     color: ${props => props.theme.white};                        
-    background: linear-gradient(${props => 'to bottom, ' + props.theme.white + ' 30%, ' + randomTagColor(props.gamerTag) + ' 30%, ' + randomTagColor(props.gamerTag) + ' 100%'});
+    background: linear-gradient(${props => 'to bottom, ' + props.theme.white + ' 30%, ' + props.getBadgeColor(props.gamerTag) + ' 30%, ' + props.getBadgeColor(props.gamerTag) + ' 100%'});
 
     &::before{        
         top: 14px;
@@ -138,7 +176,7 @@ const RivalTag = styled.div`
     }
 
     img{
-        background-color: ${props => props.iconBG};
+        background-color: ${props => props.getIconColor(props.gamerTag)};
         border-radius: 4px;
         height: 36px;                
     }
@@ -396,29 +434,43 @@ const Match = styled.div`
     }
 `;
 
+const rivalsLimit = 5;
+
 class PlayerDetailsRivals extends Component{
     constructor(props){
         super(props);
-        this.state = {
+        this.state = {            
             playerPortrait: '',
             rivalPortrait: '',
+            rivals: [],
+            rival: {},
+            matchHistory: [],
             rivalQuery: '',
-            matchQuery: ''
+            matchQuery: '',            
         };
+
         this.searchRivals = this.searchRivals.bind(this);
         this.clearRivalSearch = this.clearRivalSearch.bind(this);
         this.searchMatches = this.searchMatches.bind(this);
         this.clearMatchSearch = this.clearMatchSearch.bind(this);
+        this.selectRival = this.selectRival.bind(this);
+        this.selectPlayer = this.selectPlayer.bind(this);
+        this.selectTournament = this.selectTournament.bind(this);      
+        this.getRivalData = this.getRivalData.bind(this);
+        this.getBadgeColor = this.getBadgeColor.bind(this);
+        this.getIconColor = this.getIconColor.bind(this);
+        this.getBadgeIcon = this.getBadgeIcon.bind(this);
     }
 
     componentDidMount(){
-        import(/* webpackMode: "eager" */ `../../public/rival_portraits/${this.props.player.main}.png`).then(playerImg => {
-            this.setState({playerPortrait: playerImg.default});
-        });
+        this.getRivalData(this.props.player, false, true);        
+    }
 
-        import(/* webpackMode: "eager" */ `../../public/rival_portraits/${this.props.rival.main}.png`).then(rivalImg => {
-            this.setState({rivalPortrait: rivalImg.default});
-        });        
+    shouldComponentUpdate(prevProps){
+        if(this.props.player.gamerTag !== prevProps.player.gamerTag){
+            this.getRivalData(prevProps.player, false, true);
+        }
+        return true;
     }
 
     searchRivals(e){
@@ -435,22 +487,103 @@ class PlayerDetailsRivals extends Component{
 
     clearMatchSearch(){
         this.setState({matchQuery: ''});
-    }    
+    }
+
+    selectRival(rival){
+        this.getRivalData(this.props.player, rival, false);
+        this.clearRivalSearch();
+    }
+
+    selectTournament(tournament){
+        this.props.history.push({pathname: '/tournaments/' + tournament.replace(' ', '-')});
+    }
+
+    selectPlayer(rival){
+        this.props.history.push({pathname: '/players/' + encodeURIComponent(rival.gamerTag)});
+        this.props.setPlayer(rival);
+    }
+
+    getRivalData(player, rival, newPlayer){
+        (newPlayer ? axios.get('http://localhost:9001/api/players/rivals/' + encodeURIComponent(player.gamerTag)) : Promise.resolve({data:{}}))
+        .then(res => {
+            let rivals = Object.entries(res.data)
+            if(newPlayer) this.setState({rivals: rivals});
+            axios.all([
+                axios.get('http://localhost:9001/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0])),            
+                axios.get('http://localhost:9001/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0][0])),
+                axios.get('http://localhost:9001/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0])),
+                axios.get('http://localhost:9001/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0]))
+            ]).then(axios.spread((matchHistory, rival, highestSet, lastMet) => {                           
+                import(/* webpackMode: "eager" */ `../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
+                    this.setState({rivalPortrait: rivalImg.default});
+                });
+                this.setState({
+                    matchHistory: matchHistory.data,
+                    rival: Object.assign({}, rival.data, {highestTournament: highestSet.data.tournament.shortName, highestPlacement: highestSet.data.placement, lastMet: lastMet.data[0].shortName}),                                        
+                })
+            }))      
+        })
+        if(newPlayer){
+            import(/* webpackMode: "eager" */ `../../public/rival_portraits/${player.mains ? player.mains.split(',')[0] : 'default'}.png`).then(playerImg => {
+                this.setState({playerPortrait: playerImg.default});
+            });
+        }        
+    }
+
+    getBadgeColor(gamerTag){
+        return this.props.tagProps[gamerTag] ? badgeColors[this.props.tagProps[gamerTag].badgeColor] : badgeColors[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 12];
+    }
+    
+    getIconColor(gamerTag){
+        return this.props.tagProps[gamerTag] ?  iconColors[this.props.tagProps[gamerTag].iconColor] : iconColors[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 16];
+    }
+    
+    getBadgeIcon(gamerTag){
+        return this.props.tagProps[gamerTag] ?  badgeIcons[this.props.tagProps[gamerTag].icon] : badgeIcons[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 20];
+    }
+
+    determineMatchTitle(bracket, round, placement){          
+        if(placement <= 2 ){//if a finals match
+            if(placement == 2 && !bracket){
+                return 'Losers Finals'
+            }
+            else if(placement == 2){
+                return 'Winners Finals'
+            }
+            else if(placement == 1){
+                return 'Grand Finals'
+            }
+            else{
+                return 'Grand Finals Reset'
+            }
+        }
+        else{
+            return (bracket ? 'Winners ': 'Losers ') + 'Round ' + round + ' For '+ ordinal(placement);                
+        }                 
+    }
 
     render(){    
         return(
             <RivalDetails>
-                <RivalsListing rivals = {this.props.rivals}>
+                <RivalsListing rivals = {this.state.rivals}>
                     <input type="text" value = {this.state.rivalQuery} onChange = {this.searchRivals} placeholder='Search Rivals'/>                    
                     <ClearX onClick = {() => this.clearRivalSearch()} visible = {this.state.rivalQuery} position = {rivalSearchClearXPos}/>
                     <div>  
-                        {this.props.rivals.map((r,i) => {
-                            return <RivalTag key = {r.gamerTag} gamerTag = {r.gamerTag} iconBG = {badgeIconBackgrounds[i]}>
-                                <img src={badgeIcons[i]}></img>                            
-                                <div><span>{(r.wins === 1 ? (r.wins + ' Win'): (r.wins + ' Wins'))}</span></div>
-                                <span>{r.gamerTag}</span>
-                            </RivalTag>
-                        })}   
+                        {
+                            this.state.rivals//filter before sort would be faster
+                            .sort(this.state.rivalQuery === '' ?
+                                (r1, r2) => r2[1].setLosses - r1[1].setLosses//head to head
+                                : 
+                                (r1, r2) => r1[0].toLowerCase() > r2[0].toLowerCase() ? 1 : -1)//alphabetical
+                            .filter(r => this.state.rivalQuery === '' || r[0].toLowerCase().startsWith(this.state.rivalQuery.toLowerCase()))                                                 
+                            .map((r,i) => {
+                                return <RivalTag key = {r[0]} onClick = {() => this.selectRival(r[0])} gamerTag = {r[0]} getIconColor = {this.getIconColor} getBadgeColor = {this.getBadgeColor}>
+                                    <img src={this.getBadgeIcon(r[0])}></img>                            
+                                    <div><span>{(r[1].setWins === 1 ? (r[1].setWins + ' Win'): (r[1].setWins + ' Wins'))}</span></div>
+                                    <span>{r[0]}</span>
+                                </RivalTag>
+                            }).slice(0, rivalsLimit)
+                        }   
                     </div>
                 </RivalsListing>
                 <RivalInfo>
@@ -464,11 +597,11 @@ class PlayerDetailsRivals extends Component{
                                     </PortraitHeader>
                                     <img src={this.state.playerPortrait}/>
                                 </Portrait>
-                                <Portrait>
+                                <Portrait onClick = {() => this.selectPlayer(this.state.rival)}>
                                     <PortraitSpacer/>
                                     <PortraitHeader>
                                         <span>P2</span>
-                                        <span>{this.props.rival.gamerTag}</span>
+                                        <span>{this.state.rival.gamerTag}</span>
                                     </PortraitHeader>
                                     <img src={this.state.rivalPortrait}/>
                                 </Portrait>
@@ -477,19 +610,19 @@ class PlayerDetailsRivals extends Component{
                                 <StatsListing>
                                     <div>
                                         <StatHeader width = {'100px'} marginLeft = {'68px'}>Set Record:</StatHeader>
-                                        <span>{this.props.rival.setWins + ' - ' + this.props.rival.setLosses}</span>
+                                        <span>{this.state.rival.setWins + ' - ' + this.state.rival.setLosses}</span>
                                     </div>
                                     <div>
                                         <StatHeader width = {'120px'} marginLeft = {'48px'}>Game Record:</StatHeader>
-                                        <span>{this.props.rival.gameWins + ' - ' + this.props.rival.gameLosses}</span>
+                                        <span>{this.state.rival.gameWins + ' - ' + this.state.rival.gameLosses}</span>
                                     </div>
                                     <div>
                                         <StatHeader width = {'100px'} marginLeft = {'66px'}>Highest Set:</StatHeader>
-                                        <span>{this.props.rival.highestTournament + ' For ' + this.props.rival.highestPlacement }</span>
+                                        <span>{this.state.rival.highestTournament + ' For ' + this.state.rival.highestPlacement }</span>
                                     </div>
                                     <div>
                                         <StatHeader width = {'80px'} marginLeft = {'86px'}>Last Met:</StatHeader>
-                                        <span>{this.props.rival.lastMet}</span>
+                                        <span>{this.state.rival.lastMet}</span>
                                     </div>
                                 </StatsListing>
                                 <MatchHistory>
@@ -499,17 +632,25 @@ class PlayerDetailsRivals extends Component{
                                         <ClearX visible = {this.state.matchQuery} onClick = {() => this.clearMatchSearch()} position = {matchHistoryClearXPos}/>
                                     </MatchHistoryHeader>
                                     <MatchListings>
-                                        {this.props.matchHistory.map(m => {
-                                            return <Match win = {m.win} key = {m.tournamentName + m.title}>
-                                                <span>{m.tournamentName}</span>
-                                                <span>{m.title}</span>  
-                                                <div>
-                                                    <span>{m.playerScore}</span>
-                                                    <span>-</span>
-                                                    <span>{m.rivalScore}</span>  
-                                                </div>
-                                            </Match>
-                                        })}
+                                        {
+                                            this.state.matchHistory
+                                            .filter(mh => this.state.matchQuery === '' ||
+                                                mh.tournamentName.toLowerCase().startsWith(this.state.matchQuery.toLowerCase()) || 
+                                                mh.shortName.toLowerCase().startsWith(this.state.matchQuery.toLowerCase()))
+                                            .sort((m1, m2) => m1.date != m2.date ? m1.date > m2.date ? -1 : 1 : m1.round > m2.round ? -1 : 1)// i hate nested ternaries
+                                            .map(m => {
+                                                const title = this.determineMatchTitle(m.bracket, m.round, m.placement);
+                                                return <Match win = {m.player1Score>m.player2Score} onClick = {() => this.selectTournament(m.shortName)} key = {m.tournamentName + title}>
+                                                    <span>{m.tournamentName}</span>
+                                                    <span>{title}</span>
+                                                    <div>
+                                                        <span>{m.player1Score}</span>
+                                                        <span>-</span>
+                                                        <span>{m.player2Score}</span>  
+                                                    </div>
+                                                </Match>
+                                            })
+                                        }
                                     </MatchListings>
                                 </MatchHistory>
                             </RivalStats>
@@ -520,4 +661,4 @@ class PlayerDetailsRivals extends Component{
     };
 };
 
-export default PlayerDetailsRivals;
+export default withRouter (PlayerDetailsRivals);

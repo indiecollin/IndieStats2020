@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import SearchIcon from './svgs/SearchIcon.jsx';
 
@@ -52,14 +53,18 @@ const ArticleListing = styled.div`
 const Search = styled.div`
     margin: 12px auto;
     display: flex;         
+    position: relative;    
 
     button{
         width: 20px;
         height: 20px;
-        cursor: pointer;                
+        cursor: pointer;
+        //default border styles
+        background-color: #F0F0F0;
+        border: 2px outset #F0F0F0;        
     }
 
-    @media screen and (max-width: 960px){    
+    @media screen and (max-width: 960px){
         flex-basis: 100%;
         margin: 12px 0;
         input{
@@ -67,8 +72,8 @@ const Search = styled.div`
         }
         button{
             margin-right: auto;
-        }
-    }       
+        }        
+    }           
 `;
 
 const Thumbnail = styled.div`  
@@ -107,36 +112,48 @@ const Thumbnail = styled.div`
     }
 `;
 
-class NewsArticleListing extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            thumbnails: []
-        };
-    }
+const NewsArticleListing = (props => {
 
-    componentDidMount(){            
-        let imports = this.props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
-        Promise.all(imports).then(images => this.setState({thumbnails: images.map(banner => banner.default)}));
-    }    
-    
-    render(){    
-        return(
-            <ArticleListing>
-                <h2>Articles</h2>
-                <Search>
-                    <input  type='text' placeholder = 'Search Articles'></input>
-                    <button><span><SearchIcon/></span></button>
-                </Search>
-                {this.props.articles.map((a,i) => {
-                    return <Thumbnail key = {a.name}>
-                        <img src={this.state.thumbnails[i]}/>
-                        <span>{a.name}</span>
-                    </Thumbnail>
-                })}
-            </ArticleListing>
-        );
-    };
-};
+    const [query, setQuery] = useState('');
+    const [input, setInput] = useState('');
+    const [articles, setArticles] = useState([]);    
+    const [queriedArticles, setQueriedArticles] = useState([]);
+    const selectArticle = (article) => {
+        props.history.push({pathname: '/news/' + article.replace('\'','')});
+        props.setArticleTitle(article); 
+    }        
+    useEffect(()=>{
+        let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
+        Promise.all(imports).then(images => {
+            let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../articles/${aFile.replace('\'', '')}.jsx`));
+            let bannersAndTitles = images.map((banner, i) => ({title: props.titles[i], image: banner.default}));            
+            Promise.all(imports).then(aComponents =>{
+                setArticles(bannersAndTitles.map((article, i) => Object.assign({}, article, {tags: aComponents[i].tags})));
+                setQueriedArticles(bannersAndTitles.map((article, i) => Object.assign({}, article, {tags: aComponents[i].tags})));
+            });            
+        });         
+    },[]);
 
-export default NewsArticleListing;
+    useEffect(()=>{
+        setQueriedArticles(articles.filter(a => !query || a.tags.some(t => query.toLowerCase().split(' ').indexOf(t) >= 0)))
+    },[query]);
+        
+    return <ArticleListing>
+        <h2>Articles</h2>
+        <Search>
+            <input type='text' value={input} onChange={(e => setInput(e.target.value))} placeholder = 'Search Articles'></input>
+            <button onClick = {() => setQuery(input)}><span><SearchIcon/></span></button>
+        </Search>
+        {
+            queriedArticles.length ? queriedArticles            
+            .map(t => {
+                return <Thumbnail key = {t.title} onClick = {() => selectArticle(t.title)}>
+                    <img src={t.image}/>
+                    <span>{t.title.split(/(?=[A-Z])/).join(' ')}</span>
+                </Thumbnail>
+            }) : null
+        }
+    </ArticleListing>
+    });
+
+export default withRouter(NewsArticleListing);

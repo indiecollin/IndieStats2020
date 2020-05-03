@@ -23,7 +23,7 @@ const StyledFooter = styled.footer`
         font-weight: 550;
     }
     
-    button{        
+    a{        
         background-color: transparent;
         border: solid 1px ${props => props.theme.white};
         outline: none;
@@ -31,6 +31,8 @@ const StyledFooter = styled.footer`
         margin-right: 8px;
         cursor: pointer;
         color: ${props => props.theme.lightGrey};
+        font-size: 12px;
+        text-decoration: none;
 
         &:hover{
             color: ${props => props.theme.hoverRed};
@@ -47,7 +49,8 @@ const Footer = (props) => {
     return(
         <StyledFooter>
             <span>© 2020 indieStats</span>
-            <button onClick = {() => props.contactUs('contact')} className = 'ignore-react-onclickoutside'>Contact Us</button>
+            <a href="mailto:webmaster@example.com">Contact Us</a>
+            {/* <button onClick = {() => props.contactUs('contact')} className = 'ignore-react-onclickoutside'>Contact Us</button> */}
         </StyledFooter>
     )    
 }

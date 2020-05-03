@@ -1,0 +1,131 @@
+{
+	"pichu":{
+		"widthR": 480,
+		"coordsR": [34, 79],
+		"y-offsetR": 11		
+	},
+	"falco":{
+		"widthR": 687,
+		"coordsR":[121, -4],
+		"y-offsetR": -47
+	},
+	"shulk":{
+		"widthP": 697,
+		"widthR": 980,
+		"coordsP":[97, 150],
+		"coordsR":[159, 156]
+	},
+	"olimar":{
+		"widthR": 540,		
+		"coordsR":[79, 55]		
+	},
+	"mario":{
+		"widthP": 333,
+		"widthR": 430,
+		"coordsP":[-36, 67],
+		"coordsR":[-9, 20],
+		"x-offsetP": 36,
+		"x-offsetR": 30
+	},
+	"daisy":{
+		"widthR": 800,
+		"coordsR":[143, 35]		
+	},
+	"wolf":{
+		"widthP": 470,
+		"widthR": 672,
+		"coordsP":[102, 48],
+		"coordsR":[155, -8],
+		"y-offsetR": 8
+	},
+	"luigi":{
+		"widthP": 340,
+		"widthR": 500,
+		"coordsP": [48, 34],
+		"coordsR":[100, 0],
+		"x-offsetP": -10
+
+	},
+	"young_link":{
+		"widthR": 630,
+		"coordsR":[188, 26]
+	},
+	"link":{
+		"widthR": 870,
+		"coordsR":[301, 113]
+	},
+	"snake":{
+		"widthP": 706,
+		"widthR": 1200,
+		"coordsP":[238, 35],
+		"coordsR":[551, -7],
+		"y-offsetR": -7
+	},
+	"roy":{
+		"widthP": 766,
+		"widthR": 1072,
+		"coordsP":[143, 102],
+		"coordsR":[231, 100]
+	},
+	"pokemon_trainer":{
+		"widthR": 900,
+		"coordsR":[252, -6],
+		"y-offsetR": -6
+	},
+	"meta_knight":{
+		"widthP": 391,
+		"widthR": 620,
+		"coordsP":[58, 132],
+		"coordsR":[139, 188],
+		"y-offsetP": 38,
+		"y-offsetR": 12
+	},
+	"incineroar":{
+		"widthR": 680
+	},
+	"peach":{
+		"widthP": 620,
+		"widthR": 834,
+		"coordsP": [157,105],
+		"coordsR": [214,76]
+	},
+	"joker":{
+		"widthP": 828,
+		"widthR": 1187,
+		"coordsP": [241,61],
+		"coordsR": [375,26]
+	},
+	"ken":{
+		"widthP": 600,
+		"widthR": 878,
+		"coordsP": [234,33],
+		"coordsR": [365,-13],
+		"y-offsetR": -13
+	},
+	"terry":{
+		"widthP": 968,
+		"widthR": 1474,
+		"coordsP": [281,62],
+		"coordsR": [465,34]
+	},
+	"banjo":{
+		"widthP": 300,
+		"widthR": 420,
+		"coordsP": [-19,69],
+		"coordsR": [5,26],
+		"x-offsetP": -19
+	},
+	"rob":{
+		"widthP": 402,
+		"widthR": 510,
+		"coordsP": [102,8],
+		"coordsR": [130,-60],
+		"y-offsetR": -60
+	},
+	"richter":{
+		"widthP": 786,
+		"widthR": 1188,
+		"coordsP": [198,133],
+		"coordsR": [351,159]
+	}
+}

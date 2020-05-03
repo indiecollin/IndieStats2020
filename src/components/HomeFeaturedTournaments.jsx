@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+import axios from 'axios';
 import Moment from 'moment';
 Moment.locale('en');
 import NavTriangle from './NavTriangle.jsx';
 import OptionSwitch from './OptionSwitch.jsx';
-import { render } from 'react-dom';
 
 const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
@@ -166,21 +167,42 @@ class HomeFeaturedTournaments extends Component{
     constructor(props){
         super(props);
         this.state = {
-            upcoming: true,//mode
-            banners: [],
+            tournaments: {recent: [], upcoming: []},
+            upcoming: true,//mode            
             pageStart: 0,
-            pageEnd: 1            
+            pageEnd: 1 
         };
+        this.selectTournament = this.selectTournament.bind(this);
         this.pageLeft = this.pageLeft.bind(this);
         this.pageRight = this.pageRight.bind(this); 
     }
 
-    componentDidMount(){        
-        let imports = this.props.tournaments.upcoming.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`));
-        imports = imports.concat(this.props.tournaments.recent.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.banner}`)));
-        Promise.all(imports).then(images => {                                 
-            this.setState({banners: images.map(banner => banner.default)})            
-        });     
+    componentDidMount(){                
+        const start = new Date().getTime() - (1000 * 60 * 60 * 24 * 100);
+        const end = new Date().getTime() + (1000 * 60 * 60 * 24 * 60);//last number is # of days
+        axios.get('http://localhost:9001/api/tournaments/listings?startDate='+ start + '&endDate='+ end)
+        .then(tournaments => {
+            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+            Promise.all(imports).then(images => {                                               
+                let allTournaments = tournaments.data.map((t, i) => Object.assign({}, t, {banner: images[i].default}))
+                .reduce((acc, cur) => {
+                    if(new Date(cur.eventDate < new Date()) && !cur.featured){
+                        acc.recent.push(cur)
+                    }
+                    else if(new Date(cur.eventDate >= new Date())){
+                        acc.upcoming.push(cur)
+                    }
+                    return acc;
+                }, {recent:[],upcoming: []});
+                this.setState({tournaments: allTournaments});
+            });
+        });             
+    }
+
+    selectTournament(tournament){
+        this.props.history.push({
+            pathname: '/tournaments/' + tournament.replace(' ', '-')
+        });
     }
 
     pageLeft(){
@@ -196,7 +218,7 @@ class HomeFeaturedTournaments extends Component{
         this.setState(prevState => {
             return {
                 pageStart:  prevState.pageStart + tournamentsPerPage,
-                pageEnd:  Math.min((this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length - 1, prevState.pageEnd + tournamentsPerPage)
+                pageEnd:  Math.min((this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent).length - 1, prevState.pageEnd + tournamentsPerPage)
             }
         });
     }
@@ -217,18 +239,18 @@ class HomeFeaturedTournaments extends Component{
                 <h2>Tournaments</h2>
                     <div>                                            
                         {
-                            (this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent)
+                            (this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent)
                             .filter((t, i) => i >= this.state.pageStart && i <= this.state.pageEnd)
                             .map((t,i) => {
                                 return (
-                                    <TournamentListing key = {t.name}>
-                                        <img src = {this.state.banners[i + this.state.pageStart + (this.state.upcoming ? 0 : this.props.tournaments.upcoming.length)]}/>
+                                    <TournamentListing key = {t.name} onClick = {() => !this.state.upcoming && this.selectTournament(t.shortName)}>
+                                        <img src = {t.banner}/>
                                         <div>
                                             <div>
-                                                <span><span>{t.name}</span></span>
+                                                <span><span>{t.shortName}</span></span>
                                             </div>
                                             <div>
-                                                <span><span>{Moment(new Date(t.date)).format('MMM D, YYYY')}</span></span>
+                                                <span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span>
                                             </div>
                                             <div>
                                                 <span><span>{t.venue}</span></span>
@@ -238,11 +260,11 @@ class HomeFeaturedTournaments extends Component{
                                 )
                             })
                         }
-                        {(this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length - 1 === this.state.pageStart ? <Spacer/> : null}
+                        {(this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent).length - 1 === this.state.pageStart ? <Spacer/> : null}
                         <Controls>                            
                             <NavTriangle left={true} onClick = {this.pageLeft} disabled = {!this.state.pageStart}/>
                                 <OptionSwitch selected = {this.state.upcoming} left = 'Upcoming' right = 'Recent' onToggle = {() => this.toggleMode()} background={background}/>
-                            <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= (this.state.upcoming ? this.props.tournaments.upcoming : this.props.tournaments.recent).length-1}/>
+                            <NavTriangle left={false} onClick = {this.pageRight} disabled = {this.state.pageEnd >= (this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent).length-1}/>
                         </Controls>
                     </div> 
             </FeaturedTournaments>
@@ -250,4 +272,4 @@ class HomeFeaturedTournaments extends Component{
     }
 };
 
-export default HomeFeaturedTournaments;
+export default withRouter(HomeFeaturedTournaments);

@@ -1,18 +1,19 @@
-//MAY NEED TO USE STATE IN THIS COMPONENT TO HANDLE PAGING
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+import axios from 'axios';
 import First from '../../public/assets/gold-medal.png';
 import Second from '../../public/assets/silver-medal.png';
 import Third from '../../public/assets/bronze-medal.png';
 
 const background = '#B3CFDD'
 const highlightTheme = '#043C63';
+const pageLimit = 5;
 
 const TournamentDetails = styled.div`    
     grid-column: 2 / 5;    
     display: flex;
-    flex-direction: column;    
-    min-height: 560px;     
+    flex-direction: column;        
     margin: 0 auto 20px;
 
     @media screen and (max-width: 1180px){
@@ -160,47 +161,55 @@ const PaginationButton = styled.button`
     }
 `;
 
-class PlayerDetailsTournaments extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            banners: []
-        }
-    };
-
-    componentDidMount(){
-        let imports = this.props.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
-        Promise.all(imports).then(images => {                                 
-            this.setState({banners: images.map(banner => banner.default)});
+const PlayerDetailsTournaments = (props) => {
+    const [tournaments, setTournaments] = useState([]);
+    const [banners, setBanners] = useState([]);
+    const [page, setPage] = useState(1);
+    useEffect(() => {
+        axios.get('http://localhost:9001/api/players/tournaments/' + encodeURIComponent(props.player.gamerTag))
+        .then(res => {
+            let imports = res.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+            Promise.all(imports).then(images => {                
+                setBanners(images.map(banner => banner.default));
+            });
+            setTournaments(res.data.tournaments);
         });
-    }
+    },[props.player]);
 
-    render(){
-        return(
-            <TournamentDetails>
-                {this.props.tournaments.map((t, i) => {
-                    return <TournamentListing key = {i}>
-                        <img src = {this.state.banners[i]}/>
-                        <span>{t.name}</span>
-                        <PlayerInfo>
-                            <div><span>Place</span><span>{t.placement}</span></div>
-                            <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
-                            <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
-                            <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
-                        </PlayerInfo>
-                        <Top3>
-                            <div><img src = {First}/>{t.top3[0]}</div>
-                            <div><img src = {Second}/>{t.top3[1]}</div>
-                            <div><img src = {Third}/>{t.top3[2]}</div>
-                        </Top3>
-                    </TournamentListing>                
-                })}
-                <Pagination>
-                        {[...Array(5)].map((x,i) => <PaginationButton key = {i} index = {i} page={this.props.page}></PaginationButton>)}
-                </Pagination>
-            </TournamentDetails>
-        );
-    }
+    const selectTournament = (tournament) => {
+        props.history.push({pathname: '/tournaments/' + tournament.replace(' ', '-')});
+    };
+    
+    return <TournamentDetails>
+        {tournaments
+            .filter((t,i) => i >= ((page - 1) * pageLimit) && i < (page) * pageLimit )//pagination filtering
+            .map((t, i) => {
+                return <TournamentListing key = {i} onClick = {() => selectTournament(t.shortName)}>
+                    <img src = {banners[i]}/>
+                    <span>{t.name}</span>
+                    <PlayerInfo>
+                        <div><span>Place</span><span>{t.placement}</span></div>
+                        <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
+                        <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
+                        <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
+                    </PlayerInfo>
+                    <Top3>
+                        <div><img src = {First}/>{t.top3[0]}</div>
+                        <div><img src = {Second}/>{t.top3[1]}</div>
+                        <div><img src = {Third}/>{t.top3[2]}</div>
+                    </Top3>
+                </TournamentListing>                
+            })
+        }
+        {
+           tournaments.length> pageLimit ?
+            <Pagination>
+                {[...Array(Math.ceil(tournaments.length/pageLimit))].map((x,i) => <PaginationButton key = {i} onClick = {() => setPage(i+1)} page={page} index = {i}></PaginationButton>)}
+            </Pagination>
+            :
+            null
+        }
+    </TournamentDetails> 
 };
 
-export default PlayerDetailsTournaments;
+export default withRouter(PlayerDetailsTournaments);

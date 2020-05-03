@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
+import titles from '../helpers/articleTitles';
 import NewsIcon from './svgs/NewsIcon.jsx';
 import ArrowIcon from './svgs/ArrowIcon.jsx';
 
@@ -114,55 +116,44 @@ const ArticleContent = styled.div`
         flex-direction: column;
     }
 `;
+const articleCount = 2;
+const HomeNewsFlash = (props) =>{    
 
-class HomeNewsFlash extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            thumbnails: []
-        };
-    };
-
-    componentDidMount(){
-        let imports = this.props.articles.map(a => import(/* webpackMode: "eager" */ `../../public/article_images/${a.thumbnail}`));
-        Promise.all(imports).then(images => this.setState({thumbnails: images.map(banner => banner.default)}));
-    };
-
-    render(){    
-        return(
-            <NewsFlash>
-                <h3>News Flash</h3>
-                <div>
-                    <ArticleHeader>
-                        <span><NewsIcon/></span><h4>{this.props.articles[0].name}</h4>
-                    </ArticleHeader>
-                    <ArticleContent>
-                        <img src = {this.state.thumbnails[0]}/>             
-                        <div>   
-                            <p>{this.props.articles[0].abstract}</p>
-                            <div>
-                                <span>More</span><span><ArrowIcon /></span>
-                            </div>
-                        </div>
-                    </ArticleContent>
-                </div>
-                <div>
-                    <ArticleHeader>
-                        <span><NewsIcon/></span><h4>{this.props.articles[1].name}</h4>
-                    </ArticleHeader>
-                    <ArticleContent>
-                        <img src = {this.state.thumbnails[1]}/>             
-                        <div>
-                            <p>{this.props.articles[1].abstract}</p>
-                            <div>
-                                <span>More</span><span><ArrowIcon /></span>
-                            </div>
-                        </div>
-                    </ArticleContent>
-                </div>
-            </NewsFlash>
-        )
+    const [thumbnails, setThumbnails] = useState([]);
+    const [abstracts, setAbstracts] = useState([]);
+    const selectArticle = (article) => {
+        props.history.push({pathname: '/news/'+ article.replace('\'','')});
     }
+    useEffect(()=>{
+        let imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
+        Promise.all(imports).then(images => setThumbnails(images.map(banner => banner.default)));
+        imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../articles/${aFile.replace('\'', '')}.jsx`));
+        Promise.all(imports).then(aComponents =>{
+            setAbstracts(aComponents.map(aComp => aComp.abstract));
+        });
+    },[])
+    
+    return <NewsFlash>
+        <h3>News Flash</h3>
+        {
+            titles
+            .filter((t,i) => i<articleCount)
+            .map((title,i) => <div key = {title}>
+                <ArticleHeader>
+                    <span><NewsIcon/></span><h4>{title.split(/(?=[A-Z])/).join(' ')}</h4>
+                </ArticleHeader>
+                <ArticleContent>
+                    <img src = {thumbnails[i]}/>             
+                    <div>   
+                        <p>{abstracts[i]}</p>
+                        <div onClick = {() => selectArticle(title)}>
+                            <span>More</span><span><ArrowIcon /></span>
+                        </div>
+                    </div>
+                </ArticleContent>
+            </div>   
+        )}        
+    </NewsFlash>            
 };
 
-export default HomeNewsFlash;
+export default withRouter(HomeNewsFlash);

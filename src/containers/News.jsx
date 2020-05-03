@@ -1,23 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import titles from '../helpers/articleTitles';
 import NewsArticleListing from '../components/NewsArticleListing.jsx';
 import NewsArticle from '../components/NewsArticle.jsx';
-
-
-const articles = [
-    {
-        "thumbnail": "genesis5.jpg",
-        "name": "A New God Is Born",
-        "abstract": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis.",
-        "content": "ANewGodIsBorn.jsx"
-    },
-    {
-      "thumbnail": "newloc.jpg",
-      "name": "Mega Smash Monday's Big Move",
-      "abstract": "Sem nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
-      "content": "MegaSmashMondaysBigMove.jsx"
-    }
-  ];
 
 const NewsContainer = styled.div`
     &>div{
@@ -43,12 +29,16 @@ const NewsContainer = styled.div`
     }
 `;
 
-const News = (props) => {
+const News = () => {
+    let { selected } = useParams();    
+    const cleaned = titles.map(t => t.replace('\'', '').toLowerCase());
+    const urlArticleIndex = selected ? cleaned.findIndex(t => t === selected.toLowerCase()) : -1;
+    const [articleTitle, setArticleTitle] = useState(titles[urlArticleIndex > 0 ? urlArticleIndex : 0]);    
     return (
         <NewsContainer>
             <div>
-                <NewsArticleListing articles = {articles}></NewsArticleListing>
-                <NewsArticle article = {articles[0]}></NewsArticle>
+                <NewsArticleListing setArticleTitle = {setArticleTitle} titles = {titles}></NewsArticleListing>
+                <NewsArticle articleTitle = {articleTitle}></NewsArticle>
             </div>
         </NewsContainer>
     );
