@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ordinal from '../helpers/ordinal';
 import ClearX from './ClearX.jsx';
@@ -161,6 +161,9 @@ const RivalTag = styled.div`
     cursor: pointer;
     color: ${props => props.theme.white};                        
     background: linear-gradient(${props => 'to bottom, ' + props.theme.white + ' 30%, ' + props.getBadgeColor(props.gamerTag) + ' 30%, ' + props.getBadgeColor(props.gamerTag) + ' 100%'});
+    *{
+        font-family: sans-serif;
+    }
 
     &::before{        
         top: 14px;
@@ -294,6 +297,10 @@ const PortraitHeader = styled.div`
     margin-top: -16px;
     transform: skewY(-2deg);                                    
     background-color: ${() => portraitHeader};
+    
+    *{
+        font-family: sans-serif;
+    }
 
     span:first-child{
         font-size: 20px;
@@ -315,7 +322,7 @@ const PortraitHeader = styled.div`
         width: -webkit-fill-available;             
     }
 
-    @media screen and (max-width: 1000px){
+    @media screen and (max-width: 1180px){
 
         span:first-child{
             font-size: 16px;      
@@ -416,11 +423,15 @@ const MatchHistoryHeader = styled.div`
 
 const MatchListings = styled.div`                                       
     padding-bottom: 16px;    
+    a{
+        text-decoration: none;
+    }
 `;
 
 const Match = styled.div`
-    margin: 0 8px;
+    margin: 0 8px;    
     background-color: ${props => props.win ? matchWin : matchLoss};
+    color: ${props => props.theme.white};
 
     &>span{
         display: block;
@@ -449,13 +460,12 @@ class PlayerDetailsRivals extends Component{
             matchQuery: '',            
         };
 
+        this.selectPlayer = this.selectPlayer.bind(this);
         this.searchRivals = this.searchRivals.bind(this);
         this.clearRivalSearch = this.clearRivalSearch.bind(this);
         this.searchMatches = this.searchMatches.bind(this);
         this.clearMatchSearch = this.clearMatchSearch.bind(this);
-        this.selectRival = this.selectRival.bind(this);
-        this.selectPlayer = this.selectPlayer.bind(this);
-        this.selectTournament = this.selectTournament.bind(this);      
+        this.selectRival = this.selectRival.bind(this);        
         this.getRivalData = this.getRivalData.bind(this);
         this.getBadgeColor = this.getBadgeColor.bind(this);
         this.getIconColor = this.getIconColor.bind(this);
@@ -471,6 +481,10 @@ class PlayerDetailsRivals extends Component{
             this.getRivalData(prevProps.player, false, true);
         }
         return true;
+    }
+
+    selectPlayer(rival){        
+        this.props.setPlayer(rival);
     }
 
     searchRivals(e){
@@ -492,27 +506,18 @@ class PlayerDetailsRivals extends Component{
     selectRival(rival){
         this.getRivalData(this.props.player, rival, false);
         this.clearRivalSearch();
-    }
-
-    selectTournament(tournament){
-        this.props.history.push({pathname: '/tournaments/' + tournament.replace(' ', '-')});
-    }
-
-    selectPlayer(rival){
-        this.props.history.push({pathname: '/players/' + encodeURIComponent(rival.gamerTag)});
-        this.props.setPlayer(rival);
-    }
+    }    
 
     getRivalData(player, rival, newPlayer){
         (newPlayer ? axios.get('http://localhost:9001/api/players/rivals/' + encodeURIComponent(player.gamerTag)) : Promise.resolve({data:{}}))
-        .then(res => {
-            let rivals = Object.entries(res.data)
+        .then(res => {            
+            const rivals = res.data;
             if(newPlayer) this.setState({rivals: rivals});
             axios.all([
-                axios.get('http://localhost:9001/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0])),            
-                axios.get('http://localhost:9001/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0][0])),
-                axios.get('http://localhost:9001/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0])),
-                axios.get('http://localhost:9001/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0][0]))
+                axios.get('http://localhost:9001/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),            
+                axios.get('http://localhost:9001/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
+                axios.get('http://localhost:9001/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
+                axios.get('http://localhost:9001/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag))
             ]).then(axios.spread((matchHistory, rival, highestSet, lastMet) => {                           
                 import(/* webpackMode: "eager" */ `../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
                     this.setState({rivalPortrait: rivalImg.default});
@@ -571,16 +576,13 @@ class PlayerDetailsRivals extends Component{
                     <div>  
                         {
                             this.state.rivals//filter before sort would be faster
-                            .sort(this.state.rivalQuery === '' ?
-                                (r1, r2) => r2[1].setLosses - r1[1].setLosses//head to head
-                                : 
-                                (r1, r2) => r1[0].toLowerCase() > r2[0].toLowerCase() ? 1 : -1)//alphabetical
-                            .filter(r => this.state.rivalQuery === '' || r[0].toLowerCase().startsWith(this.state.rivalQuery.toLowerCase()))                                                 
+                            .sort(this.state.rivalQuery ? ((r1, r2) => r1.gamerTag.toLowerCase() > r2.gamerTag.toLowerCase() ? 1 : -1) : () => 0) //alphabetical when typing
+                            .filter(r => this.state.rivalQuery === '' || r.gamerTag.toLowerCase().startsWith(this.state.rivalQuery.toLowerCase()))                                                 
                             .map((r,i) => {
-                                return <RivalTag key = {r[0]} onClick = {() => this.selectRival(r[0])} gamerTag = {r[0]} getIconColor = {this.getIconColor} getBadgeColor = {this.getBadgeColor}>
-                                    <img src={this.getBadgeIcon(r[0])}></img>                            
-                                    <div><span>{(r[1].setWins === 1 ? (r[1].setWins + ' Win'): (r[1].setWins + ' Wins'))}</span></div>
-                                    <span>{r[0]}</span>
+                                return <RivalTag key = {r.gamerTag} onClick = {() => this.selectRival(r.gamerTag)} gamerTag = {r.gamerTag} getIconColor = {this.getIconColor} getBadgeColor = {this.getBadgeColor}>
+                                    <img src={this.getBadgeIcon(r.gamerTag)}></img>                            
+                                    <div><span>{'Wins: ' + r.setWins}</span></div>
+                                    <span>{r.gamerTag}</span>
                                 </RivalTag>
                             }).slice(0, rivalsLimit)
                         }   
@@ -598,12 +600,14 @@ class PlayerDetailsRivals extends Component{
                                     <img src={this.state.playerPortrait}/>
                                 </Portrait>
                                 <Portrait onClick = {() => this.selectPlayer(this.state.rival)}>
-                                    <PortraitSpacer/>
-                                    <PortraitHeader>
-                                        <span>P2</span>
-                                        <span>{this.state.rival.gamerTag}</span>
-                                    </PortraitHeader>
-                                    <img src={this.state.rivalPortrait}/>
+                                    <Link to = {`/players/${encodeURIComponent(this.state.rival.gamerTag)}`}>
+                                        <PortraitSpacer/>
+                                        <PortraitHeader>
+                                            <span>P2</span>
+                                            <span>{this.state.rival.gamerTag}</span>
+                                        </PortraitHeader>
+                                        <img src={this.state.rivalPortrait}/>
+                                    </Link>
                                 </Portrait>
                             </Portraits>
                             <RivalStats>
@@ -640,15 +644,17 @@ class PlayerDetailsRivals extends Component{
                                             .sort((m1, m2) => m1.date != m2.date ? m1.date > m2.date ? -1 : 1 : m1.round > m2.round ? -1 : 1)// i hate nested ternaries
                                             .map(m => {
                                                 const title = this.determineMatchTitle(m.bracket, m.round, m.placement);
-                                                return <Match win = {m.player1Score>m.player2Score} onClick = {() => this.selectTournament(m.shortName)} key = {m.tournamentName + title}>
-                                                    <span>{m.tournamentName}</span>
-                                                    <span>{title}</span>
-                                                    <div>
-                                                        <span>{m.player1Score}</span>
-                                                        <span>-</span>
-                                                        <span>{m.player2Score}</span>  
-                                                    </div>
-                                                </Match>
+                                                return <Link to = {`/tournaments/${m.shortName.replace(' ', '-')}`} key = {m.tournamentName + title}>
+                                                    <Match win = {m.player1Score>m.player2Score} key = {m.tournamentName + title}>
+                                                        <span>{m.tournamentName}</span>
+                                                        <span>{title}</span>
+                                                        <div>
+                                                            <span>{m.player1Score}</span>
+                                                            <span>-</span>
+                                                            <span>{m.player2Score}</span>  
+                                                        </div>
+                                                    </Match>
+                                                </Link>
                                             })
                                         }
                                     </MatchListings>
@@ -661,4 +667,4 @@ class PlayerDetailsRivals extends Component{
     };
 };
 
-export default withRouter (PlayerDetailsRivals);
+export default PlayerDetailsRivals;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import First from '../../public/assets/gold-medal.png';
@@ -15,6 +15,10 @@ const TournamentDetails = styled.div`
     display: flex;
     flex-direction: column;        
     margin: 0 auto 20px;
+
+    a{
+        text-decoration: none;
+    }
 
     @media screen and (max-width: 1180px){
         grid-column: 1 / -1;
@@ -175,30 +179,28 @@ const PlayerDetailsTournaments = (props) => {
             setTournaments(res.data.tournaments);
         });
     },[props.player]);
-
-    const selectTournament = (tournament) => {
-        props.history.push({pathname: '/tournaments/' + tournament.replace(' ', '-')});
-    };
     
     return <TournamentDetails>
         {tournaments
             .filter((t,i) => i >= ((page - 1) * pageLimit) && i < (page) * pageLimit )//pagination filtering
             .map((t, i) => {
-                return <TournamentListing key = {i} onClick = {() => selectTournament(t.shortName)}>
-                    <img src = {banners[i]}/>
-                    <span>{t.name}</span>
-                    <PlayerInfo>
-                        <div><span>Place</span><span>{t.placement}</span></div>
-                        <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
-                        <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
-                        <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
-                    </PlayerInfo>
-                    <Top3>
-                        <div><img src = {First}/>{t.top3[0]}</div>
-                        <div><img src = {Second}/>{t.top3[1]}</div>
-                        <div><img src = {Third}/>{t.top3[2]}</div>
-                    </Top3>
-                </TournamentListing>                
+                return <Link key = {i} to = {`/tournaments/${t.shortName.replace(' ', '-')}`}>
+                    <TournamentListing>
+                        <img src = {banners[i]}/>
+                        <span>{t.name}</span>
+                        <PlayerInfo>
+                            <div><span>Place</span><span>{t.placement}</span></div>
+                            <div><span>Record</span><span>{t.wins + ' - ' + t.losses}</span></div>
+                            <div><span>Loss To</span><span>{t.loser ? t.loser: '-----'}</span></div>
+                            <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
+                        </PlayerInfo>
+                        <Top3>
+                            <div><img src = {First}/>{t.top3[0]}</div>
+                            <div><img src = {Second}/>{t.top3[1]}</div>
+                            <div><img src = {Third}/>{t.top3[2]}</div>
+                        </Top3>
+                    </TournamentListing>                
+                </Link>
             })
         }
         {
@@ -212,4 +214,4 @@ const PlayerDetailsTournaments = (props) => {
     </TournamentDetails> 
 };
 
-export default withRouter(PlayerDetailsTournaments);
+export default PlayerDetailsTournaments;

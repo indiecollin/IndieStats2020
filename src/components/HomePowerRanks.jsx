@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
@@ -70,6 +70,10 @@ const PowerRanks = styled.div`
             height: 100%;
             opacity: ${props => props.sliding ? '0' : '1' };
 
+            a{
+                text-decoration: none;
+            }
+
             &>img{                         
                 height: 32px;
                 width: 32px;                 
@@ -83,7 +87,7 @@ const PowerRanks = styled.div`
                 font-weight: 550;
                 cursor: pointer;
                 min-width: 144px;                                                 
-                color: ${props => props.theme.black};
+                color: ${props => props.theme.black};                
             }
 
             div{           
@@ -147,8 +151,7 @@ class HomePowerRanks extends Component{
             pageEnd: 4,
             sliding: false,
             ranks: []
-        }
-        this.selectPlayer = this.selectPlayer.bind(this);
+        }        
         this.pageLeft = this.pageLeft.bind(this);
         this.pageRight = this.pageRight.bind(this);
     }
@@ -200,11 +203,7 @@ class HomePowerRanks extends Component{
                 });
             }); 
         }));       
-    };  
-
-    selectPlayer(gamerTag){
-        this.props.history.push({pathname: '/players/' + gamerTag})
-    }
+    };      
 
     pageLeft(){
         this.setState(prevState => {
@@ -240,17 +239,19 @@ class HomePowerRanks extends Component{
                         .filter((p, i) => {return (i >= this.state.pageStart && i <= this.state.pageEnd)})
                         .map((player, i) =>{
                             return (                        
-                                <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {300} classNames = 'slide' component = {null}>
-                                <div key = {player.gamerTag} onClick = {() => this.selectPlayer(player.gamerTag)}> 
-                                    {player.sponsor ? <img src = {this.state.playerIcons[i+this.state.pageStart].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
-                                    <span>{player.gamerTag}</span>
-                                    <div>
-                                        {player.primary?<img src= {this.state.playerIcons[i+this.state.pageStart].primary}/>:null}
-                                        {player.secondary?<img src= {this.state.playerIcons[i+this.state.pageStart].secondary}/>:null}
-                                        {player.tertiary?<img src= {this.state.playerIcons[i+this.state.pageStart].tertiary}/>:null}                                    
+                                <Link to = {`/players/${player.gamerTag}`} key = {player.gamerTag}>
+                                <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {300} classNames = 'slide' component = {null}>                                
+                                    <div key = {player.gamerTag}> 
+                                        {player.sponsor ? <img src = {this.state.playerIcons[i+this.state.pageStart].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
+                                        <span>{player.gamerTag}</span>
+                                        <div>
+                                            {player.primary?<img src= {this.state.playerIcons[i+this.state.pageStart].primary}/>:null}
+                                            {player.secondary?<img src= {this.state.playerIcons[i+this.state.pageStart].secondary}/>:null}
+                                            {player.tertiary?<img src= {this.state.playerIcons[i+this.state.pageStart].tertiary}/>:null}                                    
+                                        </div>
                                     </div>
-                                </div>
                                 </CSSTransition>                
+                                </Link>
                             )
                         })
                     }
@@ -262,4 +263,4 @@ class HomePowerRanks extends Component{
     }
 }
 
-export default withRouter(HomePowerRanks);
+export default HomePowerRanks;

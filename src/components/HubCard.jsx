@@ -98,11 +98,10 @@ const Hub =  styled.div`
         height: 13px;//don't like it but it works
         width: 20px;
         z-index: -1;
-    }
+    }    
 
-    ${props => props.type === 'player' ? '' : hoverStyles(props)}
-    @media screen and (max-width: 1180px) {  
-        ${props => props.type === 'player' ? hoverStyles(props) : '' }
+    *{
+        font-family: sans-serif;
     }
 
     *:first-child{
@@ -116,6 +115,7 @@ const Hub =  styled.div`
     }
 
     &>span{
+        font-family: sans-serif;
         font-size: 28px; 
         font-weight: 700;
         color: ${props => props.theme.white};        
@@ -127,6 +127,12 @@ const Hub =  styled.div`
                              ', -2px -2px 0 ' + props.theme.black + 
                              ' , -2px 2px 0 ' + props.theme.black + 
                              ' , 2px 2px 0 ' + props.theme.black};
+    }
+
+    ${props => props.type === 'player' ? '' : hoverStyles(props)}
+    
+    @media screen and (max-width: 1180px) {  
+        ${props => props.type === 'player' ? hoverStyles(props) : '' }
     }
 `;
 
@@ -189,7 +195,7 @@ const GamerTag = styled.div`
     border: solid 2px ${props => props.theme.black};        
     z-index: 20;
     margin-bottom: 4px;
-    text-align: center;
+    text-align: center;    
     font-size: 20px;
     font-weight: 550;
 `;
@@ -223,9 +229,9 @@ const HubCard =  (props) =>{
             case 'rivals':
                 axios.get('http://localhost:9001/api/players/rivals/' + encodeURIComponent(props.player.gamerTag))
                 .then(res => {
-                    const rivalsPreview = Object.entries(res.data)
-                    .sort((r1, r2) => r2[1].setLosses - r1[1].setLosses)
-                    .map(r => (<span>{r[0]}</span>)).slice(0,5);
+                    const rivalsPreview = res.data
+                    .sort((r1, r2) => r2.setLosses - r1.setLosses)
+                    .map(r => (<span>{r.gamerTag}</span>)).slice(0,5);
                     setPreview(rivalsPreview);
                 });
             break;

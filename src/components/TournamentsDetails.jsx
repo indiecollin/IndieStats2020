@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import Moment from 'moment';
@@ -69,6 +69,7 @@ const Header = styled.div`
             padding: 8px 0;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             min-width: 320px;
             margin-left: calc((932px - 60px - 100%) * .25 );
             margin-right: calc((932px - 60px - 100%) * .5 );               
@@ -339,7 +340,10 @@ const Matches = styled(ColumnData)`
     height: 32px;
     padding: 0;
     display: flex;                
-    align-items: center;                     
+    align-items: center;      
+    *{
+        font-family: sans-serif;
+    }          
 `;
 //maybe just export match icon instead
 const matchIconStyles = (props) =>(`
@@ -362,9 +366,12 @@ const MatchIcon = styled.span`
     ${props => matchIconStyles(props)}
 `;
 
-const LinkColumn = styled(ColumnData)`
-    cursor: ${props => props.link ? 'pointer' : 'unset'};
+const LinkColumn = styled(ColumnData)`    
     ${props => props.overflow ? overflowEllipsis : ''}
+    a{
+        text-decoration: none;
+        color: inherit;
+    }
 `;
 
 const infoExpanderStyles = (props) =>(`
@@ -409,7 +416,6 @@ class TournamentsDetails extends Component{
             sort: 'placement',
             sortAsc: 1
         };        
-        this.selectPlayer = this.selectPlayer.bind(this);
         this.searchPlayers = this.searchPlayers.bind(this);
         this.clearPlayerSearch = this.clearPlayerSearch.bind(this);
         this.setSort = this.setSort.bind(this);        
@@ -428,11 +434,7 @@ class TournamentsDetails extends Component{
                 });
             });
         }         
-    };
-
-    selectPlayer(gamerTag){        
-        this.props.history.push({pathname: '/players/' + encodeURIComponent(gamerTag)});
-    }
+    };    
 
     searchPlayers(e){
         this.setState({query: e.target.value});
@@ -507,25 +509,31 @@ class TournamentsDetails extends Component{
                             })
                             .map(p =>{                                    
                                 return <tr key={p.gamerTag}>
-                                    <LinkColumn width='160' onClick = {() => this.selectPlayer(p.gamerTag)} link = {p.gamerTag} mobile = {true}>{p.gamerTag}</LinkColumn>
+                                    <LinkColumn width='160' mobile = {true}>
+                                        <Link to={`/players/${encodeURIComponent(p.gamerTag)}`}>{p.gamerTag}</Link>
+                                    </LinkColumn>
                                     <ColumnData width='60' mobile = {true}>{p.placement}</ColumnData>
                                     <ColumnData width='60'>{p.seed}</ColumnData>
                                     <ColumnData width='60' mobile = {true}>{p.wins+' - '+p.losses}</ColumnData>
                                     <Matches width = '184'>                                        
                                         {p.matches.split('').map((m, i) => <MatchIcon key = {i} win = {m == 'W'}>{m}</MatchIcon>)}
                                     </Matches>
-                                    <LinkColumn width='160' onClick = {() => this.selectPlayer(p.loser)} link = {p.loser}>{p.loser ? p.loser : '-----'}</LinkColumn>
-                                    <LinkColumn width='144' onClick = {() => this.selectPlayer(p.eliminator)} link = {p.eliminator}>{p.eliminator ? p.eliminator : '-----'}</LinkColumn>                                        
+                                    <LinkColumn width='160'>
+                                        {p.loser ? <Link to={`/players/${encodeURIComponent(p.loser)}`}>{p.loser}</Link> : '-----'}
+                                    </LinkColumn>
+                                    <LinkColumn width='144'>
+                                        {p.eliminator ? <Link to={`/players/${encodeURIComponent(p.eliminator)}`}>{p.eliminator}</Link> : '-----'}
+                                    </LinkColumn>
                                     <InfoExpanderData width = '40' onClick = {() => this.setState({moreInfoPlayer: p, expandMoreInfo: true})}><CaretIcon/></InfoExpanderData>
                                 </tr>
                             })}
                             {/* <tr className='last-row'></tr> what is this for? */}
                         </tbody>                        
                 </table>
-                <MoreInfo player = {this.state.moreInfoPlayer} selectPlayer = {this.selectPlayer} show = {this.state.expandMoreInfo} collapse = {() => this.setState({expandMoreInfo: false})}/>
+                <MoreInfo player = {this.state.moreInfoPlayer} show = {this.state.expandMoreInfo} collapse = {() => this.setState({expandMoreInfo: false})}/>
             </TableWrapper>
         </TournamentHub> : null
     };
 };
 
-export default withRouter(TournamentsDetails);
+export default TournamentsDetails;

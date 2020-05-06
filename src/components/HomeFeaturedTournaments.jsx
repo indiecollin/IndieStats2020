@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import Moment from 'moment';
@@ -65,6 +65,10 @@ const FeaturedTournaments = styled.div`
         background-color: ${background};                                                              
     }
 
+    a{
+        text-decoration: none;        
+    }
+
     @media screen and (max-width: 480px) {
         width: 320px;
         margin-left: auto;
@@ -83,7 +87,7 @@ const FeaturedTournaments = styled.div`
 
 const TournamentListing = styled.div`
     display: flex;          
-    margin-bottom: 16px;
+    margin-bottom: 16px;    
 
     img{
         width: 160px;
@@ -171,10 +175,9 @@ class HomeFeaturedTournaments extends Component{
             upcoming: true,//mode            
             pageStart: 0,
             pageEnd: 1 
-        };
-        this.selectTournament = this.selectTournament.bind(this);
+        };        
         this.pageLeft = this.pageLeft.bind(this);
-        this.pageRight = this.pageRight.bind(this); 
+        this.pageRight = this.pageRight.bind(this);        
     }
 
     componentDidMount(){                
@@ -197,13 +200,7 @@ class HomeFeaturedTournaments extends Component{
                 this.setState({tournaments: allTournaments});
             });
         });             
-    }
-
-    selectTournament(tournament){
-        this.props.history.push({
-            pathname: '/tournaments/' + tournament.replace(' ', '-')
-        });
-    }
+    }    
 
     pageLeft(){
         this.setState(prevState => {
@@ -233,7 +230,7 @@ class HomeFeaturedTournaments extends Component{
         });
     }
 
-    render(){
+    render(){        
         return(
             <FeaturedTournaments>
                 <h2>Tournaments</h2>
@@ -242,22 +239,26 @@ class HomeFeaturedTournaments extends Component{
                             (this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent)
                             .filter((t, i) => i >= this.state.pageStart && i <= this.state.pageEnd)
                             .map((t,i) => {
-                                return (
-                                    <TournamentListing key = {t.name} onClick = {() => !this.state.upcoming && this.selectTournament(t.shortName)}>
+                                return this.state.upcoming ?
+                                <TournamentListing key = {t.name}>
                                         <img src = {t.banner}/>
                                         <div>
-                                            <div>
-                                                <span><span>{t.shortName}</span></span>
-                                            </div>
-                                            <div>
-                                                <span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span>
-                                            </div>
-                                            <div>
-                                                <span><span>{t.venue}</span></span>
-                                            </div>
+                                            <div><span><span>{t.shortName}</span></span></div>
+                                            <div><span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span></div>
+                                            <div><span><span>{t.venue}</span></span></div>
+                                        </div>
+                                </TournamentListing>
+                                :
+                                <Link to={`/tournaments/${t.shortName.replace(' ', '-')}`} key = {t.name}>
+                                    <TournamentListing>
+                                        <img src = {t.banner}/>
+                                        <div>
+                                            <div><span><span>{t.shortName}</span></span></div>
+                                            <div><span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span></div>
+                                            <div><span><span>{t.venue}</span></span></div>
                                         </div>
                                     </TournamentListing>
-                                )
+                                </Link>                                
                             })
                         }
                         {(this.state.upcoming ? this.state.tournaments.upcoming : this.state.tournaments.recent).length - 1 === this.state.pageStart ? <Spacer/> : null}
@@ -272,4 +273,4 @@ class HomeFeaturedTournaments extends Component{
     }
 };
 
-export default withRouter(HomeFeaturedTournaments);
+export default HomeFeaturedTournaments;

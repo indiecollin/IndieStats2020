@@ -5,8 +5,7 @@ const backgroundOverlayPrimary = 'rgba(255, 255, 255, 0.801)';
 const backgroundOverlaySecondary = 'rgba(216, 216, 216, 0.801)';
 
 export default createGlobalStyle`
-    body{//should i put this on id = app instead?
-        font-family: Arial, Helvetica, sans-serif;
+    body{
         margin: 0;
         background-image: linear-gradient(${() => backgroundOverlayPrimary + ', ' + backgroundOverlaySecondary + '), url(' + backgroundImage });
         background-size: cover;

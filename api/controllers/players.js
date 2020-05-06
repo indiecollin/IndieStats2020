@@ -92,7 +92,7 @@ router.route('/players/tournaments/:gamerTag')//make this for detailed listing
                         date: tournamentListing.date,
                         entrants: tournamentListing.entrants,
                         shortName: tournamentListing.shortName,//make sure this sort works properly      
-                        top3: curTournament.entrants.filter( entrant => entrant.placement <= 3).sort((entrant1, entrant2) => entrant1.placement > entrant2.placement).map(entrant => entrant.gamerTag),
+                        top3: curTournament.entrants.filter( entrant => entrant.placement <= 3).sort((entrant1, entrant2) => entrant1.placement - entrant2.placement).map(entrant => entrant.gamerTag),
                         placement: entrant.placement,
                         seed: entrant.seed,
                         wins: curTournament.matches.filter(match => match.winnerId == entrant.id).length,//DQs?
@@ -129,7 +129,7 @@ router.route('/players/rivals/:gamerTag')//may want to update this route to retu
     .lean().collation({locale: "en", strength: 1})
     .then(tournaments =>{
         if(tournaments && tournaments.length){
-            let rivals = {};
+            let rivalsDict = {};
             tournaments.forEach(tournament => {
                 const entrant = tournament.entrants.find(entrant => {
                     return entrant.gamerTag.toUpperCase() == req.params.gamerTag.toUpperCase();
@@ -137,13 +137,13 @@ router.route('/players/rivals/:gamerTag')//may want to update this route to retu
                 tournament.matches.forEach(match => {
                     if(match.winnerId == entrant.id){
                         const rival = tournament.entrants[match.loserId].gamerTag;                     
-                        if(rivals[rival]){
-                            rivals[rival].gameWins = rivals[rival].gameWins + match.winnerScore;
-                            rivals[rival].gameLosses = rivals[rival].gameLosses + match.loserScore;
-                            rivals[rival].setWins = rivals[rival].setWins + 1;                            
+                        if(rivalsDict[rival]){
+                            rivalsDict[rival].gameWins = rivalsDict[rival].gameWins + match.winnerScore;
+                            rivalsDict[rival].gameLosses = rivalsDict[rival].gameLosses + match.loserScore;
+                            rivalsDict[rival].setWins = rivalsDict[rival].setWins + 1;                            
                         }
                         else{                            
-                            rivals[rival] = {
+                            rivalsDict[rival] = {
                                 gameWins: match.winnerScore,
                                 setWins: 1,
                                 gameLosses: match.loserScore,
@@ -153,13 +153,13 @@ router.route('/players/rivals/:gamerTag')//may want to update this route to retu
                     }
                     else if(match.loserId == entrant.id){
                         const rival = tournament.entrants[match.winnerId].gamerTag;
-                        if(rivals[rival]){
-                            rivals[rival].gameWins = rivals[rival].gameWins + match.loserScore;
-                            rivals[rival].gameLosses = rivals[rival].gameLosses + match.winnerScore;
-                            rivals[rival].setLosses = rivals[rival].setLosses + 1;
+                        if(rivalsDict[rival]){
+                            rivalsDict[rival].gameWins = rivalsDict[rival].gameWins + match.loserScore;
+                            rivalsDict[rival].gameLosses = rivalsDict[rival].gameLosses + match.winnerScore;
+                            rivalsDict[rival].setLosses = rivalsDict[rival].setLosses + 1;
                         }
                         else{
-                            rivals[rival] = {
+                            rivalsDict[rival] = {
                                 gameWins: match.loserScore,
                                 setWins: 0,
                                 gameLosses: match.winnerScore,
@@ -169,6 +169,9 @@ router.route('/players/rivals/:gamerTag')//may want to update this route to retu
                     }
                 });                
             });
+            const entries = Object.entries(rivalsDict);
+            const rivals = entries.map(rival => Object.assign({}, rival[1], {gamerTag: rival[0]}))
+            .sort((r1, r2) => r2.setLosses - r1.setLosses);//head to head            
             res.json(rivals);
         }
         else{ res.status(404).send('No Tournaments Found For ' + req.params.gamerTag + '.'); }        

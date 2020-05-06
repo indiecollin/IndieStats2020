@@ -51,23 +51,24 @@ const TournamentsListing = styled.div`
         border-right: 2px solid ${props => props.theme.stripeGrey};
     } 
 
-@media screen and (max-width: 960px){
-    padding-left: 12px;
-    max-width: 420px;
-    min-width: 320px;
-}
-
-@media screen and (max-width: 706px){
-    margin: 0 auto;
-    grid-column: 1 / -1;
-}
-
-@media screen and (max-width: 480px){ 
-    padding-right: 12px;
-    &::-webkit-scrollbar {
-        width: 0px !important;  /* remove scrollbar space */
+    @media screen and (max-width: 960px){
+        padding-left: 12px;
+        max-width: 420px;
+        min-width: 320px;
     }
-}
+
+    @media screen and (max-width: 706px){
+        margin: 0 auto;
+        grid-column: 1 / -1;
+    }
+
+    @media screen and (max-width: 480px){ 
+        padding-right: 12px;
+        max-width: 320px;
+        &::-webkit-scrollbar {
+            width: 0px !important;  /* remove scrollbar space */
+        }
+    }
 `;
 
 const Header = styled.div`
@@ -151,7 +152,11 @@ const Placements = styled.div`
     &>div{
         display: flex;                     
         align-items: center;   
-        margin-bottom: 4px;                      
+        margin-bottom: 4px;             
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;         
+        //max-width: TBD;
 
         img{
             width: 20px;
@@ -169,8 +174,14 @@ const Placements = styled.div`
 
     @media screen and (max-width: 960px){
         grid-row: 2;
-        grid-column: 2 / 3;        
-    }                                                
+        grid-column: 2 / 3;                
+    }                              
+    
+    @media screen and (max-width: 480px){
+        &>div {            
+            max-width: 128px;      
+        }
+    }
 `;
 
 const Info = styled.div`    
@@ -206,14 +217,15 @@ const Info = styled.div`
     }
 `;
 
-const Link =  styled.span`
+const Link =  styled.a`
     color: ${props => props.theme.link};
+    text-decoration: none;
 `;
 
 const Seeds = styled.div`
     grid-row: 2 / 4;
     margin: auto 0;
-    padding-left: 20px;                
+    padding-left: 20px;               
 
     h4{                
         margin-top: 8px;
@@ -225,10 +237,11 @@ const Seeds = styled.div`
     &>div{                
         font-size: 14px;
         font-weight: 550;
-        margin-left: 8px;    
+        margin-left: 8px;            
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        //max-width: TBD;
 
         &:not(:first-of-type){
             margin-top: 8px;
@@ -242,18 +255,24 @@ const Seeds = styled.div`
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
+        }        
     }
 
     @media screen and (max-width: 960px){
         grid-row: 3;
         grid-column: 2 / 3;
-        padding-left: 4px;
+        padding-left: 0;
 
         h4{
             margin-top: 0;
-        }
+        }        
     }     
+
+    @media screen and (max-width: 480px){
+        &>div {            
+            max-width: 128px;      
+        }
+    }
 `;
 
 const SearchWrapper = styled.div`
@@ -367,12 +386,7 @@ class TournamentsPast extends Component{
     selectTournament(tournament){        
         this.props.history.push({pathname: '/tournaments/' + tournament.shortName.replace(' ', '-')});
         this.props.setTournament(tournament)
-    }
-
-    goToBracket(url, e){
-        window.location = url;
-        e.stopPropagation();
-    }
+    }    
 
     render(){
         return (
@@ -424,7 +438,7 @@ class TournamentsPast extends Component{
                             <div>
                                 {/*condition once Challonge tournaments are being added*/ }
                                 <img src={Smashgg} />
-                                <Link onClick = {(e) => this.goToBracket(t.bracketLink, e) }>smash.gg</Link>
+                                <Link onClick = {(e) => e.stopPropagation()} href={t.bracketLink}>smash.gg</Link>
                             </div>
                             <div>
                                 <img src={SeasonIcon} />

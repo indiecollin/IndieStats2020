@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 
@@ -30,7 +30,7 @@ const PlayerListWrapper = styled.div`
     top: 100px;    
     height: min-content;
     z-index: 100; 
-    left:  4%;
+    left:  2.5%;
     
     @media screen and (max-width: 1180px) {        
         position: relative;
@@ -54,6 +54,10 @@ const StyledPlayerList = styled.div`
     transition: max-height 0.5s linear;
     overflow: hidden;
     background: ${props => props.theme.white};
+
+    a{
+        text-decoration: none;
+    }
 `;
 
 const SearchWrapper = styled.div`
@@ -137,8 +141,7 @@ class PlayerList extends Component {
         this.rightNavDisable = this.rightNavDisable.bind(this);
     }
 
-    selectPlayer(player){
-        this.props.history.push({pathname: '/players/' + encodeURIComponent(player.gamerTag)});
+    selectPlayer(player){        
         this.props.setPlayer(player);
     }
     
@@ -217,7 +220,7 @@ class PlayerList extends Component {
                     })
                     .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering
                     .filter((p,i) => i >= ((this.state.page - 1) * this.state.limit) && i < (this.state.page) * this.state.limit )//pagination filtering
-                    .map((p, i) =>
+                    .map((p, i) => <Link to = {`/players/${encodeURIComponent(p.gamerTag)}`} key = {p.gamerTag + i}>
                         <PlayerListing key = {p.gamerTag + i} onClick = {() => this.selectPlayer(p)}>
                             <div>                                
                                 {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(true, false, e)} downsort = {e => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
@@ -227,7 +230,8 @@ class PlayerList extends Component {
                                 {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(false, false, e)} downsort = {e => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
                                 {p.setWins + ' - ' + p.setLosses}
                             </div>                        
-                        </PlayerListing>                    
+                        </PlayerListing> 
+                    </Link>                   
                     )
                 }
                 <Spacer/> 
@@ -237,4 +241,4 @@ class PlayerList extends Component {
     }
 }
 
-export default withRouter(PlayerList);
+export default PlayerList;

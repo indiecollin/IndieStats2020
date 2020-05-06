@@ -138,7 +138,7 @@ const NavLink = styled.li`
         }        
 
         span{
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 550;
         }   
 

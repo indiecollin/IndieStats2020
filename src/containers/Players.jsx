@@ -22,7 +22,7 @@ const PlayersContainer = styled.main`
 
 const PlayerInfo = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) repeat(3, minmax(320px, 0.8fr));
+  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(320px, 0.8fr));
   
   row-gap: 20px;
   flex-wrap: wrap;
@@ -38,7 +38,7 @@ const PlayerInfo = styled.div`
   }
 
   @media screen and (max-width: 1360px) {  
-    grid-template-columns: minmax(0, 1.05fr) repeat(1, minmax(320px, 0.8fr));
+    grid-template-columns: minmax(0, 1fr) repeat(1, minmax(320px, 0.8fr));
     padding-left: 300px;
   }
 
@@ -71,15 +71,13 @@ const PlayerInfo = styled.div`
 
 const PlayerDetails = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) repeat(3, minmax(320px, 0.8fr));
-  min-width: 500px;
+  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(320px, 0.8fr));  
   margin: 20px auto;
 
   @media screen and (max-width: 1360px) {
     grid-template-columns: 1fr;
     flex-basis: 100%;
-    margin-left: 300px;    
-    padding-right: 8px;
+    margin-left: 300px;        
     &>div{
       grid-column: 1 / -1;
     }    
@@ -90,8 +88,8 @@ const PlayerDetails = styled.div`
   }
 
   @media screen and (max-width: 500px) {
-    min-width: unset;
-    margin: 20px 0;
+    max-width: 360px;
+    margin: 20px auto;
   }
 `;
 

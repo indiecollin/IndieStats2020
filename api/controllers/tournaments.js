@@ -63,8 +63,9 @@ router.route('/tournaments/players/:id')//may need to return name here
         if(tournament){
             const players = tournament.entrants.map((entrant, i, entrants) => {
                 const matches = tournament.matches.filter(match => (match.winnerId == entrant.id || match.loserId == entrant.id));
-                const winnersLoss = matches.find(match => match.loserId == entrant.id && match.bracket);                
-                const losersLoss = matches.find(match => match.loserId == entrant.id && (!match.bracket || (match.placement == 0 && matches.filter(match => match.loserId == entrant.id).length == 2)));
+                const winnersLoss = matches.find(match => match.loserId == entrant.id && match.bracket);   
+                //if losers bracket or GF coming from losers side (placement: 1:GF, 0:GFR)             
+                const losersLoss = matches.find(match => match.loserId == entrant.id && (!match.bracket || (match.placement < 2 && matches.filter(match => match.loserId == entrant.id).length == 2) && matches.every(m => match.placement <= m.placement)));
                 entrant.wins = matches.filter(match => match.winnerId == entrant.id).length;
                 entrant.losses = matches.filter(match => match.loserId == entrant.id).length;
                 entrant.loser = winnersLoss ? entrants.find(entrant => entrant.id == winnersLoss.winnerId).gamerTag : null;

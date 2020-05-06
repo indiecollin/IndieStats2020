@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import CaretIcon from './svgs/CaretIcon.jsx';
 import {matchIconStyles} from './TournamentsDetails.jsx';
@@ -49,6 +50,11 @@ const GamerTag = styled.span`
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
+    a{
+        text-decoration: none;
+        color: inherit;
+    }    
 `;
 
 const HeaderClip = styled.span`
@@ -70,12 +76,14 @@ const Placement = styled.span`
     grid-column: 2;
     width: unset;
     font-weight: 550;
-    font-size: 52px;
+    font-size: 48px;
     color: transparent;
     background: -webkit-linear-gradient(${'315deg, ' + moreInfoPlacePrimary + ' 0%, ' + moreInfoPlaceSecondary + ' 74%'});
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-left: auto;
+    padding-right: 4px;
 `;
 
 const Details = styled.div`
@@ -108,12 +116,19 @@ const detailsInfoStyles = () => (`
 //add link prop for losers and eliminators
 const DetailsInfo = styled.span`
     ${detailsInfoStyles()}
-    ${props => props.clipped ? `clip-path: polygon(5% 100%, 100% 100%, 100% 0, 0 0); text-align: right;` : ''}    
+    ${props => props.clipped ? `clip-path: polygon(5% 100%, 100% 100%, 100% 0, 0 0); text-align: right;` : ''}
+    a{
+        text-decoration: none;
+        color: inherit;
+    }    
 `;
 
 const Matches = styled.div`
-    display: flex;
+    display: flex;    
     ${detailsInfoStyles()}
+    *{
+        font-family: sans-serif;
+    }
 `;
 
 const MatchIcon = styled.span`
@@ -141,7 +156,9 @@ const Collapser = styled.span`
 
 const TournamentResponsiveDetails = (props) =>{
     return <MobileDetails player = {props.player} show = {props.show}>
-        <GamerTag onClick = {() => props.selectPlayer(props.player.gamerTag)}>{props.player.gamerTag}</GamerTag>
+        <GamerTag>
+            <Link to={`/players/${encodeURIComponent(props.player.gamerTag)}`}>{props.player.gamerTag}</Link>
+        </GamerTag>
         <HeaderClip></HeaderClip>
         <HeaderPadding></HeaderPadding>
         <Placement>{props.player.placement}</Placement>
@@ -160,11 +177,15 @@ const TournamentResponsiveDetails = (props) =>{
             </DetailsWrapper>
             <DetailsWrapper>
                 <DetailsHeader>Loss To</DetailsHeader>
-                <DetailsInfo clipped = {true} onClick = {() => props.player.loser && props.selectPlayer(props.player.loser)}>{props.player.loser ? props.player.loser : '-----' }</DetailsInfo>
+                <DetailsInfo clipped = {true}>
+                    {props.player.loser ? <Link to={`/players/${encodeURIComponent(props.player.loser)}`}>{props.player.loser}</Link> : '-----' }
+                </DetailsInfo>
             </DetailsWrapper>
             <DetailsWrapper>
                 <DetailsHeader>Eliminator</DetailsHeader>
-                <DetailsInfo clipped = {true} onClick = {() => props.player.eliminator && props.selectPlayer(props.player.eliminator)}>{props.player.eliminator ? props.player.eliminator : '-----'}</DetailsInfo>
+                <DetailsInfo clipped = {true}>
+                    {props.player.eliminator ? <Link to={`/players/${encodeURIComponent(props.player.eliminator)}`}>{props.player.eliminator}</Link> : '-----' }                    
+                </DetailsInfo>
             </DetailsWrapper>
         </Details>
         <Collapser onClick = {() => props.collapse()}><CaretIcon></CaretIcon></Collapser>

@@ -4,6 +4,7 @@ import {ThemeProvider} from 'styled-components';
 
 import theme from '../styles/Theme';
 import GlobalStyles from '../styles/GlobalStyles';
+import fontImports from '../styles/fontimports.css';
 
 import NavBar from './NavBar.jsx';
 import Footer from './Footer.jsx';
@@ -53,12 +54,6 @@ class App extends Component {
             </ThemeProvider>
         )
     }
-}
-
-const mapStateToProps = state => {
-    return {
-        actionRan: state.actionRan
-    };
 }
 
 export default App;

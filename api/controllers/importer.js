@@ -160,10 +160,10 @@ router.route('/smashgg')
                     allDataWithMatches.matches = matches.map(match => {    
                         
                         if(match.round > allDataWithMatches.winnerRounds && match.winnerId && match.loserId){
-                            allDataWithMatches.winnerRounds = match.round;
+                            allDataWithMatches.winnerRounds = match.round;//updates to latest seen round
                         }
                         if(match.round < -allDataWithMatches.loserRounds && match.winnerId && match.loserId){
-                            allDataWithMatches.loserRounds = Math.abs(match.round);
+                            allDataWithMatches.loserRounds = Math.abs(match.round);//updates to latest seen round
                         }
                         //currently not fully handling DQs                        
                         if(!(match.loserId && match.winnerId && !req.body.exclusions.includes(match.loserId) && !req.body.exclusions.includes(match.winnerId))){return null;}//DQ stuff

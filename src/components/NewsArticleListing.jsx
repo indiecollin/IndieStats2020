@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SearchIcon from './svgs/SearchIcon.jsx';
 
@@ -32,6 +32,11 @@ const ArticleListing = styled.div`
             left: 12px;
         }     
     }    
+
+    a{
+        text-decoration: none;
+        color: inherit;
+    }
 
     @media screen and (max-width: 960px){
         max-width: 500px;
@@ -118,8 +123,7 @@ const NewsArticleListing = (props => {
     const [input, setInput] = useState('');
     const [articles, setArticles] = useState([]);    
     const [queriedArticles, setQueriedArticles] = useState([]);
-    const selectArticle = (article) => {
-        props.history.push({pathname: '/news/' + article.replace('\'','')});
+    const selectArticle = (article) => {        
         props.setArticleTitle(article); 
     }        
     useEffect(()=>{
@@ -147,13 +151,15 @@ const NewsArticleListing = (props => {
         {
             queriedArticles.length ? queriedArticles            
             .map(t => {
-                return <Thumbnail key = {t.title} onClick = {() => selectArticle(t.title)}>
-                    <img src={t.image}/>
-                    <span>{t.title.split(/(?=[A-Z])/).join(' ')}</span>
-                </Thumbnail>
+                return <Link to = {`/news/${t.title.replace('\'', '')}`} key = {t.title}>
+                    <Thumbnail onClick = {() => selectArticle(t.title)}>
+                        <img src={t.image}/>
+                        <span>{t.title.split(/(?=[A-Z])/).join(' ')}</span>
+                    </Thumbnail>
+                </Link>
             }) : null
         }
     </ArticleListing>
     });
 
-export default withRouter(NewsArticleListing);
+export default NewsArticleListing;

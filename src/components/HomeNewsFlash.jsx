@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import titles from '../helpers/articleTitles';
 import NewsIcon from './svgs/NewsIcon.jsx';
@@ -81,18 +81,18 @@ const ArticleContent = styled.div`
             padding: 8px 20px;
         }
 
-        &>div{
+        &>a{
             align-self: flex-end;
             margin-top: auto;  
             margin-bottom: 12px;
             margin-right: 12px;
             padding: 4px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             background-color: ${props => props.theme.newsColor};
             border: 1.5px solid ${props => props.theme.stripeBlack};
             color: ${props => props.theme.stripeBlack};
+            text-decoration: none;
 
             span{                                                
                 svg{                                        
@@ -120,10 +120,7 @@ const articleCount = 2;
 const HomeNewsFlash = (props) =>{    
 
     const [thumbnails, setThumbnails] = useState([]);
-    const [abstracts, setAbstracts] = useState([]);
-    const selectArticle = (article) => {
-        props.history.push({pathname: '/news/'+ article.replace('\'','')});
-    }
+    const [abstracts, setAbstracts] = useState([]);    
     useEffect(()=>{
         let imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
         Promise.all(imports).then(images => setThumbnails(images.map(banner => banner.default)));
@@ -146,9 +143,9 @@ const HomeNewsFlash = (props) =>{
                     <img src = {thumbnails[i]}/>             
                     <div>   
                         <p>{abstracts[i]}</p>
-                        <div onClick = {() => selectArticle(title)}>
+                        <Link to = {`/news/${title.replace('\'','')}`}>
                             <span>More</span><span><ArrowIcon /></span>
-                        </div>
+                        </Link>
                     </div>
                 </ArticleContent>
             </div>   
@@ -156,4 +153,4 @@ const HomeNewsFlash = (props) =>{
     </NewsFlash>            
 };
 
-export default withRouter(HomeNewsFlash);
+export default HomeNewsFlash;
