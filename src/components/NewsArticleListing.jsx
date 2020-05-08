@@ -8,7 +8,7 @@ const ArticleListing = styled.div`
     flex-direction: column;
     max-width: 256px;
     max-height: 100%;
-    height: max-content;
+    height: max-content;//crossbroswer logic safe
     margin: 0 auto 24px;
     overflow-y: auto;    
     overflow-x: hidden;
@@ -18,7 +18,7 @@ const ArticleListing = styled.div`
     h2{
         position: relative;
         padding: 12px 148px 12px 20px;
-        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'}); 
+        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'}); 
         color: ${props => props.theme.white};
         text-align: center;        
 
@@ -36,11 +36,12 @@ const ArticleListing = styled.div`
     a{
         text-decoration: none;
         color: inherit;
+        margin: 0 auto;
     }
 
     @media screen and (max-width: 960px){
-        max-width: 500px;
-        max-height: 392px;
+        width: 100%;
+        max-width: 620px;
         flex-direction: row;
         flex-wrap: wrap;
 
@@ -96,7 +97,7 @@ const Thumbnail = styled.div`
     }    
     
     &:hover{
-        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'}); 
+        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'}); 
 
         img{
             outline: 2px solid ${props => props.theme.newsColor};
@@ -112,7 +113,7 @@ const Thumbnail = styled.div`
     }    
 
     @media screen and (max-width: 960px){        
-        min-width: 240px;
+        min-width: 256px;
         margin: 0 auto;
     }
 `;
@@ -145,7 +146,7 @@ const NewsArticleListing = (props => {
     return <ArticleListing>
         <h2>Articles</h2>
         <Search>
-            <input type='text' value={input} onChange={(e => setInput(e.target.value))} placeholder = 'Search Articles'></input>
+            <input type='text' value={input} onChange={(e => setInput(e.target.value))} onKeyPress = {(e) =>  e.charCode===13 ? setQuery(input) : null} placeholder = 'Search Articles'></input>
             <button onClick = {() => setQuery(input)}><span><SearchIcon/></span></button>
         </Search>
         {

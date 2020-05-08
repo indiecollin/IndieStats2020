@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-
+import { withRouter } from 'react-router';
 import theme from '../styles/Theme';
 import ClearX from './ClearX.jsx';
 import NavTriangle from './NavTriangle.jsx';
@@ -27,15 +25,18 @@ const background = '#DBE6EC';
 
 const PlayerListWrapper = styled.div`
     position: fixed;
-    top: 100px;    
-    height: min-content;
+    top: 100px;        
     z-index: 100; 
     left:  2.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     
     @media screen and (max-width: 1180px) {        
         position: relative;
         margin-left: auto;
         left: unset;
+        height: 100%;
         margin-bottom: 88px;
     }
     @media screen and (max-width: 706px) {        
@@ -48,16 +49,12 @@ const StyledPlayerList = styled.div`
     flex-direction: column;                            
     padding-top: 4px;
     min-width: 300px;
-    height: ${props => props.expanded ? '516px' : 'max-content'};
+    height: ${props => props.expanded ? '516px' : 'max-content'};//crossbrowser logic safe
     min-height: 290px;
     max-height: ${props => props.expanded ? '516px' : '290px'};
     transition: max-height 0.5s linear;
     overflow: hidden;
     background: ${props => props.theme.white};
-
-    a{
-        text-decoration: none;
-    }
 `;
 
 const SearchWrapper = styled.div`
@@ -107,7 +104,7 @@ const PlayerListing = styled.div`
         width: 38%;
         clip-path: polygon(18% 0%, 100% 0%, 100% 100%, 0% 100%);
         padding-left: 12px;
-        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});
+        background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'});
         padding: 8px 0;    
         position: relative;    
     }
@@ -142,6 +139,7 @@ class PlayerList extends Component {
     }
 
     selectPlayer(player){        
+        this.props.history.push({pathname: '/players/' + encodeURIComponent(player.gamerTag)});
         this.props.setPlayer(player);
     }
     
@@ -220,8 +218,7 @@ class PlayerList extends Component {
                     })
                     .filter(p => !this.state.query || p.gamerTag.toLowerCase().startsWith(this.state.query.toLowerCase()))//query filtering
                     .filter((p,i) => i >= ((this.state.page - 1) * this.state.limit) && i < (this.state.page) * this.state.limit )//pagination filtering
-                    .map((p, i) => <Link to = {`/players/${encodeURIComponent(p.gamerTag)}`} key = {p.gamerTag + i}>
-                        <PlayerListing key = {p.gamerTag + i} onClick = {() => this.selectPlayer(p)}>
+                    .map((p, i) => <PlayerListing key = {p.gamerTag + i} onClick = {() => this.selectPlayer(p)}>
                             <div>                                
                                 {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(true, false, e)} downsort = {e => this.setSort(true, true, e)} position = {leftSorterPos} baseColor = {theme.stripeBlack} hoverColor = {theme.hoverRed}/> : null}
                                 {p.gamerTag}
@@ -230,15 +227,14 @@ class PlayerList extends Component {
                                 {!i && !this.state.ranks ? <SortArrows upsort = {e => this.setSort(false, false, e)} downsort = {e => this.setSort(false, true, e)} position = {rightSorterPos} baseColor = {theme.white} hoverColor = {theme.hoverRed}/> : null}
                                 {p.setWins + ' - ' + p.setLosses}
                             </div>                        
-                        </PlayerListing> 
-                    </Link>                   
+                        </PlayerListing>                     
                     )
                 }
                 <Spacer/> 
-        </StyledPlayerList>    
+            </StyledPlayerList>    
             <Expander expanded = {this.state.expanded} onClick = {() => this.expand(!this.state.expanded)}/>	
         </PlayerListWrapper>         
     }
 }
 
-export default PlayerList;
+export default withRouter(PlayerList);

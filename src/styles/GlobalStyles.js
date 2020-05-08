@@ -20,13 +20,23 @@ export default createGlobalStyle`
     }
 
     input {
-        box-sizing: border-box; 
+        box-sizing: border-box;
+        &::-ms-clear{
+            display: none;
+        } 
     }
 
     button{
         border: none;
         background-color: unset;
         outline: none;
+        &::-moz-focus-inner{
+            border: 0;
+        }
+    }
+
+    a:focus { 
+        outline: none; 
     }
 
     html {
@@ -57,5 +67,4 @@ export default createGlobalStyle`
         transform: translate(0%);            
         transition: transform 300ms linear;        
     }
-
 `;

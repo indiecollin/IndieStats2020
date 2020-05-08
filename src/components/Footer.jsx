@@ -8,8 +8,7 @@ const StyledFooter = styled.footer`
     display: flex;
     align-items: center;
     position: relative;
-    bottom: 0;
-    //width: calc(100vw - 120px);//minus padding (wonky behavior when contant us button is clicked)
+    bottom: 0;    
     height: 32px;    
     z-index: 250;
     display: flex;

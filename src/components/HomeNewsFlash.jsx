@@ -74,6 +74,7 @@ const ArticleContent = styled.div`
         display: flex;
         flex-direction: column;
         background-color: ${props => props.theme.white};
+        min-height: 144px;//temp
 
         p{
             font-size: 14px;

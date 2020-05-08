@@ -13,14 +13,17 @@ const UpcomingTournamentsContainer = styled.div`
     width: 280px;
     margin: 0 auto;
     padding-bottom: 20px;        
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const UpcomingTournaments = styled.div`
     max-height: 790px;//may update when carousel added
     margin: 0 auto;
     padding: 0 16px;
-    overflow: hidden;   
-    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});
+    overflow: hidden;       
+    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'}); 
 
     h3{
         text-align: center;
@@ -29,29 +32,21 @@ const UpcomingTournaments = styled.div`
         margin: 0;
         padding-top: 8px;
     }
-
-    /* &>span{
-        text-align: center;
-        color: ${props => props.theme.white};
-        height: 36px;
-        padding-top: 8px;
-    } */
 `;
 
 const UpcomingListingsWrapper = styled.div`
+    height: 752px;
     max-height: ${props => props.expanded ? '752px' : '0' };//temp    
     overflow: scroll;
-    transition: max-height .5s linear;    
-    //cursor: pointer;
+    transition: max-height .5s linear;        
 
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     &::-webkit-scrollbar {
         width: 0px;  /* remove scrollbar space */
-        background: transparent;  /* optional: just make scrollbar invisible */
-    }
-
-    /* @media screen and (max-width: 706px){
-        padding-bottom: 0;
-    } */          
+        background: transparent;  /* optional: just make scrollbar invisible */        
+    }    
+    
 `;
 
 const UpcomingListing = styled.div`
@@ -157,24 +152,26 @@ class TournamentsUpcoming extends Component{
                 listingHovered: false            
             })
         })
-        
-        this.interval = setInterval(()=>{        
-            let first = this.listingRef.current.children[0]
-            if(!this.state.listingHovered){
-                this.listingRef.current.scrollTop++
-            }            
-            if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
-                this.setState((prevState) => {
-                    return{
-                        cycle: true,
-                        scrollY: window.scrollY,
-                        tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
-                        banners: prevState.banners.concat(prevState.banners.splice(0,1))
-                    }
-                });                    
-                this.listingRef.current.scrollTop = 0;
-            }
-        }, 10);  
+
+        // if(window.innerWidth > 706){
+        //     this.interval = setInterval(()=>{        
+        //         let first = this.listingRef.current.children[0]
+        //         if(!this.state.listingHovered){
+        //             this.listingRef.current.scrollTop++
+        //         }            
+        //         if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
+        //             this.setState((prevState) => {
+        //                 return{
+        //                     cycle: true,
+        //                     scrollY: window.scrollY,
+        //                     tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
+        //                     banners: prevState.banners.concat(prevState.banners.splice(0,1))
+        //                 }
+        //             });                    
+        //             this.listingRef.current.scrollTop = 0;
+        //         }
+        //     }, 10); 
+        // }         
     }
         
     componentWillUnmount() {

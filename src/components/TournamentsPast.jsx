@@ -18,18 +18,19 @@ import SeasonIcon from '../../public/assets/season-icon.png';
 import SearchIcon from './svgs/SearchIcon.jsx';
 import XIcon from './svgs/XIcon.jsx';
 
-const listingSelected = '#D3E6E8';
+const listingBackground = '#DBE6EC';
 const seedPrimary ='#A2A4C7';
 const seedSecondary = '#807387';
-const searching = false;
 
 const TournamentsListing = styled.div`
     grid-column: 2 / 3; 
     position: relative;
+    max-width: 680px;
     height: 788px;      
+    margin-right: 16px;
     overflow: scroll;
     overflow-x: hidden;      
-    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});    
+    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'}); 
 
     &::-webkit-scrollbar-track
     {        
@@ -51,6 +52,9 @@ const TournamentsListing = styled.div`
         border-right: 2px solid ${props => props.theme.stripeGrey};
     } 
 
+    scrollbar-width: thin;
+    scrollbar-color: ${props => props.theme.scrollbarSecondary +', ' + props.theme.stripeGrey};
+
     @media screen and (max-width: 960px){
         padding-left: 12px;
         max-width: 420px;
@@ -68,6 +72,8 @@ const TournamentsListing = styled.div`
         &::-webkit-scrollbar {
             width: 0px !important;  /* remove scrollbar space */
         }
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
 `;
 
@@ -95,7 +101,7 @@ const TournamentListing = styled.div`
     grid-template-columns: 4fr 4fr 3fr;                       
     margin-bottom: 20px;
     margin-left: 12px;
-    background-color: ${props => props.selected ? listingSelected : props.theme.white};
+    background-color: ${props => props.selected ? props.theme.white : listingBackground};
     cursor: pointer;    
 
     &>span{
@@ -109,7 +115,7 @@ const TournamentListing = styled.div`
     }
 
     &:hover{
-        background-color: ${listingSelected};
+        background-color: ${props => props.theme.white};
     }        
 
     &>img{            
@@ -291,7 +297,7 @@ const SearchWrapper = styled.div`
             right: 60px;
             top: 20px;
             left: unset;
-            height: min-content;
+            height: min-content;//crossbrowser logic safe
         }
     }
 
@@ -405,7 +411,7 @@ class TournamentsPast extends Component{
                 </button>}
                 </SearchWrapper>
                 {this.state.tournaments.map((t, i) => {
-                    return <TournamentListing key={t.name} onClick = {() => this.selectTournament(t)}>
+                    return <TournamentListing key={t.name} onClick = {() => this.selectTournament(t)} selected = {this.props.tournament.shortName === t.shortName}>
                         <span>{t.name}</span>
                         <img src = {t.banner}/>
                         <Placements>

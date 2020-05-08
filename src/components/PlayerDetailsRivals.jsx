@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -39,7 +40,9 @@ const rivalIcon = '#0068EB';
 const rivalBackground = '#3878A4';
 const rivalBackgroundHover = '#6594B3';
 const matchWin = 'rgba(41, 153, 41, 0.808)';
+const matchWinHover = 'rgb(41, 153, 41)';
 const matchLoss = 'rgba(192, 80, 60, 0.801)';
+const matchLossHover = 'rgb(192, 80, 60)';
 const statsTranslucent = 'rgba(70, 67, 67, 0.685)';
 
 const badgeColors = [
@@ -76,6 +79,9 @@ const iconColors = [
     '#F0E28A'
 ];
 
+const badgeHoverBase = '#ED8103';
+const badgeHoverHighlight = '#FFFE01';
+
 const rivalSearchClearXPos = {
     top: '15.5px',
     right: '15.5px'
@@ -95,11 +101,7 @@ const RivalDetails = styled.div`
 
     @media screen and (max-width: 1360px){
         grid-template-columns: 160px 1fr;        
-    }
-
-    @media screen and (max-width: 1180px){
-        
-    }        
+    }    
     
     @media screen and (max-width: 706px){
         padding: 0; 
@@ -131,10 +133,14 @@ const RivalsListing = styled.div`
 
         &>div{
             display: flex;
-            justify-content: space-evenly;
+            justify-content: space-around;            
             flex-flow: row wrap;
             overflow: hidden;
-            max-height: 76px;
+            max-height: 80px;
+
+            @supports not (-ms-ime-align: auto) {
+                justify-content: space-evenly;                
+            }
         }
 
         input[type=text]{width: 50%;}
@@ -165,7 +171,7 @@ const RivalTag = styled.div`
         font-family: sans-serif;
     }
 
-    &::before{        
+    &::before{//chain hole   
         top: 14px;
         left: -6px;
         position: absolute;
@@ -176,7 +182,36 @@ const RivalTag = styled.div`
         border-radius: 50%;                
         width: 16px;
         height: 32px; 
-    }
+    }    
+
+    &:hover::after{//hover effect
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;                    
+        transform: scale(1.17, 1.25);        
+        z-index: -200;
+        border-radius: 28px;
+        animation: tag-pulse 0.5s;
+        animation-iteration-count: infinite;        
+
+        @supports (-ms-ime-align:auto) {//edge doesn't properly animate linear gradients
+            background-color: ${badgeHoverHighlight};
+            animation: none;
+        }
+    }    
+
+    @keyframes tag-pulse{        
+        0%{background: linear-gradient(${'to right, ' + badgeHoverHighlight + ', ' + badgeHoverHighlight + ' 100%'});}
+        13%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverHighlight +  ' 17%, ' + badgeHoverHighlight + ' 100%'});}
+        26%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 17%, ' + badgeHoverHighlight +  ' 34%, ' + badgeHoverHighlight + ' 100%'});}
+        39%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 34%, ' + badgeHoverHighlight +  ' 51%, ' + badgeHoverHighlight + ' 100%'});}
+        52%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 51%, ' + badgeHoverHighlight +  ' 68%, ' + badgeHoverHighlight + ' 100%'});}
+        65%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 68%, ' + badgeHoverHighlight +  ' 85%, ' + badgeHoverHighlight + ' 100%'});}                
+        75%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 100%'});}        
+        100%{background: linear-gradient(${'to right, ' + badgeHoverBase + ', ' + badgeHoverBase + ' 100%'});} 
+        
+    }                         
 
     img{
         background-color: ${props => props.getIconColor(props.gamerTag)};
@@ -208,6 +243,10 @@ const RivalTag = styled.div`
 
     @media screen and (max-width: 1360px){
         width: 140px;
+
+        &:hover::after{
+            transform: scale(1.22, 1.25);
+        }
         div, div > span{
             font-size: 14px;
         }        
@@ -243,8 +282,7 @@ const RivalTag = styled.div`
 `;
 
 const RivalInfo = styled.div`    
-    grid-column : 2 / 3;     
-    //width: 760px;//temp         
+    grid-column : 2 / 3;         
 
     &>div{  
         display: grid; 
@@ -263,24 +301,23 @@ const Portraits = styled.div`
     grid-row: 1 / 3;
     grid-area: 1 / 1 / 3 / 2;
     display: flex;
-    justify-content: space-around; 
+    justify-content: space-around;
+    min-width: 760px;
 
     @media screen and (max-width: 1360px){
         max-width: 680px;
+        min-width: unset;
     }
+
+    @media screen and (max-width: 706px){
+        min-width: 100vw;
+    }     
 `;
 
 const Portrait = styled.div`
     width: 50%;
     position: relative;
-    cursor: ${props => props.player ? 'default' : 'pointer'};                
-
-    img{        
-        max-width: 100%;
-        max-height: 100%;
-        background-color: ${props => props.player ? playerBackground : rivalBackground};
-        ${props => !props.player ? '&:hover{background-color: ' + rivalBackgroundHover + '};' : ''}
-    }    
+    cursor: ${props => props.player ? 'default' : 'pointer'};               
 `;
 
 const PortraitSpacer = styled.div`
@@ -296,7 +333,8 @@ const PortraitHeader = styled.div`
     position: absolute;
     margin-top: -16px;
     transform: skewY(-2deg);                                    
-    background-color: ${() => portraitHeader};
+    background-color: ${portraitHeader};
+    z-index: 30;
     
     *{
         font-family: sans-serif;
@@ -342,16 +380,61 @@ const PortraitHeader = styled.div`
         }
     }
 
+    @media screen and (max-width: 480px){
+        span:first-child{
+            font-size: 11px;  
+            margin-left: 0;                
+        }
+
+        span:last-child{
+            font-size: 18px;            
+        }
+    }
+
+`;
+
+const ImageWrapper = styled.div`        
+    position: relative;
+    min-height: 400px;    
+    background: linear-gradient(to bottom, ${props => (props.player ? playerBackground : rivalBackground) + ', ' + (props.player ? playerBackground : rivalBackground)} 95%, transparent 100%);
+    
+    img{         
+        max-width: 100%;
+        max-height: 100%;       
+        background-color: ${props => props.player ? playerBackground : rivalBackground};
+        ${props => !props.player ? '&:hover{background-color: ' + rivalBackgroundHover + '};' : ''}
+        position: absolute;
+        left: 0;
+        z-index: 20;                
+    }   
+
+    @media screen and (max-width: 1360px){
+        min-height: ${props => props.preLoad? '356px' : 'unset'};
+        min-width: ${props => props.preLoad? '340px' : 'unset'};
+        
+        img{
+            position: relative;
+        }
+    }
+
+    @media screen and (max-width: 900px){
+        min-width: 276px;
+    }        
+
+    @media screen and (max-width: 706px){
+        min-width: 100%;
+    }        
 `;
 
 const RivalStats = styled.div`
     grid-area: 1 / 1 / 3 / 2;                
+    position: relative;
     z-index: 100;      
-    height: max-content;  
+    height: max-content;//crossbrowser logic safe
     width: 320px; 
     justify-self: center;
     margin: auto 0;
-    color: ${props => props.theme.white};        
+    color: ${props => props.theme.white};            
 `;
 
 const StatsListing = styled.div`
@@ -375,13 +458,13 @@ const MatchHistory = styled.div`
     margin-top: 20px;        
     grid-area: 2 / 1 / 3 / 2;        
     position: relative;      
+    z-index: 50;
     overflow-y: scroll;        
-    width: 320px;
-    max-height: 300px;
+    width: 320px;    
+    height: 300px;
     justify-self: center;
-    background-color: ${() => statsTranslucent}; 
+    background-color: ${statsTranslucent}; 
     color: ${props => props.theme.white};
-    min-height: 300px;    
     
     &::-webkit-scrollbar-track
     {        
@@ -422,16 +505,20 @@ const MatchHistoryHeader = styled.div`
 `;
 
 const MatchListings = styled.div`                                       
-    padding-bottom: 16px;    
+    padding-bottom: 16px;
     a{
         text-decoration: none;
-    }
+    }     
 `;
 
 const Match = styled.div`
     margin: 0 8px;    
     background-color: ${props => props.win ? matchWin : matchLoss};
     color: ${props => props.theme.white};
+
+    &:hover{
+        background-color: ${props => props.win ? matchWinHover : matchLossHover};
+    }
 
     &>span{
         display: block;
@@ -440,8 +527,12 @@ const Match = styled.div`
 
     div{
         display: flex;
-        justify-content: space-evenly;
         margin: 8px 64px 0;
+        justify-content: space-between;
+
+        @supports not (-ms-ime-align: auto) {
+            justify-content: space-evenly;                
+        }
     }
 `;
 
@@ -454,7 +545,7 @@ class PlayerDetailsRivals extends Component{
             playerPortrait: '',
             rivalPortrait: '',
             rivals: [],
-            rival: {},
+            rival: {preload: true},
             matchHistory: [],
             rivalQuery: '',
             matchQuery: '',            
@@ -484,6 +575,7 @@ class PlayerDetailsRivals extends Component{
     }
 
     selectPlayer(rival){        
+        this.props.history.push({pathname: '/players/' + encodeURIComponent(rival.gamerTag)});
         this.props.setPlayer(rival);
     }
 
@@ -516,18 +608,30 @@ class PlayerDetailsRivals extends Component{
             axios.all([
                 axios.get('http://localhost:9001/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),            
                 axios.get('http://localhost:9001/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
+                axios.get('http://localhost:9001/api/players/records/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),                
                 axios.get('http://localhost:9001/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
                 axios.get('http://localhost:9001/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag))
-            ]).then(axios.spread((matchHistory, rival, highestSet, lastMet) => {                           
+            ]).then(axios.spread((matchHistory, rival, records, highestSet, lastMet) => {                           
                 import(/* webpackMode: "eager" */ `../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
                     this.setState({rivalPortrait: rivalImg.default});
                 });
                 this.setState({
                     matchHistory: matchHistory.data,
-                    rival: Object.assign({}, rival.data, {highestTournament: highestSet.data.tournament.shortName, highestPlacement: highestSet.data.placement, lastMet: lastMet.data[0].shortName}),                                        
-                })
-            }))      
-        })
+                    rival:  
+                        {
+                            gamerTag: rival ? rival.data.gamerTag : rivals[0].gamerTag,
+                            setWins: records.data.player1SetWins,
+                            setLosses: records.data.player2SetWins,
+                            gameWins: records.data.player1GameWins,
+                            gameLosses:records.data.player2GameWins,
+                            highestTournament: highestSet.data.tournament.shortName,
+                            highestPlacement: highestSet.data.placement,
+                            lastMet: lastMet.data[0].shortName,
+                            mains: rival.data.mains
+                        }                                        
+                });
+            }));      
+        });
         if(newPlayer){
             import(/* webpackMode: "eager" */ `../../public/rival_portraits/${player.mains ? player.mains.split(',')[0] : 'default'}.png`).then(playerImg => {
                 this.setState({playerPortrait: playerImg.default});
@@ -575,9 +679,9 @@ class PlayerDetailsRivals extends Component{
                     <ClearX onClick = {() => this.clearRivalSearch()} visible = {this.state.rivalQuery} position = {rivalSearchClearXPos}/>
                     <div>  
                         {
-                            this.state.rivals//filter before sort would be faster
-                            .sort(this.state.rivalQuery ? ((r1, r2) => r1.gamerTag.toLowerCase() > r2.gamerTag.toLowerCase() ? 1 : -1) : () => 0) //alphabetical when typing
+                            this.state.rivals
                             .filter(r => this.state.rivalQuery === '' || r.gamerTag.toLowerCase().startsWith(this.state.rivalQuery.toLowerCase()))                                                 
+                            .sort(this.state.rivalQuery ? ((r1, r2) => r1.gamerTag.toLowerCase() > r2.gamerTag.toLowerCase() ? 1 : -1) : () => 0) //alphabetical when typing
                             .map((r,i) => {
                                 return <RivalTag key = {r.gamerTag} onClick = {() => this.selectRival(r.gamerTag)} gamerTag = {r.gamerTag} getIconColor = {this.getIconColor} getBadgeColor = {this.getBadgeColor}>
                                     <img src={this.getBadgeIcon(r.gamerTag)}></img>                            
@@ -597,36 +701,38 @@ class PlayerDetailsRivals extends Component{
                                         <span>P1</span>
                                         <span>{this.props.player.gamerTag}</span>
                                     </PortraitHeader>
-                                    <img src={this.state.playerPortrait}/>
+                                    <ImageWrapper  player = {true} preLoad = {this.state.rival.preload}>
+                                        <img src={this.state.playerPortrait}/>
+                                    </ImageWrapper>                                                                            
                                 </Portrait>
-                                <Portrait onClick = {() => this.selectPlayer(this.state.rival)}>
-                                    <Link to = {`/players/${encodeURIComponent(this.state.rival.gamerTag)}`}>
-                                        <PortraitSpacer/>
-                                        <PortraitHeader>
-                                            <span>P2</span>
-                                            <span>{this.state.rival.gamerTag}</span>
-                                        </PortraitHeader>
+                                <Portrait onClick = {() => this.selectPlayer(this.state.rival)}>                                    
+                                    <PortraitSpacer/>
+                                    <PortraitHeader>
+                                        <span>P2</span>
+                                        <span>{this.state.rival.gamerTag}</span>
+                                    </PortraitHeader>
+                                    <ImageWrapper preLoad = {this.state.rival.preload}>
                                         <img src={this.state.rivalPortrait}/>
-                                    </Link>
+                                    </ImageWrapper>                                                                            
                                 </Portrait>
                             </Portraits>
                             <RivalStats>
                                 <StatsListing>
                                     <div>
                                         <StatHeader width = {'100px'} marginLeft = {'68px'}>Set Record:</StatHeader>
-                                        <span>{this.state.rival.setWins + ' - ' + this.state.rival.setLosses}</span>
+                                        {!this.state.rival.preload ? <span>{this.state.rival.setWins + ' - ' + this.state.rival.setLosses}</span> : <span>-----</span>}
                                     </div>
                                     <div>
                                         <StatHeader width = {'120px'} marginLeft = {'48px'}>Game Record:</StatHeader>
-                                        <span>{this.state.rival.gameWins + ' - ' + this.state.rival.gameLosses}</span>
+                                        {!this.state.rival.preload ? <span>{this.state.rival.gameWins + ' - ' + this.state.rival.gameLosses}</span> : <span>-----</span>}
                                     </div>
                                     <div>
                                         <StatHeader width = {'100px'} marginLeft = {'66px'}>Highest Set:</StatHeader>
-                                        <span>{this.state.rival.highestTournament + ' For ' + this.state.rival.highestPlacement }</span>
+                                        {!this.state.rival.preload ? <span>{this.state.rival.highestTournament + ' For ' + this.state.rival.highestPlacement }</span> : <span>-----</span>}
                                     </div>
                                     <div>
                                         <StatHeader width = {'80px'} marginLeft = {'86px'}>Last Met:</StatHeader>
-                                        <span>{this.state.rival.lastMet}</span>
+                                        {!this.state.rival.preload ? <span>{this.state.rival.lastMet}</span> : <span>-----</span>}
                                     </div>
                                 </StatsListing>
                                 <MatchHistory>
@@ -667,4 +773,4 @@ class PlayerDetailsRivals extends Component{
     };
 };
 
-export default PlayerDetailsRivals;
+export default withRouter(PlayerDetailsRivals);

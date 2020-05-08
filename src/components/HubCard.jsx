@@ -172,16 +172,17 @@ const HubFooter = styled.div`
         }
 
         div{                
+            position: relative;
+            z-index: 20;
             height: 40px;
             background-color: ${props => hubColors[props.type][5]};          
-            z-index: 20;
             clip-path: polygon(0% 33%, 0 100%, 100% 100%, 100% 33%, 95% 0%, 5% 0%);
             
             div{                    
                 clip-path: polygon(0% 0%, 0 100%, 82% 100%, 100% 0%);
                 background: repeating-linear-gradient(115deg, 
-                    ${props => hubColors[props.type][6]} 0 2px, 
-                    ${props => hubColors[props.type][7]} 2px 4px);
+                    ${props => hubColors[props.type][6] + ', ' + hubColors[props.type][6] + ' 2px'}, 
+                    ${props => hubColors[props.type][7] + ' 2px, ' + hubColors[props.type][7] + ' 4px'});
                 height: 100%;
                 width: 100px;
             }

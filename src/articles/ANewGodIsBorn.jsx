@@ -1,7 +1,7 @@
 import  React from 'react'
 import headline from '../../public/article_images/genesis5.jpg';
 
-export const abstract = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repudiandae dolore iure natus quibusdam culpa? Quaerat quasi aspernatur laboriosam fuga, in dolor, error, facere amet cupiditate adipisci mollitia rem neque. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repudiandae dolore iure natus quibusdam culpa?';
+export const abstract = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repudiandae dolore iure natus quibusdam culpa? Quaerat quasi aspernatur laboriosam fuga, in dolor, error, facere amet neque. Lorem ipsum dolor sit amet consectetur adipisicing elit.';
 const Article = () => {
     return(
         <div>

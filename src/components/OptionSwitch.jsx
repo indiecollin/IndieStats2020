@@ -4,31 +4,41 @@ import styled from 'styled-components';
 const textStroke = '#226377';
 
 const Options = styled.div`    
-    display: flex;        
-    background-color: ${props => props.theme.white}; 
+    display: flex;            
     position: relative;
     z-index: 10;
-    border-radius: 10px;
-    background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ' 0 2px, ' + props.theme.stripeBlack + ' 2px 4px'});  
+    border-radius: 10px;    
     border-bottom: solid 0.2px ${props => props.theme.stripeGrey}; 
     width: 75%;//temp
-    margin: 0 auto;// 4px;
-    min-height: 30px;    
-
-    button:first-child{ 
-        clip-path: polygon(0% 0%, 0% 100%, 85% 100%, 95% 0%);
-        z-index: 20;        
-    }     
+    margin: 0 auto;
+    min-height: 30px;        
+    button:first-child{
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
 
     button:last-child{                    
-        clip-path: polygon(15% 0%, 5% 100%, 100% 100%, 100% 0%);        
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        position: relative;
+        &:before{
+            display: block;
+            position: absolute;
+            content:'';
+            background: repeating-linear-gradient(${props => 'to right, ' + props.theme.stripeGrey + ', '+ props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeBlack + ' 4px'});            
+            transform: skew(30deg);
+            z-index: 20;
+            width: 20%;
+            height: calc(100% + 3px);//adjusted for border
+            top: -2px;
+            left: -12px;
+        }        
     }               
 `;
 
 const OptionsButton = styled.button`
-    border: 1.5px solid ${props => props.theme.stripeGrey};
-    border-radius: 10px;
-    -webkit-text-stroke: ${() => textStroke} 0.5px;
+    border: 1.5px solid ${props => props.theme.stripeGrey};    
+    -webkit-text-stroke: ${textStroke} 0.5px;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 19px;

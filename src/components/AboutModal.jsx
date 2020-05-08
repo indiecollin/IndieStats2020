@@ -14,6 +14,8 @@ const StyledModal = styled.div`
     &::-webkit-scrollbar {
         display: none;
     }            
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
     svg{
         position: fixed;

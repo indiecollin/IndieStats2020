@@ -47,9 +47,4 @@ class Backdrop extends Component {
     }
   }
 
-// function mapStateToProps(state){
-//     return state
-// }
-
-// export default connect(mapStateToProps)(Backdrop)
 export default onClickOutside(Backdrop);

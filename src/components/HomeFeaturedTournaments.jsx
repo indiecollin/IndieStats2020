@@ -22,12 +22,11 @@ const FeaturedTournaments = styled.div`
     
     h2 {                 
         position: relative;
-        background-color: ${headerPrimary};
-        clip-path: polygon(0% 0%, 3% 100%, 97% 100%, 100% 0%);
+        background-color: ${headerPrimary};        
         color: ${props => props.theme.white};      
         text-align: center;
         margin-bottom: 8px;
-        width: 424px;
+        width: 396px;
 
         &:before{
             display: block;
@@ -36,7 +35,7 @@ const FeaturedTournaments = styled.div`
             background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
-            left: 2px;
+            left: -8px;
             transform: skew(30deg);
         }
 
@@ -48,25 +47,30 @@ const FeaturedTournaments = styled.div`
             width: 24px;
             height: 100%;
             top: 0;
-            right: 2px;
+            right: -8px;
             transform: skew(-30deg);
         }
     }
 
     &>div{
-        display: grid;
+        display: flex;
+        flex-direction: column;
         justify-items: center;
-        position: relative;                   
-        grid-template-columns: 1fr;              
+        position: relative;                           
         padding: 8px 12px;          
         font-weight: 550;                
         align-self: center;
         border: solid 2px ${headerSecondary};
-        background-color: ${background};                                                              
+        background-color: ${background};
+        min-width: 396px;
+        min-height: 244px;                                                    
     }
 
     a{
-        text-decoration: none;        
+        text-decoration: none;  
+        &>div:hover{
+            outline: 2px solid ${props => props.theme.hoverRed};
+        }              
     }
 
     @media screen and (max-width: 480px) {
@@ -75,19 +79,23 @@ const FeaturedTournaments = styled.div`
         margin-right: auto;
         
         h2{
-            width: 320px;            
+            width: 288px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         &>div{
             width: 300px;
             padding: 4px;
+            min-width: 300px;
+            min-height: 180px;
         }
     } 
 `;
 
 const TournamentListing = styled.div`
     display: flex;          
-    margin-bottom: 16px;    
+    margin-bottom: 16px;        
 
     img{
         width: 160px;
@@ -132,8 +140,10 @@ const TournamentListing = styled.div`
 
 const Controls = styled.div`
     display: flex;
-    width: -webkit-fill-available;
+    width: 100%;    
+    margin-top: auto;
     margin-bottom: 0;
+    height: 32px;
 
     &>div{
         flex-direction: row;                    

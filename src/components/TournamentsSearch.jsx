@@ -56,6 +56,18 @@ const SearchBar = styled.div`
     div>span:hover svg{
         fill: ${dateRangeHighlight};
     }
+
+    
+    @media screen and (max-width: 480px){
+        p{
+            padding: 8px 0;
+            left: -72px;
+            top: -72px;
+            &::after{
+                left: calc(50% + 8px);
+            }
+        }        
+    }
 `;
 
 const Icon = styled.span`                                               
@@ -229,11 +241,11 @@ const TournamentsSearch = (props) => {
     return <HubWrapper>
         <SearchHub>
             <SearchBar>
-                <input type='text' value = {tournament} onChange = {e => setTournament(e.target.value)} placeholder='Tournament Search'/>
+                <input type='text' value = {tournament} onChange = {e => setTournament(e.target.value)} onKeyPress = {(e) =>  e.charCode===13 ? search() : null} placeholder='Tournament Search'/>
                 <button onClick = {() => search()}><Icon><SearchIcon fill = {theme.black}/></Icon></button>
             </SearchBar>
             <SearchBar>
-                <input type='text' value = {players} onChange = {e => setPlayers(e.target.value)} placeholder='Player Search'/>
+                <input type='text' value = {players} onChange = {e => setPlayers(e.target.value)} onKeyPress = {(e) =>  e.charCode===13 ? search() : null} placeholder='Player Search'/>
                 <Tooltip>Multi-player Search: Enter Gamer Tags Separated by Commas</Tooltip>
             </SearchBar>
             <DateRange>

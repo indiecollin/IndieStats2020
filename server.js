@@ -1,4 +1,6 @@
-import 'babel-polyfill';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+import 'core-js/features/array/fill';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StaticRouter} from 'react-router';
@@ -26,6 +28,7 @@ app.get('*', (req, res)=>{
   );
 
   const html = `
+    <!DOCTYPE html>
     <html>
       <head>
         <title>Smash Stats</title>
@@ -36,7 +39,7 @@ app.get('*', (req, res)=>{
         <link href='styles.css' rel = 'stylesheet'/>
       </head>
       <body class = 'preload' style = 'background-color: #EEEEEE;'>
-        <div id = 'app' style = 'visibility: hidden;'>${content}</div>
+        <div id = 'app' style = 'visibility: hidden;min-height: 100vh;'>${content}</div>
         <div id="modal-root"></div>
         <script src='client_bundle.js'></script>        
       </body>

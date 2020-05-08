@@ -48,7 +48,7 @@ const StyledNavBar = styled.nav`
 `;
 
 const NavList = styled.ul`
-    height: 64px;//subject to change   
+    height: 64px;
     display: flex;
     justify-content: space-between;
     margin: 0;
@@ -95,8 +95,8 @@ const NavLink = styled.li`
         cursor: pointer;            
 
         &:hover::before{
-            background: repeating-linear-gradient(125deg, transparent 0 4px, rgba(255, 255, 255, 0.2) 4px 5px),
-            linear-gradient(${props => 'to bottom, ' + props.primGradient + ', ' + props.secGradient});
+            background: repeating-linear-gradient(125deg, transparent, transparent 4px, rgba(255, 255, 255, 0.2) 4px, rgba(255, 255, 255, 0.2)  5px),
+                        linear-gradient(${props => 'to bottom, ' + props.primGradient + ', ' + props.secGradient});
         }        
         
         &::before{
@@ -104,7 +104,7 @@ const NavLink = styled.li`
             display: block;        
             position: absolute;
             top: 0; bottom: 0; left: 0; right: 0;    
-            background: repeating-linear-gradient(${() => '125deg, ' + navBarPrimary +  ' 0 4px, ' + navBarSecondary + ' 4px 5px'});                
+            background: repeating-linear-gradient(${'125deg, ' + navBarPrimary +  ', ' + navBarPrimary + ' 4px, ' + navBarSecondary + ' 4px, ' + navBarSecondary + ' 5px'});            
             z-index: -100;
         }
 
@@ -132,8 +132,8 @@ const NavLink = styled.li`
                 position: absolute;
                 top: 0; bottom: 0; left: 0; right: 0;                    
                 transform: scale(1.06, 1.1);
-                background-color: ${() => navBarHover};
-                z-index: -200;                 
+                background-color: ${navBarHover};
+                z-index: -200;
             }               
         }        
 

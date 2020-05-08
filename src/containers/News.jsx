@@ -5,14 +5,14 @@ import titles from '../helpers/articleTitles';
 import NewsArticleListing from '../components/NewsArticleListing.jsx';
 import NewsArticle from '../components/NewsArticle.jsx';
 
-const NewsContainer = styled.div`
+const NewsContainer = styled.main`
+    min-height: 100vh;
+    padding-top: 90px;        
     &>div{
         display: grid;
-        grid-template-columns: minmax(256px, 1fr) 4fr;
-        grid-column-gap: 36px;
-        //grid-gap: 20px;
-        margin: 0 40px;        
-        padding-top: 90px;        
+        grid-template-columns: 256px minmax(580px, 1244px);
+        grid-column-gap: 36px;        
+        margin: 0 40px;                
     }
 
     @media screen and (max-width: 960px){

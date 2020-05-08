@@ -19,12 +19,11 @@ const PowerRanks = styled.div`
 
     h2{
         position: relative;
-        background-color: ${headerPrimary};
-        clip-path: polygon(0% 0%, 3% 100%, 97% 100%, 100% 0%);
+        background-color: ${headerPrimary};        
         margin-bottom: 8px;
         color: ${props => props.theme.white};          
         text-align: center;   
-        width: 424px;     
+        width: 396px;     
 
         &:before{
             display: block;
@@ -33,7 +32,7 @@ const PowerRanks = styled.div`
             background-color: ${headerSecondary};
             width: 24px;
             height: 100%;
-            left: 2px;
+            left: -8px;
             transform: skew(25deg);            
         }
 
@@ -45,7 +44,7 @@ const PowerRanks = styled.div`
             width: 24px;
             height: 100%;
             top: 0;
-            right: 2px;
+            right: -8px;
             transform: skew(-25deg);
         }
     }
@@ -61,17 +60,26 @@ const PowerRanks = styled.div`
         justify-content: space-around;
         padding: 0 32px;
         min-width: 396px;
-        height: 244px;        
+        height: 244px;
         
-        &>div{            
+        &>div{       
             display: flex;        
             flex-direction: column;           
-            justify-content: space-evenly;
+            justify-content: space-between;
+            margin: 20px 0;
             height: 100%;
             opacity: ${props => props.sliding ? '0' : '1' };
 
+            @supports not (-ms-ime-align: auto) {
+                justify-content: space-evenly;
+                margin: 0;
+            }
+
             a{
                 text-decoration: none;
+                &:hover{
+                    outline: 3px solid ${props => props.theme.hoverRed};
+                }  
             }
 
             &>img{                         
@@ -88,12 +96,16 @@ const PowerRanks = styled.div`
                 cursor: pointer;
                 min-width: 144px;                                                 
                 color: ${props => props.theme.black};                
-            }
+            }            
 
             div{           
                 display: flex;
                 min-width: 108px;
-                justify-content: space-evenly;
+                justify-content: space-around;
+
+                @supports not (-ms-ime-align: auto) {
+                    justify-content: space-evenly;                
+                }
 
                 img{         
                     height: 32px;
@@ -119,7 +131,9 @@ const PowerRanks = styled.div`
         margin-right: auto;
 
         h2{
-            width: 320px;
+            width: 288px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         &>div{

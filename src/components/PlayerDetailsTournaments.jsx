@@ -6,15 +6,16 @@ import First from '../../public/assets/gold-medal.png';
 import Second from '../../public/assets/silver-medal.png';
 import Third from '../../public/assets/bronze-medal.png';
 
-const background = '#B3CFDD'
-const highlightTheme = '#043C63';
-const pageLimit = 5;
+const background = '#DBE6EC';
+const highlightTheme = '#2E2D2D';
+const pageLimit = 4;
 
 const TournamentDetails = styled.div`    
     grid-column: 2 / 5;    
     display: flex;
     flex-direction: column;        
     margin: 0 auto 20px;
+    min-height: 580px;
 
     a{
         text-decoration: none;
@@ -36,6 +37,13 @@ const TournamentListing = styled.div`
     border-top: 1.5px solid ${highlightTheme};    
     cursor: pointer;
 
+    &:hover{
+        background-color: ${props => props.theme.white};
+        &>div{
+            background-color: ${props => props.theme.white};
+        }
+    }
+
     &>img{
         grid-row: 2 / 3;
         padding: 8px;
@@ -46,7 +54,7 @@ const TournamentListing = styled.div`
     &>span{
         grid-column: 1 / -1;           
         justify-self: center; 
-        color: ${props => '#043c63'};
+        color: ${highlightTheme};
         font-weight: 550;
     }        
 
@@ -70,8 +78,12 @@ const PlayerInfo = styled.div`
     grid-column: 2 / 3;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-around;    
     background-color: ${background};
+
+    div{
+        display: flex;
+    }
     
     span:first-child{
         display: inline-block;//should it just me a different element instead of forcing a span to be block?s
@@ -88,6 +100,9 @@ const PlayerInfo = styled.div`
         height: 100%;
         text-align: center;  
         font-weight: 550; 
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     @media screen and (max-width: 706px){
@@ -153,7 +168,7 @@ const PaginationButton = styled.button`
     margin-left: 4px;  
     background-color: ${props => props.page === props.index+1 ? highlightTheme : background};    
     border: none;
-    outline: ${props => props.page === props.index+1 ? 'none': '1px solid #043c63'};        
+    outline: ${props => props.page === props.index+1 ? 'none': '1px solid ' + highlightTheme};        
     cursor: ${props => props.page === props.index+1 ? 'default' : 'pointer'};        
     
     &:hover{
@@ -177,6 +192,7 @@ const PlayerDetailsTournaments = (props) => {
                 setBanners(images.map(banner => banner.default));
             });
             setTournaments(res.data.tournaments);
+            setPage(1);
         });
     },[props.player]);
     

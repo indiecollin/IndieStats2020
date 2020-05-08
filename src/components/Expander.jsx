@@ -6,26 +6,79 @@ import theme from '../styles/Theme';
 
 const caretDims = 12;
 const ExpanderWrapper = styled.div`    
-    margin-top: 4px;
-    height: 16px;
-    width: 100%;        
-    background: linear-gradient(${props => 'to bottom, ' + props.theme.black + ' 0%, ' + props.theme.black + ' 50%, transparent 50%, transparent 100%'});
-    clip-path: polygon(10% 100%, 90% 100%, 100% 0, 0 0);
+    position: relative;
+    margin-top: ${props => props.expanded ? '4px' : '20px'};
+    transition: margin .5s linear;
+    width: 75%;        
     cursor: pointer;        
-`;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
 
-const StyledExpander = styled.div`  
-    text-align: center;               
-    background-color: ${props => props.theme.black};            
-    width: 60%;
-    height: 100%;
-    margin: 0 auto;            
-    clip-path: polygon(30% 100%, 70% 100%, 100% 0, 0 0);
+    div{
+        background-color: ${props => props.theme.black};
+    }
 
     span{                          
-        display: block;      
+        display: block;
+        position: absolute;
+        top: 2px;
         ${props => props.expanded ? 'transform: rotate(-180deg);' : ''}       
-    }                    
+    }
+`;
+
+const ExpanderWing = styled.div`
+    width: 32px;
+    height: 8px;    
+
+    &:before{
+        display: block;
+        position: absolute;
+        content: '';
+        width: 150px;
+        height: 8px;
+        background-color: ${props => props.theme.black};
+        left: 0;
+        transform: skew(60deg);
+    }
+
+    &:after{
+        display: block;
+        position: absolute;
+        content: '';
+        width: 150px;
+        height: 8px;
+        background-color: ${props => props.theme.black};
+        right: 0;
+        transform: skew(-60deg);
+    }
+`;
+
+const ExpanderPoint = styled.div`
+    width: 28px;
+    height: 10px;
+
+    &:before{
+        display: block;
+        position: absolute;
+        content: '';
+        width: 50px;
+        height: 10px;
+        background-color: ${props => props.theme.black};
+        left: 50%;        
+        transform: skew(-70deg);
+    }
+
+    &:after{
+        display: block;
+        position: absolute;
+        content: '';
+        width: 50px;
+        height: 10px;
+        background-color: ${props => props.theme.black};
+        right: 50%;
+        transform: skew(70deg);
+    }
 `;
 
 class Expander extends Component{
@@ -35,10 +88,10 @@ class Expander extends Component{
 
     render(){
         return(
-            <ExpanderWrapper onClick = {this.props.onClick}>
-                <StyledExpander expanded = {this.props.expanded}>
-                    <span><CaretIcon dims = {caretDims} fill = {theme.white}/></span>
-                </StyledExpander>
+            <ExpanderWrapper onClick = {this.props.onClick} expanded = {this.props.expanded}>
+                <ExpanderWing/>
+                <ExpanderPoint/>
+                <span><CaretIcon dims = {caretDims} fill = {theme.white}/></span>
             </ExpanderWrapper>
         );
     };

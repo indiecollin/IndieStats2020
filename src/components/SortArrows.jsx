@@ -13,12 +13,14 @@ const Sorter = styled.span`
 const UpSort = styled(Sorter)`    
     border-bottom: 5px solid ${props => props.baseColor};
     top: 30%;
+    //top: 55%;
     &:hover{border-bottom: 5px solid ${props => props.hoverColor}};        
 `;
 
 const DownSort = styled(Sorter)`        
     border-top: 5px solid ${props => props.baseColor};
     bottom: 30%;
+    //bottom: -25%;
     &:hover{border-top: 5px solid ${props => props.hoverColor}};           
 `;
 

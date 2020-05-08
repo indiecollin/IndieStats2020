@@ -20,7 +20,7 @@ const MobileDetails = styled.div`
     width: 90%;    
     background-color: ${props => props.theme.black};
     color: ${moreInfoText};    
-    margin-top: ${props => props.show ? '0' : '-436px'};    
+    margin-top: ${props => props.show ? '0' : '-440px'};    
     grid-template-columns: 1fr 64px;     
 
     p{
@@ -76,7 +76,7 @@ const Placement = styled.span`
     grid-column: 2;
     width: unset;
     font-weight: 550;
-    font-size: 48px;
+    font-size: ${props => props.placement>=100 ? '34px': '48px'};
     color: transparent;
     background: -webkit-linear-gradient(${'315deg, ' + moreInfoPlacePrimary + ' 0%, ' + moreInfoPlaceSecondary + ' 74%'});
     background-clip: text;
@@ -101,7 +101,7 @@ const DetailsWrapper = styled.div`
 `;
 
 const DetailsHeader = styled.span`
-    background-color: ${() => moreInfoDataHeader};
+    background-color: ${moreInfoDataHeader};
     padding: 4px 0 4px 12px;
     font-weight: 550;
     font-size: 18px;
@@ -161,7 +161,7 @@ const TournamentResponsiveDetails = (props) =>{
         </GamerTag>
         <HeaderClip></HeaderClip>
         <HeaderPadding></HeaderPadding>
-        <Placement>{props.player.placement}</Placement>
+        <Placement placement = {props.player.placement}>{props.player.placement}</Placement>
         <Details>
             <DetailsWrapper>
                 <DetailsHeader>Record</DetailsHeader>

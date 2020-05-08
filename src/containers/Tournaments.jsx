@@ -10,7 +10,17 @@ import TournamentsDetails from '../components/TournamentsDetails.jsx';
 const TournamentsContainer = styled.main`   
     padding-top: 100px;
     margin: 0 auto;
-    width: min-content;
+    width: min-content;//crossbrowser logic safe
+    max-width: 1268px;
+    min-height: 100vh;
+
+    @media screen and (max-width: 1300px){
+      max-width: 888px;
+    }
+
+    @media screen and (max-width: 960px){
+      max-width: 692px;
+    }
 
     @media screen and (max-width: 706px){
       width: unset;
@@ -62,7 +72,7 @@ const Tournaments = (props) => {
   return <TournamentsContainer>
     <TournamentsGrid>
       <TournamentsUpcoming/>
-      <TournamentsPast query = {query} setQuery = {setQuery} setTournament = {setTournament}/>        
+      <TournamentsPast query = {query} setQuery = {setQuery} tournament = {tournament} setTournament = {setTournament}/>        
       <TournamentsDetails tournament = {tournament}/>        
     </TournamentsGrid>
     <TournamentsSearch setQuery = {setQuery}/>

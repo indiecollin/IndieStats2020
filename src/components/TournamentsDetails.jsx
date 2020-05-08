@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
 import theme from '../styles/Theme';
+//import scrollToElem from '../helpers/scrollToPolyfill';
 import MoreInfo from './TournamentResponsiveDetails.jsx';
 import ClearX from './ClearX.jsx';
 import CaretIcon from './svgs/CaretIcon.jsx'; 
@@ -25,13 +26,13 @@ const overflowEllipsis = `
 `;
 
 const playerSearchPos = {
-    top: '11.5px',
-    left: '232px',
+    top: '12.5px',
+    left: '220px',
     tabletLeft: '140px',
     mobileLeft: '252px'
 };
 
-const playerSorterPos = {right: '98px'}
+const playerSorterPos = {right: '94px'}
 const placeSorterPos = {right: '4px'}
 const seedSorterPos = {right: '8px'}
 
@@ -48,6 +49,7 @@ const TournamentHub = styled.div`
 
 const Header = styled.div`
     background-color: ${header};
+    position: relative;
     z-index: 50;
     
     &>div{
@@ -61,8 +63,7 @@ const Header = styled.div`
 
         h2{
             font-size: 26px;
-            margin: 0 auto;
-            margin-left: calc((932px - 60px - 100%) * .5 );
+            margin: 0 auto;            
         }
 
         div{
@@ -71,8 +72,7 @@ const Header = styled.div`
             justify-content: space-between;
             align-items: center;
             min-width: 320px;
-            margin-left: calc((932px - 60px - 100%) * .25 );
-            margin-right: calc((932px - 60px - 100%) * .5 );               
+            margin: 0 auto;            
 
             p{
                 font-size: 16px;          
@@ -105,7 +105,7 @@ const Header = styled.div`
         &>div{
             padding: 36px 4px 0 4px;
 
-            h2{font-size: 20px;}
+            h2{font-size: 18px;}
 
             div{
                 margin: 0;
@@ -119,8 +119,7 @@ const Header = styled.div`
     @media screen and (max-width: 480px){
         grid-template-columns: 1fr;
         grid-column: 1 / -1;
-        flex-direction: column;        
-        max-width: 320px;
+        flex-direction: column;                
 
         &>div{
             grid-column: 1 / 3;
@@ -133,12 +132,13 @@ const Header = styled.div`
 `;
 
 const Banner = styled.div`
-    background-color: ${header};
-    z-index: 50;
     grid-column: 1 / 2;
     grid-row: 1;
-    padding-top: 20px;
     display: flex;
+    position: relative;
+    padding-top: 20px;
+    z-index: 50;
+    background-color: ${header};
     
     img{
         margin: 0 auto;
@@ -168,7 +168,7 @@ const Search = styled.div`
     z-index: 50;    
     grid-column: 1 / -1;
     grid-row: 2;
-    padding: 8px 0 8px 62px;
+    padding: 8px 0 8px 50px;
 
     input{
         width: 192px;
@@ -181,13 +181,17 @@ const Search = styled.div`
     }
 
     @media screen and (max-width: 960px){        
-        padding-left: 0;
+        padding-left: 6px;
         input{
             width: 160px;
         }
         button{
             left: ${playerSearchPos.tabletLeft};
         }
+    }
+
+    @media screen and (max-width: 706px){
+        padding-left: 0;
     }
 
     @media screen and (max-width: 480px){    
@@ -217,12 +221,17 @@ const TableWrapper = styled.div`
 
         thead{
             display: table;
-            padding-right: 16px;
+            margin-right: 16px;
 
             th{
                 text-align: left;
                 height: 32px;
+                padding: 6.5px 0;
             }   
+
+            @media screen and (max-width: 480px){
+                margin-right: 0;
+            }
         }
 
         tbody{
@@ -240,7 +249,7 @@ const TableWrapper = styled.div`
 
             td:nth-last-child(2){
                 border-radius: 0 6px 6px 0;
-            }
+            }            
 
             &::-webkit-scrollbar-track
             {
@@ -263,6 +272,9 @@ const TableWrapper = styled.div`
                 border-left: 2px solid ${props => props.theme.scrollbarPrimary};
                 border-right: 2px solid ${props => props.theme.scrollbarPrimary};
             }
+
+            scrollbar-width: thin;
+            scrollbar-color: ${props => props.theme.scrollbarSecondary +', ' + props.theme.stripeGrey};
         }        
     }    
 
@@ -277,14 +289,10 @@ const TableWrapper = styled.div`
             min-height: 28px;
         }
 
-        &:nth-child(2n) td{
+        &:nth-child(2n-1) td{
             background-color: ${tableRow};
         }
-    }
-
-    /* .last-row{//not sure what this is for
-        height: 100%;
-    } */
+    }    
     
 
     @media screen and (max-width: 960px){        
@@ -309,12 +317,9 @@ const TableWrapper = styled.div`
             &::-webkit-scrollbar {
                 width: 0px;  /* remove scrollbar space */            
             }
-        }
-        /* table td:first-child{
-            width: 140px;
-        } */
-        
-        .more-info {width: 100%;}
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }                        
     }
 `;
 
@@ -421,17 +426,21 @@ class TournamentsDetails extends Component{
         this.setSort = this.setSort.bind(this);        
     }
 
+    componentDidMount(){
+        import(/* webpackMode: "eager" */ `../helpers/scrollToPolyfill`).then(module => {
+            this.setState({scrollTo: module.default})
+        });
+    }
+
     componentDidUpdate(prevProps){
         if(this.props.tournament._id !== prevProps.tournament._id){
             axios.get('http://localhost:9001/api/tournaments/players/' + this.props.tournament._id)
             .then(players => {                                
-                this.setState({tournament: Object.assign({}, this.props.tournament, players.data)});
-                window.requestAnimationFrame(() => {
-                    window.scrollTo({
-                        top: document.getElementsByClassName('tournament-details')[0].offsetTop, 
-                        behavior: "smooth"
-                    })
+                this.setState({
+                    tournament: Object.assign({}, this.props.tournament, players.data),
+                    expandMoreInfo: false
                 });
+                this.state.scrollTo('#tournament-details')                
             });
         }         
     };    
@@ -450,7 +459,7 @@ class TournamentsDetails extends Component{
 
     render(){
         return this.state.tournament ? 
-        <TournamentHub className = 'tournament-details'>
+        <TournamentHub id = 'tournament-details'>
             <Header>
                 <div>
                     <h2>{this.state.tournament.name}</h2>
@@ -526,8 +535,7 @@ class TournamentsDetails extends Component{
                                     </LinkColumn>
                                     <InfoExpanderData width = '40' onClick = {() => this.setState({moreInfoPlayer: p, expandMoreInfo: true})}><CaretIcon/></InfoExpanderData>
                                 </tr>
-                            })}
-                            {/* <tr className='last-row'></tr> what is this for? */}
+                            })}                            
                         </tbody>                        
                 </table>
                 <MoreInfo player = {this.state.moreInfoPlayer} show = {this.state.expandMoreInfo} collapse = {() => this.setState({expandMoreInfo: false})}/>

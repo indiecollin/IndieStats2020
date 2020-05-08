@@ -44,7 +44,7 @@ const Wrapper = styled.div`
             border-style: solid;
             top: 100%;
             left: calc(50% - 5px);//relative to border width
-            border-color: ${() => tooltip} transparent transparent transparent;
+            border-color: ${tooltip} transparent transparent transparent;
         }
     }
 `;

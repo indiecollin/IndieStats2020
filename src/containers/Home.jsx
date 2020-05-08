@@ -17,21 +17,20 @@ const articles = [
   }
 ];
 
-const HomeContainer = styled.div`
-  min-height: 100vh;  
+const HomeContainer = styled.main`
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 32px;
+  margin-right: auto;  
+  padding-top: 90px;
+  min-height: calc(100vh);
 
   &>div{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));    
     row-gap: 36px;
     column-gap: 20px;
-    margin: 0 auto;
-    padding-top: 90px;//temp
+    margin: 0 auto;    
     max-width: 940px;
   }
 

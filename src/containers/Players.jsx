@@ -49,14 +49,15 @@ const PlayerInfo = styled.div`
     padding-left: unset;
     display: flex;
     flex-direction: column;
-    height: ${props => props.expanded ? '1172px' : '308px'};
+    align-items: center;
+    height: ${props => props.expanded ? '1172px' : '326px'};
 
     &>div:not(:last-child){
       ${props => props.expanded ? '' : 'top: 0;'}
     }
 
     &>div:last-child{
-      display: block;
+      display: flex;
       position: relative;
       margin-top: auto;
       transition: margin 0.5s linear;
@@ -86,11 +87,7 @@ const PlayerDetails = styled.div`
   @media screen and (max-width: 1180px) {
     margin-left: auto;
   }
-
-  @media screen and (max-width: 500px) {
-    max-width: 360px;
-    margin: 20px auto;
-  }
+  
 `;
 
 const Players = (props) => {
