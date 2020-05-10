@@ -1,6 +1,6 @@
-let titles = [
-    'ANewGodIsBorn',
-    'MegaSmashMonday\'sBigMove'    
+let titles = [    
+    'IndieStatsLaunches',    
+    'TournamentsMoveOnline'
 ];
 
 export default titles;

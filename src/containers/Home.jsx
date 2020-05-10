@@ -1,21 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PowerRanks from '../components/HomePowerRanks.jsx';
 import FeaturedTournaments from '../components/HomeFeaturedTournaments.jsx';
 import NewsFlash from '../components/HomeNewsFlash.jsx';
 
-const articles = [
-  {
-    "thumbnail": "genesis5.jpg",
-    "name": "A New God Is Born",
-    "abstract": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis."
-  },
-  {
-    "thumbnail": "newloc.jpg",
-    "name": "Mega Smash Mondays Big Move",
-    "abstract": "Sem nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
-  }
-];
+function ScrollToTopOnMount() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null;
+};
 
 const HomeContainer = styled.main`
   width: 100%;
@@ -36,8 +31,7 @@ const HomeContainer = styled.main`
 
   @media screen and (max-width: 480px) {
     &>div{
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      padding-top: 72px;//temp
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));      
       row-gap: 20px;
     }
   }
@@ -49,8 +43,9 @@ const Home = () => {
           <div>
             <PowerRanks/>
             <FeaturedTournaments/>
-            <NewsFlash articles = {articles}/>
+            <NewsFlash/>
           </div>
+          <ScrollToTopOnMount/>
         </HomeContainer>
     )
 }

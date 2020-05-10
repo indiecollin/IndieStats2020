@@ -153,25 +153,25 @@ class TournamentsUpcoming extends Component{
             })
         })
 
-        // if(window.innerWidth > 706){
-        //     this.interval = setInterval(()=>{        
-        //         let first = this.listingRef.current.children[0]
-        //         if(!this.state.listingHovered){
-        //             this.listingRef.current.scrollTop++
-        //         }            
-        //         if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
-        //             this.setState((prevState) => {
-        //                 return{
-        //                     cycle: true,
-        //                     scrollY: window.scrollY,
-        //                     tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
-        //                     banners: prevState.banners.concat(prevState.banners.splice(0,1))
-        //                 }
-        //             });                    
-        //             this.listingRef.current.scrollTop = 0;
-        //         }
-        //     }, 10); 
-        // }         
+        if(window.innerWidth > 706){
+            this.interval = setInterval(()=>{        
+                let first = this.listingRef.current.children[0]
+                if(!this.state.listingHovered){
+                    this.listingRef.current.scrollTop++
+                }            
+                if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
+                    this.setState((prevState) => {
+                        return{
+                            cycle: true,
+                            scrollY: window.scrollY,
+                            tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
+                            banners: prevState.banners.concat(prevState.banners.splice(0,1))
+                        }
+                    });                    
+                    this.listingRef.current.scrollTop = 0;
+                }
+            }, 10); 
+        }         
     }
         
     componentWillUnmount() {

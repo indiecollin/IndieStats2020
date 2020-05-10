@@ -7,6 +7,14 @@ import TournamentsPast from '../components/TournamentsPast.jsx';
 import TournamentsSearch from '../components/TournamentsSearch.jsx';
 import TournamentsDetails from '../components/TournamentsDetails.jsx';
 
+function ScrollToTopOnMount() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null;
+};
+
 const TournamentsContainer = styled.main`   
     padding-top: 100px;
     margin: 0 auto;
@@ -76,6 +84,7 @@ const Tournaments = (props) => {
       <TournamentsDetails tournament = {tournament}/>        
     </TournamentsGrid>
     <TournamentsSearch setQuery = {setQuery}/>
+    <ScrollToTopOnMount/>
   </TournamentsContainer>
 };
 

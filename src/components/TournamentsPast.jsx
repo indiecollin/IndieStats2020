@@ -448,7 +448,7 @@ class TournamentsPast extends Component{
                             </div>
                             <div>
                                 <img src={SeasonIcon} />
-                                <span>Spring 2018</span>
+                                <span>{t.season}</span>
                             </div>
                         </Info>
                         <Seeds>

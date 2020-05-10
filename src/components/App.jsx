@@ -14,20 +14,29 @@ import Home from '../containers/Home.jsx';
 import Players from '../containers/Players.jsx';
 import Tournaments from '../containers/Tournaments.jsx';
 import News from '../containers/News.jsx';
-import AboutModal from './/AboutModal.jsx';
+import AboutModal from './AboutModal.jsx';
+import BrowserNotSupported from '../containers/BrowserNotSupported.jsx';
+import Http404 from '../containers/404.jsx';
 
 class App extends Component { 
     
     constructor(props, context){
         super(props, context);
         this.state = {
-            showBackdrop: false
+            showBackdrop: false,
+            browserSupported: false
         }
         this.toggleBackdrop = this.toggleBackdrop.bind(this);
     }
 
     componentDidMount(){
+        //class used to help with cloaking html on initial page load
         document.getElementsByTagName('body')[0].classList.remove('preload');
+        //handle broswer support logic here
+        const isIE = /*@cc_on!@*/false || !!document.documentMode;
+        if(!isIE){//
+            this.setState({browserSupported: true})
+        }
     }
 
     toggleBackdrop(content){
@@ -35,8 +44,8 @@ class App extends Component {
     }
 
     render() {
-        return (     
-            <ThemeProvider theme = {theme}>
+        return( 
+            this.state.browserSupported ? <ThemeProvider theme = {theme}>
                 <React.Fragment>
                     <GlobalStyles/>
                     <NavBar about = {this.toggleBackdrop}/>
@@ -48,11 +57,13 @@ class App extends Component {
                         <Route path='/players/:selected?' exact><Players/></Route>
                         <Route path='/tournaments/:selected?' exact><Tournaments/></Route>
                         <Route path='/news/:selected?' exact><News/></Route>
+                        <Route><Http404/></Route>
                     </Switch>
                     <Footer contactUs = {this.toggleBackdrop}/>
                 </React.Fragment>
-            </ThemeProvider>
+            </ThemeProvider> : <BrowserNotSupported/>
         )
+        
     }
 }
 

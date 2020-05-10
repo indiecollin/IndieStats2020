@@ -158,25 +158,7 @@ const PlayerDetailsStats = (props) => {
         </StatDetailsRow>
         <StatDetailsRow>
             <div>Most Losses</div><div>{stats.mostLosses}</div>
-        </StatDetailsRow>                        
-        <StatDetailsRow>
-            <div>Set Record</div><div>{props.player.setWins + ' - ' + props.player.setLosses}</div>
-        </StatDetailsRow>
-        <StatDetailsRow>
-            <div>Game Record</div><div>{props.player.gameWins + ' - ' + props.player.gameLosses}</div>
-        </StatDetailsRow>
-        <StatDetailsRow>
-            <div>Avg Place</div><div>{stats.avgPlacement}</div>
-        </StatDetailsRow>
-        <StatDetailsRow>
-            <div>Avg Seed</div><div>{stats.avgSeed}</div>
-        </StatDetailsRow>
-        <StatDetailsRow>
-            <div>Tournaments</div><div>{stats.tournaments}</div>
-        </StatDetailsRow>
-        <StatDetailsRow>
-            <div>Most Losses</div><div>{stats.mostLosses}</div>
-        </StatDetailsRow>
+        </StatDetailsRow>                                
     </StatDetails>
 };
 

@@ -1,9 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import titles from '../helpers/articleTitles';
 import NewsArticleListing from '../components/NewsArticleListing.jsx';
 import NewsArticle from '../components/NewsArticle.jsx';
+
+function ScrollToTopOnMount() {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+  
+    return null;
+  };
 
 const NewsContainer = styled.main`
     min-height: 100vh;
@@ -40,6 +48,7 @@ const News = () => {
                 <NewsArticleListing setArticleTitle = {setArticleTitle} titles = {titles}></NewsArticleListing>
                 <NewsArticle articleTitle = {articleTitle}></NewsArticle>
             </div>
+            <ScrollToTopOnMount/>
         </NewsContainer>
     );
 };

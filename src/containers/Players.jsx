@@ -9,6 +9,14 @@ import PlayerDetailsStats from '../components/PlayerDetailsStats.jsx';
 import PlayerDetailsTournaments from '../components/PlayerDetailsTournaments.jsx';
 import PlayerDetailsRivals from '../components/PlayerDetailsRivals.jsx';
 
+function ScrollToTopOnMount() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null;
+};
+
 const PlayersContainer = styled.main`    
     min-height: 100vh;    
     display: flex;
@@ -134,6 +142,7 @@ const Players = (props) => {
       {infoMode === 'tournaments' ? <PlayerDetailsTournaments player = {player}/> : null}
       {infoMode === 'rivals' ? <PlayerDetailsRivals player = {player} setPlayer = {setPlayer} tagProps = {tagProps}/>: null}
     </PlayerDetails>        
+    <ScrollToTopOnMount/>
   </PlayersContainer>
 };
 

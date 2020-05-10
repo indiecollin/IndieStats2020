@@ -48,8 +48,7 @@ const Footer = (props) => {
     return(
         <StyledFooter>
             <span>© 2020 indieStats</span>
-            <a href="mailto:webmaster@example.com">Contact Us</a>
-            {/* <button onClick = {() => props.contactUs('contact')} className = 'ignore-react-onclickoutside'>Contact Us</button> */}
+            <a href="mailto:collinalexcain@gmail.com">Contact Us</a>            
         </StyledFooter>
     )    
 }

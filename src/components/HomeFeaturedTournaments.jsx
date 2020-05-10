@@ -68,7 +68,7 @@ const FeaturedTournaments = styled.div`
 
     a{
         text-decoration: none;  
-        &>div:hover{
+        &:hover{
             outline: 2px solid ${props => props.theme.hoverRed};
         }              
     }
@@ -95,7 +95,8 @@ const FeaturedTournaments = styled.div`
 
 const TournamentListing = styled.div`
     display: flex;          
-    margin-bottom: 16px;        
+    margin-top: 4px;        
+    margin-bottom: 4px;        
 
     img{
         width: 160px;

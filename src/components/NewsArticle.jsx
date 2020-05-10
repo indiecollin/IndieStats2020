@@ -6,7 +6,7 @@ const Article = styled.div`
     display: flex;
     flex-direction: column;
     padding-bottom: 60px;
-    background-color: ${props => props.theme.white};
+    background-color: ${props => props.theme.lightGrey};
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 32px;
@@ -15,28 +15,28 @@ const Article = styled.div`
     h2{
         text-align: center;   
         padding: 12px 0;
-        margin-bottom: 20px;
         background-color: ${props => props.theme.newsColor};
         color: ${props => props.theme.stripeBlack};
     }
 
     img{
         display: block;
-        margin:  0 auto 40px;
+        margin:  20px auto 40px;
 
         //med
-        min-width: 300px;
-        max-width: 600px;
+        min-width: 300px;        
         width: 100%;        
     }
 
     p{
         margin-top: 32px;
-        padding: 8px 48px;
+        margin: 0 5%;
+        padding: 8px 16px;
     }    
 
     @media screen and (max-width: 960px) {     
         max-width: 760px;
+        width: 100%;
     }
     @media screen and (max-width: 480px) {              
         width: 300px;
