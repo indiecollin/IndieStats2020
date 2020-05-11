@@ -10,7 +10,7 @@ export default
     {gamerTag:"Eon", powerRank: 8, mains:'joker1,fox3', sponsor: 'flysociety'},
     {gamerTag:"Nito", powerRank: 9, mains:'ken1,ryu1'},
     {gamerTag:"AC", powerRank: 10, mains:'snake2,metaknight1'},
-    {gamerTag:"Cyro", powerRank: 11, mains:'roy4', sponsor: 'mazer'},
+    {gamerTag:"Cyro", powerRank: 11, mains:'roy4', sponsor: 'mazergaming'},
     {gamerTag:"Nitro", powerRank: 12, mains:'joker3,terry6'},
     {gamerTag:"T3 DOM", powerRank: 13, mains:'richter6,terry2'},
     {gamerTag:"Tearbear", powerRank: 14, mains:'banjo4'},
