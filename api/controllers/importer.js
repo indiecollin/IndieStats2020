@@ -5,11 +5,10 @@ const mongoose = require('mongoose');
 const R = require('ramda');
 const router = express.Router();
 Promise = require('bluebird');
-
-mongoose.connect('mongodb://localhost:27017/IndieStats', { useNewUrlParser: true });
    
 router.route('/smashgg')
-.post((req,res) => {              
+.post((req,res) => {          
+    mongoose.connect(`mongodb://${req.body.user}:${req.body.auth}@localhost:27017/IndieStats`, { useNewUrlParser: true });
     let phaseGroups =[];
     new Promise((resolve,reject) => {//pulls tournament phases from smash.gg                
         request('https://api.smash.gg/tournament/' + req.body.link + '/event/' + req.body.game + '?expand[]=phase', (err,res,body) => {                                    
@@ -349,6 +348,7 @@ router.route('/smashgg')
 
 router.route('/dupeCheck/smashgg')
 .get((req,res) => {              
+    mongoose.connect(`mongodb://${req.body.user}:${req.body.auth}@localhost:27017/IndieStats`, { useNewUrlParser: true });
     let phaseGroups =[];
     new Promise((resolve,reject) => {//pulls tournament phases from smash.gg                
         request('https://api.smash.gg/tournament/' + req.body.link + '/event/' + req.body.game, (err,res,body) => {                                    

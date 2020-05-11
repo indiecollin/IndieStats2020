@@ -1,5 +1,6 @@
 const schemas = require('../schemas');
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const powerRanks = require('../data/powerRanks');
 
@@ -17,6 +18,8 @@ let ordinal = function(i) {
     }
     return i + "th";
 };
+
+mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PSWD}@localhost:27017/IndieStats`, { useNewUrlParser: true });
 
 router.route('/players/player/:gamerTag')
 .get((req,res) => {  

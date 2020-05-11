@@ -1,6 +1,9 @@
 const schemas = require('../schemas');
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
+
+mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PSWD}@localhost:27017/IndieStats`, { useNewUrlParser: true });
 
 router.route('/tournaments/events')
 .get((req,res) => {         
