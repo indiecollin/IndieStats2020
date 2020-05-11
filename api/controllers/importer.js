@@ -56,7 +56,7 @@ router.route('/smashgg')
                     const tournamentData = JSON.parse(body);                    
                     const date = new Date(tournamentData.entities.tournament.startAt*1000);
                     const tournamentListing = {
-                        name: req.body.name + ' ' + req.body.count,
+                        name: req.body.name + req.body.count > 1 ? (' ' + req.body.count) : '',
                         shortName: req.body.series.code.toUpperCase() + ' ' + req.body.series.count,
                         bracketHost: 'smash.gg',                        
                         bracketLink: 'https://smash.gg/tournament/' + req.body.link + '/events/' + req.body.game + '/overview',                        

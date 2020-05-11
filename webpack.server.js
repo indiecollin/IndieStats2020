@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpackNodeExternals = require('webpack-node-externals');
 
@@ -43,9 +43,7 @@ module.exports = {
         ]
     },
     plugins: [        
-        new webpack.DefinePlugin({
-            __isBrowser__: 'false'
-        }),
+        new Dotenv(),
         new MiniCssExtractPlugin({filename: 'styles.css',}),
     ],
     externals: [webpackNodeExternals()]

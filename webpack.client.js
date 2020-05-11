@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -42,9 +42,7 @@ module.exports = {
         ]
     },
     plugins: [        
-        new webpack.DefinePlugin({
-            __isBrowser__: 'true'
-        }),
+        new Dotenv(),
         new MiniCssExtractPlugin({filename: 'styles.css'}),
     ]
 };

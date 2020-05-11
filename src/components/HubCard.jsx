@@ -221,14 +221,14 @@ const HubCard =  (props) =>{
                 setPreview(statsPreview);
             break;
             case 'tournaments':
-                axios.get('http://localhost:9001/api/players/tournamentListings/' + encodeURIComponent(props.player.gamerTag))
+                axios.get('http://localhost:' +  process.env.PORT + '/api/players/tournamentListings/' + encodeURIComponent(props.player.gamerTag))
                 .then(res => {
                     const tournamentsPreview = res.data.map(t => t.shortName).slice(0,5);
                     setPreview(tournamentsPreview);                                  
                 });
             break;
             case 'rivals':
-                axios.get('http://localhost:9001/api/players/rivals/' + encodeURIComponent(props.player.gamerTag))
+                axios.get('http://localhost:' +  process.env.PORT + '/api/players/rivals/' + encodeURIComponent(props.player.gamerTag))
                 .then(res => {
                     const rivalsPreview = res.data
                     .sort((r1, r2) => r2.setLosses - r1.setLosses)

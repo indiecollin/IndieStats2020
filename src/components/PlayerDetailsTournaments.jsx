@@ -185,7 +185,7 @@ const PlayerDetailsTournaments = (props) => {
     const [banners, setBanners] = useState([]);
     const [page, setPage] = useState(1);
     useEffect(() => {
-        axios.get('http://localhost:9001/api/players/tournaments/' + encodeURIComponent(props.player.gamerTag))
+        axios.get('http://localhost:' +  process.env.PORT + '/api/players/tournaments/' + encodeURIComponent(props.player.gamerTag))
         .then(res => {
             let imports = res.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => {                

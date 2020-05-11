@@ -130,10 +130,29 @@ class TournamentsUpcoming extends Component{
     componentDidMount(){
         const today = new Date().getTime();
         const range = today + 1000 * 60 * 60 * 24 * 60;//last number is # of days
-        axios.get('http://localhost:9001/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
+        axios.get('http://localhost:' +  process.env.PORT + '/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
         .then(tournaments => {
             let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => this.setState({tournaments: tournaments.data.map((t, i) =>  Object.assign({}, t, {banner: images[i].default}))}));
+            if(window.innerWidth > 706 && tournaments.data.length>3){
+                this.interval = setInterval(()=>{        
+                    let first = this.listingRef.current.children[0]
+                    if(!this.state.listingHovered){
+                        this.listingRef.current.scrollTop++
+                    }            
+                    if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
+                        this.setState((prevState) => {
+                            return{
+                                cycle: true,
+                                scrollY: window.scrollY,
+                                tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
+                                banners: prevState.banners.concat(prevState.banners.splice(0,1))
+                            }
+                        });                    
+                        this.listingRef.current.scrollTop = 0;
+                    }
+                }, 10); 
+            }  
         });                   
 
         this.listingRef.current.addEventListener('scroll', () =>{             
@@ -151,27 +170,7 @@ class TournamentsUpcoming extends Component{
             this.setState({
                 listingHovered: false            
             })
-        })
-
-        if(window.innerWidth > 706){
-            this.interval = setInterval(()=>{        
-                let first = this.listingRef.current.children[0]
-                if(!this.state.listingHovered){
-                    this.listingRef.current.scrollTop++
-                }            
-                if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
-                    this.setState((prevState) => {
-                        return{
-                            cycle: true,
-                            scrollY: window.scrollY,
-                            tournaments: prevState.tournaments.concat(prevState.tournaments.splice(0,1)),
-                            banners: prevState.banners.concat(prevState.banners.splice(0,1))
-                        }
-                    });                    
-                    this.listingRef.current.scrollTop = 0;
-                }
-            }, 10); 
-        }         
+        })       
     }
         
     componentWillUnmount() {
