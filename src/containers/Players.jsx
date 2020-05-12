@@ -111,8 +111,8 @@ const Players = (props) => {
   }  
 
   useEffect(() => {
-    axios.all([axios.get('http://localhost:' +  process.env.IPORT + 'players/powerRanks'),
-    axios.get('http://localhost:' +  process.env.IPORT + 'players/listing/')])
+    axios.all([axios.get('http://localhost:' +  process.env.IPORT + '/players/powerRanks'),
+    axios.get('http://localhost:' +  process.env.IPORT + '/players/listing/')])
     .then(axios.spread((ranks, players ) => {
       const tagDict = players.data.reduce((acc, cur) => {
         if(cur.icon || cur.iconColor || cur.tagColor){
