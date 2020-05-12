@@ -194,7 +194,7 @@ class HomeFeaturedTournaments extends Component{
     componentDidMount(){                        
         const start = new Date().getTime() - (1000 * 60 * 60 * 24 * 100);
         const end = new Date().getTime() + (1000 * 60 * 60 * 24 * 60);//last number is # of days
-        axios.get('http://localhost:' +  process.env.IPORT + '/tournaments/listings?startDate='+ start + '&endDate='+ end)
+        axios.get('http://localhost:' +  process.env.IPORT + '/api/tournaments/listings?startDate='+ start + '&endDate='+ end)
         .then(tournaments => {
             let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => {                                               

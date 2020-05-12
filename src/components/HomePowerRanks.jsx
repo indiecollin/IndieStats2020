@@ -171,7 +171,7 @@ class HomePowerRanks extends Component{
     }
 
     componentDidMount(){                    
-        axios.all([ axios.get('http://localhost:' +  process.env.IPORT + '/players/powerRanks')])
+        axios.all([ axios.get('http://localhost:' +  process.env.IPORT + '/api/players/powerRanks')])
         .then(axios.spread((powerRanks) => {
             let players = powerRanks.data.map(playerData => {                
                 const mains = playerData.mains.split(',')
