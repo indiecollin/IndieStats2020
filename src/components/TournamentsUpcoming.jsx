@@ -130,7 +130,7 @@ class TournamentsUpcoming extends Component{
     componentDidMount(){
         const today = new Date().getTime();
         const range = today + 1000 * 60 * 60 * 24 * 60;//last number is # of days
-        axios.get('http://localhost:' +  process.env.PORT + '/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
+        axios.get('http://localhost/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
         .then(tournaments => {
             let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => this.setState({tournaments: tournaments.data.map((t, i) =>  Object.assign({}, t, {banner: images[i].default}))}));

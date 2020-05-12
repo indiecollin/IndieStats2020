@@ -68,7 +68,7 @@ const Tournaments = (props) => {
   let { selected } = useParams();  
   useEffect(()=>{        
     if(selected){
-      axios.get('http://localhost:' +  process.env.PORT + '/api/tournaments/events/?count=1&search=' + encodeURI(selected.replace('-', ' ')))
+      axios.get('http://localhost/api/tournaments/events/?count=1&search=' + encodeURI(selected.replace('-', ' ')))
         .then(event => {
           if(event.data.tournaments.length){
             import(/* webpackMode: "eager" */ `../../public/tournament_banners/${event.data.tournaments[0].shortName.split(' ')[0]}96px.png`)
