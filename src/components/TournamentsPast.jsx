@@ -382,7 +382,7 @@ class TournamentsPast extends Component{
     };
 
     getTournaments(query, lazy){
-        axios.get('http://localhost:' +  process.env.IPORT + '/api/tournaments/events/?count='+ listingsPerPage + query)
+        axios.get('http://' + process.env.DOMAIN + '/api/tournaments/events/?count='+ listingsPerPage + query)
         .then(listing => {            
             let imports = listing.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));            
             Promise.all(imports).then(images => this.setState(prevState => ({tournaments: (lazy ? prevState.tournaments : []).concat(listing.data.tournaments.map((t,i) => Object.assign({}, t, {banner: images[i].default})))})));

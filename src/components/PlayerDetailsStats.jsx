@@ -122,10 +122,10 @@ const PlayerDetailsStats = (props) => {
     const [stats, setStats] = useState({});
     useEffect(() => {
         axios.all([ 
-            axios.get('http://localhost:' +  process.env.IPORT + '/api/players/tournamentsAttended/' + encodeURIComponent(props.player.gamerTag)),
-            axios.get('http://localhost:' +  process.env.IPORT + '/api/players/avgPlacement/' + encodeURIComponent(props.player.gamerTag)),
-            axios.get('http://localhost:' +  process.env.IPORT + '/api/players/avgSeed/' + encodeURIComponent(props.player.gamerTag)),
-            axios.get('http://localhost:' +  process.env.IPORT + '/api/players/mostLosses/' + encodeURIComponent(props.player.gamerTag))                                     
+            axios.get('http://' + process.env.DOMAIN + '/api/players/tournamentsAttended/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://' + process.env.DOMAIN + '/api/players/avgPlacement/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://' + process.env.DOMAIN + '/api/players/avgSeed/' + encodeURIComponent(props.player.gamerTag)),
+            axios.get('http://' + process.env.DOMAIN + '/api/players/mostLosses/' + encodeURIComponent(props.player.gamerTag))                                     
         ])
         .then(axios.spread((tournamentsAttended, avgPlacement, avgSeed, mostLosses) => {
             setStats({
