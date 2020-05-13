@@ -25,7 +25,7 @@ const background = '#DBE6EC';
 
 const PlayerListWrapper = styled.div`
     position: fixed;
-    top: 100px;        
+    top: 80px;        
     z-index: 100; 
     left:  2.5%;
     display: flex;
@@ -37,7 +37,7 @@ const PlayerListWrapper = styled.div`
         margin-left: auto;
         left: unset;
         height: 100%;
-        margin-bottom: 88px;
+        margin-bottom: 68px;
     }
     @media screen and (max-width: 706px) {        
         margin-right: auto;                
@@ -117,14 +117,14 @@ const Spacer = styled.div`
 
 class PlayerList extends Component {
     constructor(props, context){
-        super(props, context);
+        super(props, context);        
         this.state = {
             players: [],
             ranks: true,//mode
-            expanded: true,
+            expanded: window.innerWidth > 706,
             page: 1,
             limit: 10,
-            sort: true,//true = by name, false = by record
+            sort: false,//true = by name, false = by record
             inverse: false,
             query: ''
         }        
@@ -136,7 +136,7 @@ class PlayerList extends Component {
         this.page = this.page.bind(this);
         this.expand = this.expand.bind(this);            
         this.rightNavDisable = this.rightNavDisable.bind(this);
-    }
+    }    
 
     selectPlayer(player){        
         this.props.history.push({pathname: '/players/' + encodeURIComponent(player.gamerTag)});

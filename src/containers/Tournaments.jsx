@@ -42,15 +42,18 @@ const TournamentsGrid = styled.div`
   margin-left: 3%;
   margin-right: 3%;
 
+  &>div:last-child{
+    margin-bottom: 20px;
+  }
+
   @media screen and (max-width: 1300px) {            
         grid-template-columns: minmax(268px, 1fr) minmax(600px, 2fr);            
-        margin: 0 auto;                      
-        //padding-right: 20px;       
+        margin: 0 auto;                              
     }    
 
     @media screen and (max-width: 960px){
         grid-template-columns: 264px minmax(408px, 1fr);
-        gap: 8px 20px;//subject to change
+        gap: 8px 20px;
     }
 
     @media screen and (max-width: 706px){

@@ -356,7 +356,8 @@ class TournamentsPast extends Component{
         this.state = {
             tournaments: [],
             banners: [],
-            searching: false
+            searching: false,
+            loading: false
         };
         this.lazyLoad = this.lazyLoad.bind(this);
         this.getTournaments = this.getTournaments.bind(this);
@@ -374,8 +375,9 @@ class TournamentsPast extends Component{
     };
 
     lazyLoad(e) {
-        const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight
-        if (bottom) {
+        const bottom = (e.target.scrollHeight - e.target.scrollTop) < (e.target.clientHeight + 50)//within 50px of bottom
+        if (bottom && !this.state.loading) {
+            this.setState({loading: true});
             let queryString = this.props.query + '&lastTournament=' + this.state.tournaments.slice(-1)[0]._id;         
             this.getTournaments(queryString, true);
         }
@@ -385,7 +387,7 @@ class TournamentsPast extends Component{
         axios.get('http://' + process.env.DOMAIN + '/api/tournaments/events/?count='+ listingsPerPage + query)
         .then(listing => {            
             let imports = listing.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));            
-            Promise.all(imports).then(images => this.setState(prevState => ({tournaments: (lazy ? prevState.tournaments : []).concat(listing.data.tournaments.map((t,i) => Object.assign({}, t, {banner: images[i].default})))})));
+            Promise.all(imports).then(images => this.setState(prevState => ({tournaments: (lazy ? prevState.tournaments : []).concat(listing.data.tournaments.map((t,i) => Object.assign({}, t, {banner: images[i].default}))),loading:false})));
         });
     };    
 

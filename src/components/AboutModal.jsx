@@ -87,7 +87,7 @@ const StyledModal = styled.div`
         padding-bottom: 20px;
 
         svg{
-            right: 3%;
+            right: 5%;
         }
         &>div{        
             padding: 0 12px;
@@ -104,7 +104,7 @@ const StyledModal = styled.div`
 
 const Modal = (props) => {    
     return <StyledModal>        
-        <XIcon onClick = {() => props.closeModal(false)} fill={theme.darkGrey}/>
+        <XIcon onClick = {() => props.closeModal(false)} fill={theme.lightGrey}/>
         <div>
             <div>
                 <h3>Analytics For All</h3>

@@ -130,15 +130,18 @@ const Top3 = styled.div`
         display: flex;
         background-color: ${highlightTheme};
         align-items: center;
-        clip-path: polygon(0% 0%, 0% 100%, 90% 100%, 100% 0%);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;        
+        clip-path: polygon(0% 0%, 0% 100%, 90% 100%, 100% 0%);           
 
         img{
             width: 24px;
             height: 24px;
         }   
+
+        span{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;            
+        }
     }           
     
     @media screen and (max-width: 706px){
@@ -211,9 +214,9 @@ const PlayerDetailsTournaments = (props) => {
                             <div><span>Eliminator</span><span>{t.eliminator ? t.eliminator: '-----'}</span></div>
                         </PlayerInfo>
                         <Top3>
-                            <div><img src = {First}/>{t.top3[0]}</div>
-                            <div><img src = {Second}/>{t.top3[1]}</div>
-                            <div><img src = {Third}/>{t.top3[2]}</div>
+                            <div><img src = {First}/><span>{t.top3[0]}</span></div>
+                            <div><img src = {Second}/><span>{t.top3[1]}</span></div>
+                            <div><img src = {Third}/><span>{t.top3[2]}</span></div>
                         </Top3>
                     </TournamentListing>                
                 </Link>

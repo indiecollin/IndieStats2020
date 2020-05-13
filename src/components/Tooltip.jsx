@@ -5,9 +5,7 @@ import TipIcon from './svgs/TipIcon.jsx';
 
 const tooltip = '#252839';
 
-const tipDims = '16';
-
-const Wrapper = styled.div`    
+const Wrapper = styled.span`    
     cursor: pointer;
     position: absolute;
     top: 2px;
@@ -15,7 +13,7 @@ const Wrapper = styled.div`
     display: flex;                        
     justify-content: center;                    
     box-sizing: content-box;
-    z-index: 110;            
+    z-index: 1000;
         
     &:hover p{
         display: block;
@@ -35,7 +33,7 @@ const Wrapper = styled.div`
         position: absolute;
         top: -76px;  
         font-size: 12px;                  
-        z-index: 110;      
+        z-index: 1000;      
         
         &:after {
             content: '';
@@ -52,7 +50,7 @@ const Wrapper = styled.div`
 const Tooltip = (props) => {
     return(
         <Wrapper>
-            <span><TipIcon fill = {theme.black} dims = {tipDims}/></span>
+            <span><TipIcon fill = {theme.black}/></span>
             <p>{props.children}</p>
         </Wrapper>
     );

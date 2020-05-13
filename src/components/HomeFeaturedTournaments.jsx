@@ -88,7 +88,7 @@ const FeaturedTournaments = styled.div`
             width: 300px;
             padding: 4px;
             min-width: 300px;
-            min-height: 180px;
+            min-height: 188px;
         }
     } 
 `;

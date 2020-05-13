@@ -29,7 +29,7 @@ const NewsFlash = styled.div`
 
     @media screen and (max-width: 824px) {    
         width: 320px;
-        margin: 0 auto;
+        margin: 0 auto 20px;
 
         &>div{
             margin-top: 8px;
