@@ -29,18 +29,9 @@ class App extends Component {
         this.toggleBackdrop = this.toggleBackdrop.bind(this);
     }
 
-    componentDidMount(){        
-        let body = document.getElementsByTagName('body')[0];//prevents background image shifting on mobile when address bar shrinks
-        if ((/Android|iPhone|iPad|iPod|BlackBerry/i).test(navigator.userAgent || navigator.vendor || window.opera)) {
-            body.style.top = 'auto';
-            body.style.bottom = 0;          
-            window.onresize = sizeBackground;
-            sizeBackground();
-        }          
-        function sizeBackground() {
-            body.style.height = screen.height;
-        }
-        body.classList.remove('preload');//class used to help with cloaking html on initial page load
+    componentDidMount(){
+        //class used to help with cloaking html on initial page load
+        document.getElementsByTagName('body')[0].classList.remove('preload');
         //handle broswer support logic here
         const isIE = /*@cc_on!@*/false || !!document.documentMode;
         if(!isIE){//
