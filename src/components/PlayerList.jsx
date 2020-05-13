@@ -123,7 +123,7 @@ class PlayerList extends Component {
             ranks: true,//mode
             expanded: window.innerWidth > 706,
             page: 1,
-            limit: 10,
+            limit: window.innerWidth > 706 ? 10 : 5,
             sort: false,//true = by name, false = by record
             inverse: false,
             query: ''
