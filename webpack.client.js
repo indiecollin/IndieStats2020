@@ -1,15 +1,18 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const ReactLoadableSSRAddon = require('react-loadable-ssr-addon');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     target: 'node',
-    mode: process.env.NODE_ENV || 'production',    
+    mode: process.env.NODE_ENV || 'development',    
+    devtool:'inline-source-map',
     entry: './src/client.js',
     output: {
-        filename: 'client_bundle.js',
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist/public'),
-        publicPath: '/'
+        filename: '[name].js',
+        chunkFilename: '[name].chunk.js'
     },
     module: {
         rules:[
@@ -21,7 +24,14 @@ module.exports = {
                     presets: [
                         '@babel/react',
                         '@babel/env'
-                    ]
+                    ],
+                    plugins: [
+                        require('@babel/plugin-proposal-class-properties'),
+                        require('@babel/plugin-proposal-object-rest-spread'),
+                        require('@babel/plugin-syntax-dynamic-import'),
+                        require('babel-plugin-styled-components'),
+                        require('react-loadable/babel'),
+                    ],
                 }
             },
             {
@@ -40,8 +50,25 @@ module.exports = {
             }
         ]
     },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                    minChunks: 2,
+                },
+                default: {
+                    minChunks: 2,
+                    reuseExistingChunk: true,
+                },
+            },
+        },
+    },
     plugins: [        
         new Dotenv(),
+        new ReactLoadableSSRAddon({filename: 'react-loadable-ssr-addon.json',}),
         new MiniCssExtractPlugin({filename: 'styles.css'}),
     ]
 };

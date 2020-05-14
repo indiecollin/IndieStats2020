@@ -1,16 +1,19 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const ReactLoadableSSRAddon = require('react-loadable-ssr-addon');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
     target: 'node',
-    mode: process.env.NODE_ENV || 'production',    
+    mode: process.env.NODE_ENV || 'development',    
+    devtool:'inline-source-map',
     entry: './server.js',
     output: {
-        filename: 'bundle.js',
+        publicPath: '/dist',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/dist'
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].chunk.js'
     },
     module: {
         rules:[
@@ -41,8 +44,25 @@ module.exports = {
             }
         ]
     },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                    minChunks: 2,
+                },
+                default: {
+                    minChunks: 2,
+                    reuseExistingChunk: true,
+                },
+            },
+        },
+    },
     plugins: [        
         new Dotenv(),
+        new ReactLoadableSSRAddon({filename: 'react-loadable-ssr-addon.json',}),
         new MiniCssExtractPlugin({filename: 'styles.css',}),
     ],
     externals: [webpackNodeExternals()]

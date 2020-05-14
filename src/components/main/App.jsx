@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Switch, Route} from 'react-router';
+import Loadable from 'react-loadable';
 import {ThemeProvider} from 'styled-components';
 
 import theme from '../../styles/Theme';
@@ -7,16 +8,21 @@ import GlobalStyles from '../../styles/GlobalStyles';
 import fontImports from '../../styles/fontimports.css';
 
 import NavBar from './NavBar.jsx';
-import AboutModal from './AboutModal.jsx';
+//import AboutModal from './AboutModal.jsx';
 import Footer from './Footer.jsx';
 import Backdrop from '../Backdrop.jsx';
-import ContactUs from './ContactUs.jsx';
+//import ContactUs from './ContactUs.jsx';
 import Home from '../../containers/Home.jsx';
 import Players from '../../containers/Players.jsx';
 import Tournaments from '../../containers/Tournaments.jsx';
 import News from '../../containers/News.jsx';
 import BrowserNotSupported from '../../containers/BrowserNotSupported.jsx';
 import Http404 from '../../containers/404.jsx';
+
+const AboutModalAsync = Loadable({
+  loader: () => import(/* webpackChunkName: "about-modal" */'./AboutModal.jsx'),
+  loading() {return;}
+});
 
 class App extends Component { 
     
@@ -50,7 +56,7 @@ class App extends Component {
                     <GlobalStyles/>
                     <NavBar about = {this.toggleBackdrop}/>
                     <Backdrop show = {this.state.showBackdrop} onClick = {this.toggleBackdrop}>
-                        {this.state.showBackdrop === 'about' ? <AboutModal closeModal = {this.toggleBackdrop}/> : <ContactUs close = {this.toggleBackdrop}/> }
+                        {this.state.showBackdrop === 'about' ? <AboutModalAsync closeModal = {this.toggleBackdrop}/> : null }
                     </Backdrop>                                
                     <Switch>                        
                         <Route path='/' exact><Home/></Route>

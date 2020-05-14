@@ -8,5 +8,11 @@
         ],
         "@babel/preset-react"
     ],
-    "plugins": ["@babel/plugin-proposal-object-rest-spread", "babel-plugin-styled-components"]
+    "plugins": [
+        "@babel/plugin-proposal-object-rest-spread",
+        "babel-plugin-styled-components",
+        "@babel/plugin-proposal-class-properties",
+        "dynamic-import-node",
+        "react-loadable/babel"    
+    ]
 }
