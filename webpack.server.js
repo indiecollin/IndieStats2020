@@ -5,8 +5,7 @@ const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
     target: 'node',
-    mode: process.env.NODE_ENV || 'production',
-    devtool:'inline-source-map',
+    mode: process.env.NODE_ENV || 'production',    
     entry: './server.js',
     output: {
         filename: 'bundle.js',

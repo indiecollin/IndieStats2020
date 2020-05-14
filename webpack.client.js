@@ -4,8 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     target: 'node',
-    mode: process.env.NODE_ENV || 'production',
-    devtool:'inline-source-map',
+    mode: process.env.NODE_ENV || 'production',    
     entry: './src/client.js',
     output: {
         filename: 'client_bundle.js',
