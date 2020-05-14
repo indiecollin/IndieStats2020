@@ -5,7 +5,7 @@ const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
     target: 'node',
-    mode: process.env.NODE_ENV || 'development',
+    mode: process.env.NODE_ENV || 'production',
     devtool:'inline-source-map',
     entry: './server.js',
     output: {
