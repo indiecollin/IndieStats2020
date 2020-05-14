@@ -4,14 +4,13 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Moment from 'moment';
 Moment.locale('en');
-import theme from '../styles/Theme';
-//import scrollToElem from '../helpers/scrollToPolyfill';
-import MoreInfo from './TournamentResponsiveDetails.jsx';
-import ClearX from './ClearX.jsx';
-import CaretIcon from './svgs/CaretIcon.jsx'; 
-import SortArrows from './SortArrows.jsx';
-import Smashgg from '../../public/assets/smash.gg.png';
-import Facebook from '../../public/assets/facebook.png';
+import theme from '../../styles/Theme';
+import MoreInfo from './TournamentsResponsiveDetails.jsx';
+import ClearX from '../ClearX.jsx';
+import CaretIcon from '../svgs/CaretIcon.jsx'; 
+import SortArrows from '../SortArrows.jsx';
+import Smashgg from '../../../public/assets/smash.gg.png';
+import Facebook from '../../../public/assets/facebook.png';
 
 const header = '#B7C5CE';
 const tableRow = '#D9DFFF';
@@ -24,13 +23,6 @@ const overflowEllipsis = `
     white-space: nowrap;
     overflow: hidden;
 `;
-
-const playerSearchPos = {
-    top: '12.5px',
-    left: '220px',
-    tabletLeft: '140px',
-    mobileLeft: '252px'
-};
 
 const playerSorterPos = {right: '94px'}
 const placeSorterPos = {right: '4px'}
@@ -79,13 +71,13 @@ const Header = styled.div`
                 font-weight: 550;          
             }
 
-            a img{
+            a img{/*facebook & bracket links*/
                 width: 24px;
             }                
         }   
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*shrink content and spacing for less clutter*/
         margin: 0 auto;
         &>div {
             h2{
@@ -99,7 +91,7 @@ const Header = styled.div`
         }        
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*stacks header contents for vertical view*/
         margin: 0;
 
         &>div{
@@ -116,7 +108,7 @@ const Header = styled.div`
         }
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*stacks header contents for vertical view*/
         grid-template-columns: 1fr;
         grid-column: 1 / -1;
         flex-direction: column;                
@@ -145,14 +137,14 @@ const Banner = styled.div`
         max-width: 192px;
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*stacks header contents for vertical view*/
         img{ 
             margin: 0 auto;
             max-width: 160px;
         }
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*stacks header contents for vertical view*/
         grid-column: 1 / -1;
         padding: 8px 25%;
         img{
@@ -173,37 +165,39 @@ const Search = styled.div`
     input{
         width: 192px;
         position: relative;
-    }        
+    }            
 
-    button{
-        z-index: 100;
-        left: ${playerSearchPos.left};
-    }
-
-    @media screen and (max-width: 960px){        
+    @media screen and (max-width: 960px){/*move searchbar to accommodate header responsiveness*/      
         padding-left: 6px;
         input{
             width: 160px;
-        }
-        button{
-            left: ${playerSearchPos.tabletLeft};
-        }
+        }        
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*move searchbar to accommodate header responsiveness*/
         padding-left: 0;
     }
 
-    @media screen and (max-width: 480px){    
+    @media screen and (max-width: 480px){/*move searchbar to accommodate header responsiveness*/
         padding: 8px 15%;
         grid-row: 3;
 
         input{
             width: 100%;
-        }
-        button{
-            left: ${playerSearchPos.mobileLeft};
-        }
+        }        
+    }
+`;
+
+const PlayerClearX = styled(ClearX)`
+    top: 12.5px;
+    left: 220px;
+    z-index: 100;
+
+    @media screen and (max-width: 960px){/*move clearX to accommodate header responsiveness*/  
+        left: 140px;
+    }
+    @media screen and (max-width: 480px){/*move clearX to accommodate header responsiveness*/
+        left: 252px;
     }
 `;
 
@@ -230,7 +224,7 @@ const TableWrapper = styled.div`
             }   
 
             @media screen and (max-width: 480px){
-                margin-right: 0;
+                margin-right: 0;/*adjust margin for scrollbar disappearing*/
             }
         }
 
@@ -243,30 +237,27 @@ const TableWrapper = styled.div`
                 padding: 4px 0 4px 2px;
             }
 
-            td:first-child {
+            td:first-child {/*rounded left*/
                 border-radius: 6px 0 0 6px;
             }
 
-            td:nth-last-child(2){
+            td:nth-last-child(2){/*rounded right*/
                 border-radius: 0 6px 6px 0;
             }            
 
-            &::-webkit-scrollbar-track
-            {
+            &::-webkit-scrollbar-track{
                 border-radius: 10px;
                 border-radius: 10px;
                 background-color: ${props => props.theme.scrollbarPrimary};
             }
 
-            &::-webkit-scrollbar
-            {
+            &::-webkit-scrollbar{
                 width: 12px;
                 border-radius: 10px;
                 background-color: ${props => props.theme.scrollbarPrimary};
             }
 
-            &::-webkit-scrollbar-thumb
-            {
+            &::-webkit-scrollbar-thumb{
                 border-radius: 10px;
                 background-color: ${props => props.theme.scrollbarSecondary};
                 border-left: 2px solid ${props => props.theme.scrollbarPrimary};
@@ -281,33 +272,27 @@ const TableWrapper = styled.div`
     tr{
         min-height: 28px;
 
-        th, td{
-            //this might cover all overflow related things
+        th, td{            
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
             min-height: 28px;
         }
 
-        &:nth-child(2n-1) td{
+        &:nth-child(2n-1) td{/*striped row pattern*/
             background-color: ${tableRow};
         }
     }    
     
 
-    @media screen and (max-width: 960px){        
+    @media screen and (max-width: 960px){/*last column rounded with adjusted columns*/     
         margin: 0 auto;
         table td:last-child{
             border-radius: 0 6px 6px 0;
         }        
     }
 
-    @media screen and (max-width: 706px){
-        position: relative;
-        table>div{margin: 0 auto;}
-    }
-
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*remove scrollbar space & set height */            
         grid-row: 4;
         padding: 0;
         max-height: 800px;                
@@ -315,7 +300,7 @@ const TableWrapper = styled.div`
         table tbody{
             padding-right: 0;
             &::-webkit-scrollbar {
-                width: 0px;  /* remove scrollbar space */            
+                width: 0;
             }
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -323,6 +308,7 @@ const TableWrapper = styled.div`
     }
 `;
 
+/*@media screen and (max-width: 960px) hide non-mobile columns*/
 const columnStyles = (props) => (`
     position: ${props.position === 'relative' ? 'relative' : 'unset'};
     width: ${props.width + 'px'};
@@ -350,7 +336,7 @@ const Matches = styled(ColumnData)`
         font-family: sans-serif;
     }          
 `;
-//maybe just export match icon instead
+
 const matchIconStyles = (props) =>(`
     display: flex;
     justify-content: center;
@@ -379,6 +365,7 @@ const LinkColumn = styled(ColumnData)`
     }
 `;
 
+/*@media screen and (max-width: 960px) show expander column in mobile*/
 const infoExpanderStyles = (props) =>(`
     width: ${props.width};
     display: none;            
@@ -419,15 +406,15 @@ class TournamentsDetails extends Component{
             moreInfoPlayer: false,
             query: '',
             sort: 'placement',
-            sortAsc: 1
+            sortAsc: 1//ascending = 1, descending = -1
         };        
         this.searchPlayers = this.searchPlayers.bind(this);
         this.clearPlayerSearch = this.clearPlayerSearch.bind(this);
         this.setSort = this.setSort.bind(this);        
     }
 
-    componentDidMount(){
-        import(/* webpackMode: "eager" */ `../helpers/scrollToPolyfill`).then(module => {
+    componentDidMount(){//loads scrollTo polyfill on mount to prevent server error due to window object not yet instantiating
+        import(/* webpackMode: "eager" */ `../../helpers/scrollToPolyfill`).then(module => {
             this.setState({scrollTo: module.default})
         });
     }
@@ -439,7 +426,7 @@ class TournamentsDetails extends Component{
                 this.setState({
                     tournament: Object.assign({}, this.props.tournament, players.data),
                     expandMoreInfo: false
-                });
+                });//scroll to component on mount, useful for click in PastTournaments and tournament routing via URL
                 this.state.scrollTo('#tournament-details')                
             });
         }         
@@ -467,8 +454,7 @@ class TournamentsDetails extends Component{
                         <p>{Moment(new Date(this.state.tournament.eventDate)).format('MMM D, YYYY')}</p>
                         <p>{this.state.tournament.entrantCount} Entrants</p>                    
                         <a href={this.state.tournament.bracketLink}><img src={Smashgg}></img></a>
-                        <a href='#'><img src={Facebook}></img></a>   
-                        {/* {this.state.tournament.eventPage ? <p>Event Page: {this.state.tournament.eventPage}</p> : null} */}
+                        {this.state.tournament.eventPage ? <a href='#'><img src={Facebook}></img></a> : ''}                        
                     </div>                
                 </div> 
             </Header>
@@ -477,7 +463,7 @@ class TournamentsDetails extends Component{
             </Banner>
             <Search>
                 <input type='text' value = {this.state.query} onChange = {this.searchPlayers} placeholder='Search Player' />
-                <ClearX visible = {this.state.query} onClick = {() => this.clearPlayerSearch()} position = {playerSearchPos}/>
+                <PlayerClearX visible = {this.state.query} onClick = {() => this.clearPlayerSearch()}/>
             </Search>            
             <TableWrapper>
                 <table>                        

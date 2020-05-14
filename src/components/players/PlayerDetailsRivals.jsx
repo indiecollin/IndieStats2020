@@ -3,28 +3,28 @@ import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import ordinal from '../helpers/ordinal';
-import ClearX from './ClearX.jsx';
-import BadgeIcon0 from '../../public/smash_tag_icons/badge-icon0.png';
-import BadgeIcon1 from '../../public/smash_tag_icons/badge-icon1.png';
-import BadgeIcon2 from '../../public/smash_tag_icons/badge-icon2.png';
-import BadgeIcon3 from '../../public/smash_tag_icons/badge-icon3.png';
-import BadgeIcon4 from '../../public/smash_tag_icons/badge-icon4.png';
-import BadgeIcon5 from '../../public/smash_tag_icons/badge-icon5.png';
-import BadgeIcon6 from '../../public/smash_tag_icons/badge-icon6.png';
-import BadgeIcon7 from '../../public/smash_tag_icons/badge-icon7.png';
-import BadgeIcon8 from '../../public/smash_tag_icons/badge-icon8.png';
-import BadgeIcon9 from '../../public/smash_tag_icons/badge-icon9.png';
-import BadgeIcon10 from '../../public/smash_tag_icons/badge-icon10.png';
-import BadgeIcon11 from '../../public/smash_tag_icons/badge-icon11.png';
-import BadgeIcon12 from '../../public/smash_tag_icons/badge-icon12.png';
-import BadgeIcon13 from '../../public/smash_tag_icons/badge-icon13.png';
-import BadgeIcon14 from '../../public/smash_tag_icons/badge-icon14.png';
-import BadgeIcon15 from '../../public/smash_tag_icons/badge-icon15.png';
-import BadgeIcon16 from '../../public/smash_tag_icons/badge-icon16.png';
-import BadgeIcon17 from '../../public/smash_tag_icons/badge-icon17.png';
-import BadgeIcon18 from '../../public/smash_tag_icons/badge-icon18.png';
-import BadgeIcon19 from '../../public/smash_tag_icons/badge-icon19.png';
+import ordinal from '../../helpers/ordinal';
+import ClearX from '../ClearX.jsx';
+import BadgeIcon0 from '../../../public/smash_tag_icons/badge-icon0.png';
+import BadgeIcon1 from '../../../public/smash_tag_icons/badge-icon1.png';
+import BadgeIcon2 from '../../../public/smash_tag_icons/badge-icon2.png';
+import BadgeIcon3 from '../../../public/smash_tag_icons/badge-icon3.png';
+import BadgeIcon4 from '../../../public/smash_tag_icons/badge-icon4.png';
+import BadgeIcon5 from '../../../public/smash_tag_icons/badge-icon5.png';
+import BadgeIcon6 from '../../../public/smash_tag_icons/badge-icon6.png';
+import BadgeIcon7 from '../../../public/smash_tag_icons/badge-icon7.png';
+import BadgeIcon8 from '../../../public/smash_tag_icons/badge-icon8.png';
+import BadgeIcon9 from '../../../public/smash_tag_icons/badge-icon9.png';
+import BadgeIcon10 from '../../../public/smash_tag_icons/badge-icon10.png';
+import BadgeIcon11 from '../../../public/smash_tag_icons/badge-icon11.png';
+import BadgeIcon12 from '../../../public/smash_tag_icons/badge-icon12.png';
+import BadgeIcon13 from '../../../public/smash_tag_icons/badge-icon13.png';
+import BadgeIcon14 from '../../../public/smash_tag_icons/badge-icon14.png';
+import BadgeIcon15 from '../../../public/smash_tag_icons/badge-icon15.png';
+import BadgeIcon16 from '../../../public/smash_tag_icons/badge-icon16.png';
+import BadgeIcon17 from '../../../public/smash_tag_icons/badge-icon17.png';
+import BadgeIcon18 from '../../../public/smash_tag_icons/badge-icon18.png';
+import BadgeIcon19 from '../../../public/smash_tag_icons/badge-icon19.png';
 
 const badgeIcons = [
     BadgeIcon0,BadgeIcon1,BadgeIcon2,BadgeIcon3,BadgeIcon4,
@@ -33,17 +33,19 @@ const badgeIcons = [
     BadgeIcon15,BadgeIcon16,BadgeIcon17,BadgeIcon18,BadgeIcon19
 ];
 
+const rivalsLimit = 5;
+const rivalTagWinsShadow = 'rgba(0, 0, 0, .25)'//'#00000040'
 const portraitHeader = '#00000C';
 const playerIcon = '#FE0000';
 const playerBackground = '#993130';
 const rivalIcon = '#0068EB';
 const rivalBackground = '#3878A4';
 const rivalBackgroundHover = '#6594B3';
-const matchWin = 'rgba(41, 153, 41, 0.808)';
-const matchWinHover = 'rgb(41, 153, 41)';
-const matchLoss = 'rgba(192, 80, 60, 0.801)';
-const matchLossHover = 'rgb(192, 80, 60)';
-const statsTranslucent = 'rgba(70, 67, 67, 0.685)';
+const matchWin = 'rgba(41, 153, 41, .80)';
+const matchWinHover = '#299929';
+const matchLoss = 'rgba(192, 80, 60, .80)';
+const matchLossHover = '#C0503C';
+const statsTranslucent = '#464343B3';
 
 const badgeColors = [
     '#F33906',
@@ -99,11 +101,11 @@ const RivalDetails = styled.div`
     max-height: 452px;
     margin: 0 auto 20px;    
 
-    @media screen and (max-width: 1360px){
+    @media screen and (max-width: 1360px){/*shrinks component and content for less clutter*/
         grid-template-columns: 160px 1fr;        
     }    
     
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*stacks content and removes height restriction */
         padding: 0; 
         margin: 0;
         max-height: unset;   
@@ -123,7 +125,7 @@ const RivalsListing = styled.div`
         }       
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*stacks badges horizontally*/
         grid-column: 1 / -1;
         padding: 0;
         margin-bottom: 8px;
@@ -143,13 +145,17 @@ const RivalsListing = styled.div`
             }
         }
 
-        input[type=text]{width: 50%;}
-
-        button{            
-            right: 25.5%;
-            top: 3px;
-        }
+        input[type=text]{width: 50%;}        
     }    
+`;
+
+const RivalClearX = styled(ClearX)`
+    top: 16.5px;
+    right: 15.5px;    
+    @media screen and (max-width: 706px){/*adjusts clearX spacing for mobile view*/
+        top: 3.5px;
+        right: 25.5%;
+    }
 `;
 
 const RivalTag = styled.div`
@@ -171,7 +177,7 @@ const RivalTag = styled.div`
         font-family: sans-serif;
     }
 
-    &::before{//chain hole   
+    &::before{/*chain hole*/
         top: 14px;
         left: -6px;
         position: absolute;
@@ -184,7 +190,7 @@ const RivalTag = styled.div`
         height: 32px; 
     }    
 
-    &:hover::after{//hover effect
+    &:hover::after{/*hover effect*/
         content: '';
         display: block;
         position: absolute;
@@ -195,11 +201,11 @@ const RivalTag = styled.div`
         animation: tag-pulse 0.5s;
         animation-iteration-count: infinite;        
 
-        @supports (-ms-ime-align:auto) {//edge doesn't properly animate linear gradients
+        @supports (-ms-ime-align:auto) {/*edge doesn't properly animate linear gradients*/
             background-color: ${badgeHoverHighlight};
             animation: none;
         }
-    }    
+    }
 
     @keyframes tag-pulse{        
         0%{background: linear-gradient(${'to right, ' + badgeHoverHighlight + ', ' + badgeHoverHighlight + ' 100%'});}
@@ -213,7 +219,7 @@ const RivalTag = styled.div`
         
     }                         
 
-    img{
+    img{/*rival tag icon image*/
         background-color: ${props => props.getIconColor(props.gamerTag)};
         border-radius: 4px;
         height: 36px;                
@@ -225,15 +231,15 @@ const RivalTag = styled.div`
         margin-right: 8px;
         flex-grow: 1;
         text-align: right;
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: ${rivalTagWinsShadow};
         border-radius: 12px;
 
-        span{
+        span{/*wins*/
             margin-right: 4px;
         }
     }
     
-    &>span{
+    &>span{/*rival gamer tag*/
         flex-basis: 100%;
         text-align: center;
         text-overflow: ellipsis;
@@ -241,7 +247,7 @@ const RivalTag = styled.div`
         overflow: hidden;                    
     }
 
-    @media screen and (max-width: 1360px){
+    @media screen and (max-width: 1360px){/*shrink tag for less clutter*/
         width: 140px;
 
         &:hover::after{
@@ -252,7 +258,7 @@ const RivalTag = styled.div`
         }        
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*adjust tags for horizontal stacking*/
         height: 68px;
         padding: 8px 0 0;
 
@@ -291,7 +297,7 @@ const RivalInfo = styled.div`
         flex-direction: column;                          
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*stacks under rivals listing*/
         grid-column: 1 / -1;
     }
 
@@ -304,12 +310,12 @@ const Portraits = styled.div`
     justify-content: space-around;
     min-width: 760px;
 
-    @media screen and (max-width: 1360px){
+    @media screen and (max-width: 1360px){/*shrinks portraits for less clutter*/
         max-width: 680px;
         min-width: unset;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*allows for full screen width with stacking component*/
         min-width: 100vw;
     }     
 `;
@@ -340,7 +346,7 @@ const PortraitHeader = styled.div`
         font-family: sans-serif;
     }
 
-    span:first-child{
+    span:first-child{/*player icon*/
         font-size: 20px;
         font-weight: 800;
         text-transform: uppercase;    
@@ -348,7 +354,7 @@ const PortraitHeader = styled.div`
         color: ${props => props.player ? playerIcon : rivalIcon};
     }
 
-    span:last-child{
+    span:last-child{/*gamer tag*/
         font-size: 32px;
         font-weight: 800;
         text-transform: uppercase;
@@ -357,10 +363,10 @@ const PortraitHeader = styled.div`
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-        width: -webkit-fill-available;             
+        width: 100%;            
     }
 
-    @media screen and (max-width: 1180px){
+    @media screen and (max-width: 1180px){/*shrink for less clutter*/
 
         span:first-child{
             font-size: 16px;      
@@ -374,13 +380,13 @@ const PortraitHeader = styled.div`
         }
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*shrink for less clutter*/
         span:last-child{            
             margin-left: 0;
         }
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*shrink for less clutter*/
         span:first-child{
             font-size: 11px;  
             margin-left: 0;                
@@ -402,19 +408,14 @@ const ImageWrapper = styled.div`
         max-width: 100%;
         max-height: 100%;       
         background-color: ${props => props.player ? playerBackground : rivalBackground};
-        ${props => !props.player ? '&:hover{background-color: ' + rivalBackgroundHover + '};' : ''}
-        position: absolute;
+        ${props => !props.player ? '&:hover{background-color: ' + rivalBackgroundHover + '};' : ''}        
         left: 0;
         z-index: 20;                
     }   
-
-    @media screen and (max-width: 1360px){
-        min-height: ${props => props.preLoad? '356px' : 'unset'};
-        min-width: ${props => props.preLoad? '340px' : 'unset'};
-        
-        img{
-            position: relative;
-        }
+    
+    @media screen and (max-width: 1360px){/*preload logic to give component form while awaiting data*/
+        min-height: ${props => props.preLoad ? '356px' : 'unset'};
+        min-width: ${props => props.preLoad ? '340px' : 'unset'};                
     }
 
     @media screen and (max-width: 900px){
@@ -430,7 +431,7 @@ const RivalStats = styled.div`
     grid-area: 1 / 1 / 3 / 2;                
     position: relative;
     z-index: 100;      
-    height: max-content;//crossbrowser logic safe
+    height: max-content;/*crossbrowser logic safe*/
     width: 320px; 
     justify-self: center;
     margin: auto 0;
@@ -438,12 +439,12 @@ const RivalStats = styled.div`
 `;
 
 const StatsListing = styled.div`
-    background-color: ${() => statsTranslucent}; 
+    background-color: ${statsTranslucent}; 
 
     div{
         display: flex;
          
-        span:last-child{                            
+        span:last-child{/*stat values*/                    
             margin-right: auto; 
         }
     }
@@ -466,20 +467,17 @@ const MatchHistory = styled.div`
     background-color: ${statsTranslucent}; 
     color: ${props => props.theme.white};
     
-    &::-webkit-scrollbar-track
-    {        
+    &::-webkit-scrollbar-track{        
         border-radius: 10px;
         background-color: ${props => props.theme.scrollbarPrimary};
     }
 
-    &::-webkit-scrollbar
-    {
+    &::-webkit-scrollbar{
         width: 12px;
         background-color: ${props => props.theme.scrollbarPrimary};
     }
 
-    &::-webkit-scrollbar-thumb
-    {
+    &::-webkit-scrollbar-thumb{
         border-radius: 10px;        
         background-color: ${props => props.theme.scrollbarSecondary};
         border-left: 2px solid ${props => props.theme.scrollbarPrimary};
@@ -501,7 +499,7 @@ const MatchHistoryHeader = styled.div`
         &::-webkit-input-placeholder {
             text-align: center;
         }        
-    }      
+    }
 `;
 
 const MatchListings = styled.div`                                       
@@ -525,7 +523,7 @@ const Match = styled.div`
         margin-top: 8px;
     }        
 
-    div{
+    div{/*score*/
         display: flex;
         margin: 8px 64px 0;
         justify-content: space-between;
@@ -535,8 +533,6 @@ const Match = styled.div`
         }
     }
 `;
-
-const rivalsLimit = 5;
 
 class PlayerDetailsRivals extends Component{
     constructor(props){
@@ -567,7 +563,7 @@ class PlayerDetailsRivals extends Component{
         this.getRivalData(this.props.player, false, true);        
     }
 
-    shouldComponentUpdate(prevProps){
+    shouldComponentUpdate(prevProps){/*update rival data when player is selected*/
         if(this.props.player.gamerTag !== prevProps.player.gamerTag){
             this.getRivalData(prevProps.player, false, true);
         }
@@ -612,7 +608,7 @@ class PlayerDetailsRivals extends Component{
                 axios.get('http://' + process.env.DOMAIN + '/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
                 axios.get('http://' + process.env.DOMAIN + '/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag))
             ]).then(axios.spread((matchHistory, rival, records, highestSet, lastMet) => {                           
-                import(/* webpackMode: "eager" */ `../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
+                import(/* webpackMode: "eager" */ `../../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
                     this.setState({rivalPortrait: rivalImg.default});
                 });
                 this.setState({
@@ -633,12 +629,12 @@ class PlayerDetailsRivals extends Component{
             }));      
         });
         if(newPlayer){
-            import(/* webpackMode: "eager" */ `../../public/rival_portraits/${player.mains ? player.mains.split(',')[0] : 'default'}.png`).then(playerImg => {
+            import(/* webpackMode: "eager" */ `../../../public/rival_portraits/${player.mains ? player.mains.split(',')[0] : 'default'}.png`).then(playerImg => {
                 this.setState({playerPortrait: playerImg.default});
             });
         }        
     }
-
+    //functions for randomizing badge features when player doesn't have badge data available
     getBadgeColor(gamerTag){
         return this.props.tagProps[gamerTag] ? badgeColors[this.props.tagProps[gamerTag].badgeColor] : badgeColors[gamerTag.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 12];
     }
@@ -676,7 +672,7 @@ class PlayerDetailsRivals extends Component{
             <RivalDetails>
                 <RivalsListing rivals = {this.state.rivals}>
                     <input type="text" value = {this.state.rivalQuery} onChange = {this.searchRivals} placeholder='Search Rivals'/>                    
-                    <ClearX onClick = {() => this.clearRivalSearch()} visible = {this.state.rivalQuery} position = {rivalSearchClearXPos}/>
+                    <RivalClearX onClick = {() => this.clearRivalSearch()} visible = {this.state.rivalQuery}/>
                     <div>  
                         {
                             this.state.rivals

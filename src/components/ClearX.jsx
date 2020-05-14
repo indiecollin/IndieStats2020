@@ -8,8 +8,8 @@ const StyledClearX = styled.button`
     position: absolute;
     width: ${props => props.dims ?  props.dims + 'px' : '16px'};
     height: ${props => props.dims ? props.dims + 'px' : '16px'};
-    top: ${props => props.position.top};
-    right: ${props => props.position.right};
+    top: ${props => props.position ? props.position.top : 0 };
+    right: ${props => props.position ? props.position.right : 0};
     background: transparent;
     border: none;
     outline: none;
@@ -29,7 +29,7 @@ class ClearX extends Component{
 
     render(){
         return(
-            <StyledClearX onClick = {this.props.onClick} dims = {this.props.dims} visible = {this.props.visible} position = {this.props.position}>
+            <StyledClearX onClick = {this.props.onClick} dims = {this.props.dims} visible = {this.props.visible} position = {this.props.position} className = {this.props.className}>
                 <XIcon dims = {this.props.dims}></XIcon>
             </StyledClearX>
         );

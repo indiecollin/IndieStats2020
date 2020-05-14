@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import TournamentsUpcoming from '../components/TournamentsUpcoming.jsx';
-import TournamentsPast from '../components/TournamentsPast.jsx';
-import TournamentsSearch from '../components/TournamentsSearch.jsx';
-import TournamentsDetails from '../components/TournamentsDetails.jsx';
+import TournamentsUpcoming from '../components/tournaments/TournamentsUpcoming.jsx';
+import TournamentsPast from '../components/tournaments/TournamentsPast.jsx';
+import TournamentsSearch from '../components/tournaments/TournamentsSearch.jsx';
+import TournamentsDetails from '../components/tournaments/TournamentsDetails.jsx';
 
 function ScrollToTopOnMount() {
   useEffect(() => {
@@ -18,10 +18,10 @@ function ScrollToTopOnMount() {
 const TournamentsContainer = styled.main`   
     padding-top: 100px;
     margin: 0 auto;
-    width: min-content;//crossbrowser logic safe
+    width: min-content;/*crossbrowser logic safe*/
     max-width: 1268px;
     min-height: 100vh;
-
+    /*adjusting width and max-width values to accommodate grid changing */
     @media screen and (max-width: 1300px){
       max-width: 888px;
     }
@@ -42,24 +42,24 @@ const TournamentsGrid = styled.div`
   margin-left: 3%;
   margin-right: 3%;
 
-  &>div:last-child{
+  &>div:last-child{/*last component should have margin between footer*/
     margin-bottom: 20px;
   }
 
-  @media screen and (max-width: 1300px) {            
+  @media screen and (max-width: 1300px) {/*adjust grid for tournament search being removed*/          
         grid-template-columns: minmax(268px, 1fr) minmax(600px, 2fr);            
         margin: 0 auto;                              
     }    
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*adjust grid for page components shrinking*/
         grid-template-columns: 264px minmax(408px, 1fr);
         gap: 8px 20px;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*adjust grid for stacking components vertically*/
         grid-template-columns: 1fr;         
     }
-    @media screen and (max-width: 480px) {    
+    @media screen and (max-width: 480px) {/*shrink grid for more mobile view*/ 
         display: flex;
         flex-direction: column;
     }

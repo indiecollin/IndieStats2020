@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import SearchIcon from './svgs/SearchIcon.jsx';
+import SearchIcon from '../svgs/SearchIcon.jsx';
+
+const buttonGrey = '#F0F0F0';
 
 const ArticleListing = styled.div`    
     display: flex;
@@ -64,13 +66,12 @@ const Search = styled.div`
     button{
         width: 20px;
         height: 20px;
-        cursor: pointer;
-        //default border styles
-        background-color: #F0F0F0;
-        border: 2px outset #F0F0F0;        
+        cursor: pointer;        
+        background-color: ${buttonGrey};
+        border: 2px outset ${buttonGrey};
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*start wrapping articles under searchbar*/
         flex-basis: 100%;
         margin: 12px 0;
         input{
@@ -128,9 +129,9 @@ const NewsArticleListing = (props => {
         props.setArticleTitle(article); 
     }        
     useEffect(()=>{
-        let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
+        let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
         Promise.all(imports).then(images => {
-            let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../articles/${aFile.replace('\'', '')}.jsx`));
+            let imports = props.titles.map(aFile => import(/* webpackMode: "eager" */ `../../articles/${aFile.replace('\'', '')}.jsx`));
             let bannersAndTitles = images.map((banner, i) => ({title: props.titles[i], image: banner.default}));            
             Promise.all(imports).then(aComponents =>{
                 setArticles(bannersAndTitles.map((article, i) => Object.assign({}, article, {tags: aComponents[i].tags})));
@@ -145,7 +146,7 @@ const NewsArticleListing = (props => {
         
     return <ArticleListing>
         <h2>Articles</h2>
-        <Search>
+        <Search>{/*onChange updates query value, "onEnter" updates query results*/}
             <input type='text' value={input} onChange={(e => setInput(e.target.value))} onKeyPress = {(e) =>  e.charCode===13 ? setQuery(input) : null} placeholder = 'Search Articles'></input>
             <button onClick = {() => setQuery(input)}><span><SearchIcon/></span></button>
         </Search>

@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import onClickOutside from 'react-onclickoutside';
 import styled from 'styled-components';
 
+const background = 'rgba(0, 0, 0, .5)';//'#00000080'
+
 const StyledBackdrop = styled.div`
     visibility: ${props => props.show? 'visible' : 'hidden'};
     position: fixed;    
@@ -10,7 +12,7 @@ const StyledBackdrop = styled.div`
     top: 0;
     left: 10%;
     right: 10%;    
-    background-color: ${props => props.show ? 'rgba(0,0,0,0.5)' : 'transparent'};
+    background-color: ${props => props.show ? background : 'transparent'};
     width: 80vw;    
     height: 100vh;  
     transition: background-color 250ms linear;
@@ -23,7 +25,7 @@ const StyledBackdrop = styled.div`
     scrollbar-width: none;
     -ms-overflow-style: none;
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*full screen for mobile view*/
         width: 100vw;
         left: 0;
         right: 0;

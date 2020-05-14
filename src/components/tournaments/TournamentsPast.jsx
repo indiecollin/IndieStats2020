@@ -4,19 +4,19 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Moment from 'moment';
 Moment.locale('en');
-import theme from '../styles/Theme';
+import theme from '../../styles/Theme';
 
 import TournamentSearch from './TournamentsSearch.jsx';
-import First from '../../public/assets/gold-medal.png';
-import Second from '../../public/assets/silver-medal.png';
-import Third from '../../public/assets/bronze-medal.png';
-import PlayersIcon from '../../public/assets/players-icon.png';
-import CalendarIcon from '../../public/assets/calendar-icon.png';
-import LocationIcon from '../../public/assets/location-icon.png';
-import Smashgg from '../../public/assets/smash.gg.png';
-import SeasonIcon from '../../public/assets/season-icon.png';
-import SearchIcon from './svgs/SearchIcon.jsx';
-import XIcon from './svgs/XIcon.jsx';
+import First from '../../../public/assets/gold-medal.png';
+import Second from '../../../public/assets/silver-medal.png';
+import Third from '../../../public/assets/bronze-medal.png';
+import PlayersIcon from '../../../public/assets/players-icon.png';
+import CalendarIcon from '../../../public/assets/calendar-icon.png';
+import LocationIcon from '../../../public/assets/location-icon.png';
+import Smashgg from '../../../public/assets/smash.gg.png';
+import SeasonIcon from '../../../public/assets/season-icon.png';
+import SearchIcon from '../svgs/SearchIcon.jsx';
+import XIcon from '../svgs/XIcon.jsx';
 
 const listingBackground = '#DBE6EC';
 const seedPrimary ='#A2A4C7';
@@ -32,20 +32,17 @@ const TournamentsListing = styled.div`
     overflow-x: hidden;      
     background: repeating-linear-gradient(${props => '115deg, ' + props.theme.stripeGrey + ', ' + props.theme.stripeGrey + ' 2px, ' + props.theme.stripeBlack + ' 2px, ' + props.theme.stripeGrey + ' 4px'}); 
 
-    &::-webkit-scrollbar-track
-    {        
+    &::-webkit-scrollbar-track{        
         border-radius: 10px;
         background-color: ${props => props.theme.stripeGrey};
     }
 
-    &::-webkit-scrollbar
-    {
+    &::-webkit-scrollbar{
         width: 12px;
         background-color: ${props => props.theme.stripeGrey};
     }
 
-    &::-webkit-scrollbar-thumb
-    {
+    &::-webkit-scrollbar-thumb{
         border-radius: 10px;        
         background-color: ${props => props.theme.scrollbarSecondary};
         border-left: 2px solid ${props => props.theme.stripeGrey};
@@ -55,22 +52,22 @@ const TournamentsListing = styled.div`
     scrollbar-width: thin;
     scrollbar-color: ${props => props.theme.scrollbarSecondary +', ' + props.theme.stripeGrey};
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*listing becomes more stacked for vertical viewing*/
         padding-left: 12px;
         max-width: 420px;
         min-width: 320px;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*TournamentsUpcoming stacks under so margin and positioning adjusted */
         margin: 0 auto;
         grid-column: 1 / -1;
     }
 
-    @media screen and (max-width: 480px){ 
+    @media screen and (max-width: 480px){/*remove scrollbar space and shrink contents*/
         padding-right: 12px;
         max-width: 320px;
         &::-webkit-scrollbar {
-            width: 0px !important;  /* remove scrollbar space */
+            width: 0px !important;
         }
         scrollbar-width: none;
         -ms-overflow-style: none;
@@ -88,12 +85,7 @@ const Header = styled.div`
         color: ${props => props.theme.white};
         height: 36px;
         padding-top: 8px;             
-    }
-
-    @media screen and (max-width: 1300px){
-        width: 100%;    
-        position: absolute;
-    }
+    }    
 `;
 
 const TournamentListing = styled.div`
@@ -127,7 +119,7 @@ const TournamentListing = styled.div`
         max-width: 192px; 
     }
     
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*change grid columns which displaces grid items for more vertical view*/
         grid-template-columns: minmax(160px, 1fr) 1fr;
         margin-left: 0;
         margin-right: 0;
@@ -137,7 +129,7 @@ const TournamentListing = styled.div`
         }
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*shrinks contents of listing*/
         max-width: 320px; 
 
         &>img{
@@ -161,15 +153,14 @@ const Placements = styled.div`
         margin-bottom: 4px;             
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;         
-        //max-width: TBD;
+        overflow: hidden;                 
 
-        img{
+        img{/*medals*/
             width: 20px;
             height: 20px;                    
         }
 
-        span{                    
+        span{/*top3*/                   
             font-size: 14px;
             font-weight: 550;
             text-overflow: ellipsis;
@@ -178,12 +169,12 @@ const Placements = styled.div`
         }
     }    
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*adjust grid positioning for more vertical view*/
         grid-row: 2;
         grid-column: 2 / 3;                
     }                              
     
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*shrinks contents*/
         &>div {            
             max-width: 128px;      
         }
@@ -200,7 +191,7 @@ const Info = styled.div`
         font-weight: 550;
         align-items: center;
 
-        img{
+        img{/*info icons*/
             width: 20px;
             height: 20px;
             margin-right: 8px;
@@ -211,7 +202,7 @@ const Info = styled.div`
         }
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*adjust grid positioning for more vertical view*/
         grid-row: 3;
         &>div{
             padding-left: 8px;
@@ -264,7 +255,7 @@ const Seeds = styled.div`
         }        
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*adjust grid positioning for more vertical view*/
         grid-row: 3;
         grid-column: 2 / 3;
         padding-left: 0;
@@ -274,7 +265,7 @@ const Seeds = styled.div`
         }        
     }     
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*shrinks contents*/
         &>div {            
             max-width: 128px;      
         }
@@ -282,7 +273,7 @@ const Seeds = styled.div`
 `;
 
 const SearchWrapper = styled.div`
-    display: none;
+    display: none;/*hidden on desktop*/
     position: sticky;
     top: 20px;  
 
@@ -297,11 +288,11 @@ const SearchWrapper = styled.div`
             right: 60px;
             top: 20px;
             left: unset;
-            height: min-content;//crossbrowser logic safe
+            height: min-content;/*crossbrowser logic safe*/
         }
     }
 
-    &>button, &>div>button{
+    &>button, &>div>button{/*mobile search button*/
         display: block; 
         position: relative;                               
         margin-left: auto;
@@ -314,7 +305,7 @@ const SearchWrapper = styled.div`
         cursor: pointer;
         z-index: 50;
         outline: none;
-        ${props => props.searching ? 
+        ${props => props.searching ? /*searching flag opens and updates button icon*/
             (props) => (`
                 span{
                 height: 1px;
@@ -339,12 +330,12 @@ const SearchWrapper = styled.div`
     }
 
     @media screen and (max-width: 1300px){
-        display: block;
+        display: block;/*now visible*/
     }
 
     @media screen and (max-width: 480px){
         &>div>div{
-            right: 20px;
+            right: 20px;/*shift to the left for more centered view*/
         }
     }
 `;
@@ -369,14 +360,14 @@ class TournamentsPast extends Component{
     };
 
     componentDidUpdate(prevProps){
-        if(this.props.query !== prevProps.query){            
+        if(this.props.query !== prevProps.query){//receives query from tournaments container and updates whenever it changes          
             this.getTournaments(this.props.query);
         }
     };
 
     lazyLoad(e) {
         const bottom = (e.target.scrollHeight - e.target.scrollTop) < (e.target.clientHeight + 50)//within 50px of bottom
-        if (bottom && !this.state.loading) {
+        if (bottom && !this.state.loading) {//loading flag prevents extra requests on lazy load
             this.setState({loading: true});
             let queryString = this.props.query + '&lastTournament=' + this.state.tournaments.slice(-1)[0]._id;         
             this.getTournaments(queryString, true);
@@ -386,14 +377,14 @@ class TournamentsPast extends Component{
     getTournaments(query, lazy){
         axios.get('http://' + process.env.DOMAIN + '/api/tournaments/events/?count='+ listingsPerPage + query)
         .then(listing => {            
-            let imports = listing.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));            
+            let imports = listing.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));            
             Promise.all(imports).then(images => this.setState(prevState => ({tournaments: (lazy ? prevState.tournaments : []).concat(listing.data.tournaments.map((t,i) => Object.assign({}, t, {banner: images[i].default}))),loading:false})));
         });
     };    
 
     selectTournament(tournament){        
         this.props.history.push({pathname: '/tournaments/' + tournament.shortName.replace(' ', '-')});
-        this.props.setTournament(tournament)
+        this.props.setTournament(tournament);
     }    
 
     render(){
@@ -401,16 +392,18 @@ class TournamentsPast extends Component{
             <TournamentsListing onScroll={this.lazyLoad}>
                 <Header><h3>Past Tournaments</h3></Header>
                 <SearchWrapper searching={this.state.searching}>
-                {this.state.searching ?
-                <div>
-                    <TournamentSearch setQuery = {this.props.setQuery}/>
-                    <button onClick = {() => this.setState({searching: false})}>
-                        <XIcon fill={theme.darkGrey}/>                        
-                    </button>                    
-                </div> :
-                <button onClick = {() => this.setState({searching: true})}>
-                    <span><SearchIcon fill={theme.black}/></span>
-                </button>}
+                    {
+                        this.state.searching ?
+                        <div>
+                            <TournamentSearch setQuery = {this.props.setQuery}/>
+                            <button onClick = {() => this.setState({searching: false})}>
+                                <XIcon fill={theme.darkGrey}/>                        
+                            </button>                    
+                        </div> :
+                        <button onClick = {() => this.setState({searching: true})}>
+                            <span><SearchIcon fill={theme.black}/></span>
+                        </button>
+                    }
                 </SearchWrapper>
                 {this.state.tournaments.map((t, i) => {
                     return <TournamentListing key={t.name} onClick = {() => this.selectTournament(t)} selected = {this.props.tournament.shortName === t.shortName}>

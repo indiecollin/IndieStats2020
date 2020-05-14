@@ -39,15 +39,15 @@ const StyledFooter = styled.footer`
         }
     }
 
-    @media screen and (max-width: 480px) {        
+    @media screen and (max-width: 480px) {/*adjusts outside padding for mobile view*/   
         padding: 8px 12px;
     }
 `;
 
-const Footer = (props) => {
+const Footer = () => {
     return(
         <StyledFooter>
-            <span>© 2020 indieStats</span>
+            <span>© 2020 indiestats.gg</span>
             <a href="mailto:collinalexcain@gmail.com">Contact Us</a>            
         </StyledFooter>
     )    

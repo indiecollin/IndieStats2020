@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router';
-import theme from '../styles/Theme';
-import ClearX from './ClearX.jsx';
-import NavTriangle from './NavTriangle.jsx';
-import OptionSwitch from './OptionSwitch.jsx';
-import SortArrows from './SortArrows.jsx';
-import Expander from './Expander.jsx';
+import theme from '../../styles/Theme';
+import ClearX from '../ClearX.jsx';
+import NavTriangle from '../NavTriangle.jsx';
+import OptionSwitch from '../OptionSwitch.jsx';
+import SortArrows from '../SortArrows.jsx';
+import Expander from '../Expander.jsx';
+
+const desktopLimit = 10;
+const mobileLimit = 5;
 
 const clearXPos = {
     top: '6px',
@@ -32,14 +35,14 @@ const PlayerListWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     
-    @media screen and (max-width: 1180px) {        
+    @media screen and (max-width: 1180px) {/*moves from fixed position to player grid */
         position: relative;
         margin-left: auto;
         left: unset;
         height: 100%;
         margin-bottom: 68px;
     }
-    @media screen and (max-width: 706px) {        
+    @media screen and (max-width: 706px) {/*stacks vertically above player info*/ 
         margin-right: auto;                
     }
 `;
@@ -123,7 +126,7 @@ class PlayerList extends Component {
             ranks: true,//mode
             expanded: window.innerWidth > 706,
             page: 1,
-            limit: window.innerWidth > 706 ? 10 : 5,
+            limit: window.innerWidth > 706 ? desktopLimit : mobileLimit,
             sort: false,//true = by name, false = by record
             inverse: false,
             query: ''
@@ -178,14 +181,14 @@ class PlayerList extends Component {
         }));
         if(expanding){            
             this.setState((prevState) => ({
-                limit: 10,
+                limit: desktopLimit,
                 page: Math.ceil(prevState.page / 2)
             }));
         }     
         else{            
             setTimeout(() => {
                 this.setState((prevState) => ({    
-                    limit: 5,
+                    limit: mobileLimit,
                     page: prevState.page * 2 - 1
                 }));
             }, 500) 

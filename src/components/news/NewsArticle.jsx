@@ -22,8 +22,6 @@ const Article = styled.div`
     img{
         display: block;
         margin:  20px auto 40px;
-
-        //med
         min-width: 300px;        
         width: 100%;        
     }
@@ -34,18 +32,18 @@ const Article = styled.div`
         padding: 8px 16px;
     }    
 
-    @media screen and (max-width: 960px) {     
+    @media screen and (max-width: 960px) { /*article moves under listing*/    
         max-width: 760px;
         width: 100%;
     }
-    @media screen and (max-width: 480px) {              
+    @media screen and (max-width: 480px) {/*shrink content*/
         width: 300px;
 
         h2{
             font-size: 18px;
         }
 
-        img{//med
+        img{
             padding: 0 8px;
             width: 300px;
         }
@@ -61,7 +59,7 @@ const NewsArticle = (props) =>{
     const [article, setArticle] = useState();
 
     useEffect(() => {
-        import(/* webpackMode: "eager" */ `../articles/${props.articleTitle.replace('\'','')}.jsx`)
+        import(/* webpackMode: "eager" */ `../../articles/${props.articleTitle.replace('\'','')}.jsx`)
         .then(article => setArticle(React.createElement(article.default)));
     }, [props.articleTitle]);
     

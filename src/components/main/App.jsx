@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import {Switch, Route} from 'react-router';
 import {ThemeProvider} from 'styled-components';
 
-import theme from '../styles/Theme';
-import GlobalStyles from '../styles/GlobalStyles';
-import fontImports from '../styles/fontimports.css';
+import theme from '../../styles/Theme';
+import GlobalStyles from '../../styles/GlobalStyles';
+import fontImports from '../../styles/fontimports.css';
 
 import NavBar from './NavBar.jsx';
-import Footer from './Footer.jsx';
-import Backdrop from './Backdrop.jsx';
-import ContactUs from './ContactUs.jsx';
-import Home from '../containers/Home.jsx';
-import Players from '../containers/Players.jsx';
-import Tournaments from '../containers/Tournaments.jsx';
-import News from '../containers/News.jsx';
 import AboutModal from './AboutModal.jsx';
-import BrowserNotSupported from '../containers/BrowserNotSupported.jsx';
-import Http404 from '../containers/404.jsx';
+import Footer from './Footer.jsx';
+import Backdrop from '../Backdrop.jsx';
+import ContactUs from './ContactUs.jsx';
+import Home from '../../containers/Home.jsx';
+import Players from '../../containers/Players.jsx';
+import Tournaments from '../../containers/Tournaments.jsx';
+import News from '../../containers/News.jsx';
+import BrowserNotSupported from '../../containers/BrowserNotSupported.jsx';
+import Http404 from '../../containers/404.jsx';
 
 class App extends Component { 
     

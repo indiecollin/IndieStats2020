@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import theme from '../styles/Theme';
-import XIcon from './svgs/XIcon.jsx';
-import Players from '../../public/assets/about.jpg';
-import Creator from '../../public/assets/collin.jpg';
+import theme from '../../styles/Theme';
+import XIcon from '../svgs/XIcon.jsx';
+import Players from '../../../public/assets/about.jpg';
+import Creator from '../../../public/assets/collin.jpg';
 
 const StyledModal = styled.div`    
     display: flex;
@@ -12,7 +12,7 @@ const StyledModal = styled.div`
     align-items: center;          
     padding-top: 40px;      
 
-    svg{
+    svg{/*close X*/
         position: fixed;
         top: 32px;
         right: 12%;
@@ -64,7 +64,7 @@ const StyledModal = styled.div`
         }
     }
 
-    @media screen and (max-width: 960px){        
+    @media screen and (max-width: 960px){/*stacks contents vertically for less cluttered view*/    
         &>div{
             flex-direction: column;
             align-items: center;
@@ -82,7 +82,7 @@ const StyledModal = styled.div`
         }
     }        
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*modal goes full screen for mobile view*/
         margin: 0;        
         padding-bottom: 20px;
 
@@ -108,15 +108,15 @@ const Modal = (props) => {
         <div>
             <div>
                 <h3>Analytics For All</h3>
-                <p>indieStats.gg is a web application used to assist players with tracking their growth and progress in the SoCal smash scene. All of this data has always been available, but it was only ever consolidated at the end of every season by very dedicated inviduals to determine power ranked players. With indieStats.gg, now any player can be in the know!</p>
+                <p>indiestats.gg is a web application used to assist players with tracking their growth and progress in the SoCal smash scene. All of this data has always been available, but it was only ever consolidated at the end of every season by very dedicated inviduals to determine power ranked players. With indiestats.gg, now any player can be in the know!</p>
             </div>
             <img src = {Players}/>            
         </div>
         <div>
             <img src = {Creator}/>
             <div>
-                <h3>indieStats.gg's Creator</h3>
-                <p>This app was developed by fellow Smasher, Collin "indie" Cain (formerly Mode), as a passion project to improve visualization of all the data being collected in brackets by the Smash community. As a new low level player himself Collin wanted to create something that everyone in the community could use and with that vision and a lot of hard work indieStats.gg was born!</p>
+                <h3>indiestats.gg's Creator</h3>
+                <p>This app was developed by fellow Smasher, Collin "indie" Cain (formerly Mode), as a passion project to improve visualization of all the data being collected in brackets by the Smash community. As a new low level player himself Collin wanted to create something that everyone in the community could use and with that vision and a lot of hard work indiestats.gg was born!</p>
             </div>
         </div>
     </StyledModal>

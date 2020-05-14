@@ -12,15 +12,13 @@ const Sorter = styled.span`
 
 const UpSort = styled(Sorter)`    
     border-bottom: 5px solid ${props => props.baseColor};
-    top: 30%;
-    //top: 55%;
+    top: 30%;    
     &:hover{border-bottom: 5px solid ${props => props.hoverColor}};        
 `;
 
 const DownSort = styled(Sorter)`        
     border-top: 5px solid ${props => props.baseColor};
-    bottom: 30%;
-    //bottom: -25%;
+    bottom: 30%;    
     &:hover{border-top: 5px solid ${props => props.hoverColor}};           
 `;
 
@@ -32,8 +30,8 @@ class SortArrows extends Component{
     render(){
         return(
             <React.Fragment>
-                <UpSort onClick = {(e) => this.props.upsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></UpSort>
-                <DownSort onClick = {(e) => this.props.downsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></DownSort>
+                <UpSort onClick = {e => this.props.upsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></UpSort>
+                <DownSort onClick = {e => this.props.downsort(e)} position = {this.props.position} baseColor = {this.props.baseColor} hoverColor = {this.props.hoverColor}></DownSort>
             </React.Fragment>
         );
     };

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import PowerRanks from '../components/HomePowerRanks.jsx';
-import FeaturedTournaments from '../components/HomeFeaturedTournaments.jsx';
-import NewsFlash from '../components/HomeNewsFlash.jsx';
+import PowerRanks from '../components/home/HomePowerRanks.jsx';
+import FeaturedTournaments from '../components/home/HomeFeaturedTournaments.jsx';
+import NewsFlash from '../components/home/HomeNewsFlash.jsx';
 
 function ScrollToTopOnMount() {
   useEffect(() => {
@@ -29,7 +29,7 @@ const HomeContainer = styled.main`
     max-width: 940px;
   }
 
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 480px) {/*adjust grid for mobile view*/
     &>div{
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));      
       row-gap: 20px;
@@ -51,19 +51,3 @@ const Home = () => {
 }
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

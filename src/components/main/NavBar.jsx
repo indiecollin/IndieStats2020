@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
-import SmashBallIcon from './svgs/SmashBallIcon.jsx';
-import PlayersIcon from './svgs/PlayersIcon.jsx';
-import BracketIcon from './svgs/BracketIcon.jsx';
-import EnvelopeIcon from './svgs/EnvelopeIcon.jsx';
-import InfoIcon from './svgs/InfoIcon.jsx';
+import SmashBallIcon from '../svgs/SmashBallIcon.jsx';
+import PlayersIcon from '../svgs/PlayersIcon.jsx';
+import BracketIcon from '../svgs/BracketIcon.jsx';
+import EnvelopeIcon from '../svgs/EnvelopeIcon.jsx';
+import InfoIcon from '../svgs/InfoIcon.jsx';
 
 const navBarPrimary = '#313232';
 const navBarSecondary = '#3F4141';
@@ -21,6 +21,7 @@ const newsNavPrimary = '#FA6200';
 const newsNavSecondary = '#FFC70D';
 const aboutNavPrimary = '#0579FF';
 const aboutNavSecondary = '#00B5F3';
+const hoverShadow = 'rgba(255, 255, 255, 0.2)';
 
 const iconDims = 28;
 
@@ -36,13 +37,13 @@ const StyledNavBar = styled.nav`
     margin: 0 auto;
     max-width: 860px;
 
-    @media screen and (max-width: 706px) {
+    @media screen and (max-width: 706px) {/*navbar shrinks for a more mobile view*/
         max-width: 420px;
         width: 100%;
         margin: 0 auto;
     }
 
-    @media screen and (max-width: 480px) {        
+    @media screen and (max-width: 480px) {/*navbar shrinks even more for smaller mobile view*/   
         max-width: 320px;        
     }
 `;
@@ -55,7 +56,7 @@ const NavList = styled.ul`
     padding: 0 16px;
     list-style-type: none;
 
-    @media screen and (max-width: 706px) {
+    @media screen and (max-width: 706px) {/*navbar shrinks for a more mobile view*/
         padding: 0 8px;
     }
 `;
@@ -90,15 +91,15 @@ const NavLink = styled.li`
         position: relative;
         padding-top: 4px;            
         margin: 4px 0;
-        color: ${() => navBarColor};
+        color: ${navBarColor};
         text-decoration: none;
-        cursor: pointer;            
+        cursor: pointer;        
 
         &:hover::before{
-            background: repeating-linear-gradient(125deg, transparent, transparent 4px, rgba(255, 255, 255, 0.2) 4px, rgba(255, 255, 255, 0.2)  5px),
-                        linear-gradient(${props => 'to bottom, ' + props.primGradient + ', ' + props.secGradient});
-        }        
-        
+            background: repeating-linear-gradient(125deg, transparent, transparent 4px, ${hoverShadow} 4px, ${hoverShadow}  5px),
+                        linear-gradient(${props => 'to bottom, ' + props.primGradient + ', ' + props.secGradient});            
+        }
+                        
         &::before{
             content: '';
             display: block;        
@@ -142,7 +143,7 @@ const NavLink = styled.li`
             font-weight: 550;
         }   
 
-        @media screen and (max-width: 706px) {
+        @media screen and (max-width: 706px) {/*hide navbar icons to save vertical space*/
             padding: 8px 0;
             width: 56px;
             span{

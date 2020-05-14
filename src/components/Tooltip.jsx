@@ -49,7 +49,7 @@ const Wrapper = styled.span`
 
 const Tooltip = (props) => {
     return(
-        <Wrapper>
+        <Wrapper className = {props.className}>
             <span><TipIcon fill = {theme.black}/></span>
             <p>{props.children}</p>
         </Wrapper>

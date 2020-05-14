@@ -1,13 +1,13 @@
 import {createGlobalStyle} from 'styled-components';
 import backgroundImage from '../../public/assets/players.jpg';
 
-const backgroundOverlayPrimary = 'rgba(255, 255, 255, 0.801)';
-const backgroundOverlaySecondary = 'rgba(216, 216, 216, 0.801)';
+const backgroundOverlayPrimary = 'rgba(255, 255, 255, .80)';//'#FFFFFFCC'
+const backgroundOverlaySecondary = 'rgba(216, 216, 216, .80)';//'#D8D8D8CC'
 
 export default createGlobalStyle`
     body{
         margin: 0;
-        background-image: linear-gradient(${() => backgroundOverlayPrimary + ', ' + backgroundOverlaySecondary + '), url(' + backgroundImage });
+        background-image: linear-gradient(${ backgroundOverlayPrimary + ', ' + backgroundOverlaySecondary + '), url(' + backgroundImage });
         background-size: cover;
         background-position: center;
         background-attachment: fixed;        

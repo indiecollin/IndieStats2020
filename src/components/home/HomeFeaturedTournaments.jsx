@@ -4,13 +4,15 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Moment from 'moment';
 Moment.locale('en');
-import NavTriangle from './NavTriangle.jsx';
-import OptionSwitch from './OptionSwitch.jsx';
+import NavTriangle from '../NavTriangle.jsx';
+import OptionSwitch from '../OptionSwitch.jsx';
 
 const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
 const tournamentsPerPage = 2;
+const daysBackward = 100;
+const daysForward = 60;
 
 const FeaturedTournaments = styled.div`  
     display: flex;
@@ -73,7 +75,7 @@ const FeaturedTournaments = styled.div`
         }              
     }
 
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 480px) {/*shrinks component*/
         width: 320px;
         margin-left: auto;
         margin-right: auto;
@@ -109,29 +111,24 @@ const TournamentListing = styled.div`
         justify-content: space-evenly;
         color: ${(props) => props.theme.black};                
         
-        &>div{     
+        &>span{     
             display: flex;
             flex-direction: column;                         
             align-items: center;   
             justify-items: flex-end;    
             font-size: 16px;                                       
             margin-left: 8px;  
-            width: 200px;                    
-
-            & > div {//hmmmm?
-                display: flex;
-                height: 33%;
-            }                    
+            width: 200px;            
         }
     } 
 
-    @media screen and (max-width: 480px) {        
+    @media screen and (max-width: 480px) {/*shrinks image & details*/    
         img{
             width: 128px;
             height: 64px;
         }
 
-        &>div>div{
+        &>div>span{
             font-size: 14px;
             margin-left: 4px;
             width: 160px;
@@ -159,7 +156,7 @@ const Controls = styled.div`
         }
     }
 
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 480px) {/*reduces font and widens controls for less clutter*/
         &>div{
             width: 100%;
             button{
@@ -192,14 +189,14 @@ class HomeFeaturedTournaments extends Component{
     }
 
     componentDidMount(){                        
-        const start = new Date().getTime() - (1000 * 60 * 60 * 24 * 100);
-        const end = new Date().getTime() + (1000 * 60 * 60 * 24 * 60);//last number is # of days
+        const start = new Date().getTime() - (1000 * 60 * 60 * 24 * daysBackward);
+        const end = new Date().getTime() + (1000 * 60 * 60 * 24 * daysForward);
         axios.get('http://' + process.env.DOMAIN + '/api/tournaments/listings?startDate='+ start + '&endDate='+ end)
-        .then(tournaments => {
-            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+        .then(tournaments => {//get all tournaments for listing
+            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => {                                               
                 let allTournaments = tournaments.data.map((t, i) => Object.assign({}, t, {banner: images[i].default}))
-                .reduce((acc, cur) => {
+                .reduce((acc, cur) => {//splits tournaments into two arrays as properties of an object
                     if(new Date(cur.eventDate < new Date()) && !cur.featured){
                         acc.recent.push(cur)
                     }
@@ -254,9 +251,9 @@ class HomeFeaturedTournaments extends Component{
                                 <TournamentListing key = {t.name}>
                                         <img src = {t.banner}/>
                                         <div>
-                                            <div><span><span>{t.shortName}</span></span></div>
-                                            <div><span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span></div>
-                                            <div><span><span>{t.venue}</span></span></div>
+                                            <span>{t.shortName}</span>
+                                            <span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span>
+                                            <span>{t.venue}</span>
                                         </div>
                                 </TournamentListing>
                                 :
@@ -264,9 +261,9 @@ class HomeFeaturedTournaments extends Component{
                                     <TournamentListing>
                                         <img src = {t.banner}/>
                                         <div>
-                                            <div><span><span>{t.shortName}</span></span></div>
-                                            <div><span><span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span></span></div>
-                                            <div><span><span>{t.venue}</span></span></div>
+                                            <span>{t.shortName}</span>
+                                            <span>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</span>
+                                            <span>{t.venue}</span>
                                         </div>
                                     </TournamentListing>
                                 </Link>                                

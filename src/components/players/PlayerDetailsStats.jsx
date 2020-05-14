@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import theme from '../styles/Theme';
-import SmashBallIcon from './svgs/SmashBallIcon.jsx';
+import theme from '../../styles/Theme';
+import SmashBallIcon from '../svgs/SmashBallIcon.jsx';
 
 const header = '#850303';//maroon
 const rowHeader = '#434343';//grey
@@ -29,31 +29,28 @@ const StatDetails = styled.div`
         font-weight: 700;
     }       
 
-    &::-webkit-scrollbar-track
-    {        
+    &::-webkit-scrollbar-track{        
         border-radius: 10px;
         background-color: ${props => props.theme.scrollbarPrimary};
     }
 
-    &::-webkit-scrollbar
-    {
+    &::-webkit-scrollbar{
         width: 12px;
         background-color: ${props => props.theme.scrollbarPrimary};
     }
 
-    &::-webkit-scrollbar-thumb
-    {
+    &::-webkit-scrollbar-thumb{
         border-radius: 10px;        
         background-color: ${props => props.theme.scrollbarSecondary};
         border-left: 2px solid ${props => props.theme.scrollbarPrimary};
         border-right: 2px solid ${props => props.theme.scrollbarPrimary};
     }
 
-    @media screen and (max-width: 1180px) {
+    @media screen and (max-width: 1180px) {/*adjust for PlayerInfo stacking vertically*/
         grid-column: 1 / -1;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*shrinks content horizontally for mobile view*/
         width: 100%;
         margin: 0 8px;        
         padding-right: 4px;
@@ -76,9 +73,8 @@ const StatDetailsHeader = styled.div`
         margin-right: 20px;
     }
 
-    @media screen and (max-width: 706px){
-        width: 300px;
-        margin-left: auto;
+    @media screen and (max-width: 706px){/*shrinks content horizontally for mobile view*/
+        width: 300px;        
     }
 `;
 
@@ -96,14 +92,14 @@ const StatDetailsRow = styled.div`
         padding: 8px;
     }
 
-    div:first-child{            
+    div:first-child{/*stat header*/        
         background-color: ${rowHeader};
         color: ${props => props.theme.white};
         width: 47%;
         clip-path: polygon(0% 0%, 0 100%, 95% 100%, 100% 0%);
     }
 
-    div:last-child{
+    div:last-child{/*stat value*/
         color: ${rowHeader};
         margin: 0 8px 0 auto;
         max-width: 53%;
@@ -112,7 +108,7 @@ const StatDetailsRow = styled.div`
         overflow: hidden;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*shrinks content horizontally for mobile view*/
         width: 300px;
         margin-left: auto;
     }

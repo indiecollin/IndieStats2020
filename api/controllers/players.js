@@ -55,8 +55,8 @@ router.route('/players/listing')
     });
 });
 
-router.route('/players/tournamentListings/:gamerTag')//make this for preview listing
-.get((req, res) => {//error check count?
+router.route('/players/tournamentListings/:gamerTag')
+.get((req, res) => {
     schemas.tournament.find({ entrants: { $elemMatch: { gamerTag : req.params.gamerTag } } }).sort({eventDate: -1 }).limit(req.query.count ? parseInt(req.query.count) : 0 )
     .lean().collation({locale: "en", strength: 1})
     .then(tournaments =>{        
@@ -72,8 +72,8 @@ router.route('/players/tournamentListings/:gamerTag')//make this for preview lis
     });
 });
 
-router.route('/players/tournaments/:gamerTag')//make this for detailed listing
-.get((req, res) => {//error check count?
+router.route('/players/tournaments/:gamerTag')
+.get((req, res) => {
     schemas.tournament.find({ entrants: { $elemMatch: { gamerTag : req.params.gamerTag } } }).sort({eventDate: -1 }).limit(req.query.count ? parseInt(req.query.count) : 0 )
     .lean().collation({locale: "en", strength: 1})
     .then(tournaments =>{
@@ -94,7 +94,7 @@ router.route('/players/tournaments/:gamerTag')//make this for detailed listing
                         name: tournamentListing.name,
                         date: tournamentListing.date,
                         entrants: tournamentListing.entrants,
-                        shortName: tournamentListing.shortName,//make sure this sort works properly      
+                        shortName: tournamentListing.shortName,
                         top3: curTournament.entrants.filter( entrant => entrant.placement <= 3).sort((entrant1, entrant2) => entrant1.placement - entrant2.placement).map(entrant => entrant.gamerTag),
                         placement: entrant.placement,
                         seed: entrant.seed,
@@ -126,7 +126,7 @@ router.route('/players/tournamentsAttended/:gamerTag')
     });
 });
 
-router.route('/players/rivals/:gamerTag')//may want to update this route to return an array of objects
+router.route('/players/rivals/:gamerTag')
 .get((req, res) => {
     schemas.tournament.find({ entrants: { $elemMatch: { gamerTag : req.params.gamerTag } } })
     .lean().collation({locale: "en", strength: 1})

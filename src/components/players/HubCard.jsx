@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const playerCardBase = '#BECFE3';
 const playerCardBaseHover = '#EAEAEA';
-const gamerTag =  'rgba(255, 127, 127, 0.8)';//get hex
+const gamerTag = 'rgba(255, 127, 127, .80)';//'#FF7F7FCC'
 const hubColors = {//may reorder for organization purposes
     player:['#AD1C5F', '#CD5173', '#D3838E', '#CD7B6D', '#A30401', '#FE0000', '#BE2321', '#B20606', 'none', 'none', 'none', 'none', '#E41E1D', '#F45C57', '#FC9D8B'],
     stats:['#2D5AD9', '#4588DF', '#58A6E4', '#36A1CF', '#0140A7', '#0068EB', '#1F52D2', '#063BC9', '#C5DDFF', '#576C99', '#BAD6FF', '#192F6B', '#217AF2', '#34A0F8', '#51C5FE'],
@@ -55,11 +55,11 @@ const HubWrapper = styled.div`
         box-sizing: content-box; 
     }
 
-    @media screen and (max-width: 1360px) {  
+    @media screen and (max-width: 1360px) {/*grid switches to 2x2*/
         grid-column: ${props => props.responsiveGrid};
     }
 
-    @media screen and (max-width: 1180px) {        
+    @media screen and (max-width: 1180px) {/*grid switches to vertical*/
         grid-column: 2 / -1;
         margin: 20px auto 0;
         transition: top 0.5s linear;
@@ -131,7 +131,7 @@ const Hub =  styled.div`
 
     ${props => props.type === 'player' ? '' : hoverStyles(props)}
     
-    @media screen and (max-width: 1180px) {  
+    @media screen and (max-width: 1180px) {/*hover styles added to show player card is now clickable for collapsing funcationality*/
         ${props => props.type === 'player' ? hoverStyles(props) : '' }
     }
 `;
@@ -144,7 +144,7 @@ const HubPreview = styled.div`
     font-weight: 550;
     text-align: center;
     padding: 8px 0;
-    width: 224px;//temp?
+    width: 224px;
     border: 2px solid ${props => props.theme.black};        
 
     &:hover{
@@ -192,7 +192,7 @@ const HubFooter = styled.div`
 const GamerTag = styled.div`
     width: 72.5%;
     height: 28px;
-    background-color: ${() => gamerTag};
+    background-color: ${gamerTag};
     border: solid 2px ${props => props.theme.black};        
     z-index: 20;
     margin-bottom: 4px;
@@ -205,10 +205,10 @@ const HubCard =  (props) =>{
     const [charImage, setCharImage] = useState('');    
     const [preview, setPreview] = useState([]);    
     useEffect(() => {
-        if(!props.player.gamerTag) return;
-        switch(props.type){
+        if(!props.player.gamerTag) return;//preload logic
+        switch(props.type){//sets hub card content when player changes
             case 'player':
-                import(/* webpackMode: "eager" */ `../../public/main_portraits/${props.player.mains ? props.player.mains.split(',')[0] : 'default' }.png`)
+                import(/* webpackMode: "eager" */ `../../../public/main_portraits/${props.player.mains ? props.player.mains.split(',')[0] : 'default' }.png`)
                 .then(portrait => {
                     setCharImage(portrait.default);
                 });

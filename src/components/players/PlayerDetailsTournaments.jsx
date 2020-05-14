@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import First from '../../public/assets/gold-medal.png';
-import Second from '../../public/assets/silver-medal.png';
-import Third from '../../public/assets/bronze-medal.png';
+import First from '../../../public/assets/gold-medal.png';
+import Second from '../../../public/assets/silver-medal.png';
+import Third from '../../../public/assets/bronze-medal.png';
 
 const background = '#DBE6EC';
 const highlightTheme = '#2E2D2D';
@@ -21,7 +21,7 @@ const TournamentDetails = styled.div`
         text-decoration: none;
     }
 
-    @media screen and (max-width: 1180px){
+    @media screen and (max-width: 1180px){/*adjust for PlayerInfo stacking vertically*/
         grid-column: 1 / -1;
     }
 `;
@@ -44,21 +44,21 @@ const TournamentListing = styled.div`
         }
     }
 
-    &>img{
-        grid-row: 2 / 3;
-        padding: 8px;
-    }
-    &>div{
-        border: none;
-    }
-    &>span{
+    &>span{/*tournament name*/
         grid-column: 1 / -1;           
         justify-self: center; 
         color: ${highlightTheme};
         font-weight: 550;
-    }        
+    }
+    &>img{
+        grid-row: 2 / 3;
+        padding: 8px;
+    }
+    &>div{/*player and tournament info*/
+        border: none;
+    }            
 
-    @media screen and (max-width: 706px){        
+    @media screen and (max-width: 706px){/*tournament banner stacks above details*/
         grid-template-columns: minmax(180px,1fr) minmax(140px,152px);
         grid-template-rows: repeat(2, min-content) 88px;
 
@@ -85,15 +85,15 @@ const PlayerInfo = styled.div`
         display: flex;
     }
     
-    span:first-child{
-        display: inline-block;//should it just me a different element instead of forcing a span to be block?s
+    span:first-child{/*data header*/
+        display: inline-block;
         background-color: ${highlightTheme};
         color: ${props => props.theme.white};   
         width: 80px;        
         height: 100%;   
         clip-path: polygon(0% 0%, 0 100%, 90% 100%, 100% 0%);
     }
-    span:last-child{
+    span:last-child{/*data value*/
         color: ${highlightTheme};
         display: inline-block;
         width: 120px;
@@ -105,7 +105,7 @@ const PlayerInfo = styled.div`
         overflow: hidden;
     }
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*tournament banner stacks above details*/
         grid-row: 3;
         grid-column: 1 / 2;                           
         div{
@@ -144,13 +144,13 @@ const Top3 = styled.div`
         }
     }           
     
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*tournament banner stacks above details*/
         grid-row: 3;
         grid-column: 2 / 3;
         margin-right: 8px;
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*remove clip path because it looks weird on mobile*/
         div{
             clip-path: unset;
         }        
@@ -190,7 +190,7 @@ const PlayerDetailsTournaments = (props) => {
     useEffect(() => {
         axios.get('http://' + process.env.DOMAIN + '/api/players/tournaments/' + encodeURIComponent(props.player.gamerTag))
         .then(res => {
-            let imports = res.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+            let imports = res.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => {                
                 setBanners(images.map(banner => banner.default));
             });

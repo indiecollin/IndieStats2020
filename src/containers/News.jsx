@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import titles from '../helpers/articleTitles';
-import NewsArticleListing from '../components/NewsArticleListing.jsx';
-import NewsArticle from '../components/NewsArticle.jsx';
+import NewsArticleListing from '../components/news/NewsArticleListing.jsx';
+import NewsArticle from '../components/news/NewsArticle.jsx';
 
 function ScrollToTopOnMount() {
     useEffect(() => {
@@ -23,14 +23,14 @@ const NewsContainer = styled.main`
         margin: 0 40px;                
     }
 
-    @media screen and (max-width: 960px){
+    @media screen and (max-width: 960px){/*content stacks for a vertical view*/
         &>div{            
             display: flex;
             flex-direction: column;
         }
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*increase margins for mobile view*/
         &>div{            
             margin: 0 auto;
         }

@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Moment from 'moment';
 Moment.locale('en');
-import Expander from './Expander.jsx';
-import CalendarIcon from '../../public/assets/calendar-icon.png';
-import LocationIcon from '../../public/assets/location-icon.png';
-import Smashgg from '../../public/assets/smash.gg.png';
-import SeasonIcon from '../../public/assets/season-icon.png';
+import Expander from '../Expander.jsx';
+import CalendarIcon from '../../../public/assets/calendar-icon.png';
+import LocationIcon from '../../../public/assets/location-icon.png';
+import Smashgg from '../../../public/assets/smash.gg.png';
+import SeasonIcon from '../../../public/assets/season-icon.png';
+
+const daysBackward = 60;
 
 const UpcomingTournamentsContainer = styled.div`
     width: 280px;
@@ -19,7 +21,7 @@ const UpcomingTournamentsContainer = styled.div`
 `;
 
 const UpcomingTournaments = styled.div`
-    max-height: 790px;//may update when carousel added
+    max-height: 790px;
     margin: 0 auto;
     padding: 0 16px;
     overflow: hidden;       
@@ -27,7 +29,7 @@ const UpcomingTournaments = styled.div`
 
     h3{
         text-align: center;
-        color: #fff;
+        color: ${props => props.theme.white};
         height: 36px;
         margin: 0;
         padding-top: 8px;
@@ -43,14 +45,13 @@ const UpcomingListingsWrapper = styled.div`
     scrollbar-width: none;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
-        width: 0px;  /* remove scrollbar space */
-        background: transparent;  /* optional: just make scrollbar invisible */        
+        width: 0px;  /* remove scrollbar space */        
     }    
     
 `;
 
 const UpcomingListing = styled.div`
-    height: 240px;//temp
+    height: 240px;
     margin-top: 20px;                       
     overflow: hidden;    
     user-select: none;    
@@ -58,7 +59,7 @@ const UpcomingListing = styled.div`
     grid-template-columns: 48px 1fr;                        
     background-color: ${props => props.theme.tourneyColor};
 
-    @media screen and (max-width: 706px){
+    @media screen and (max-width: 706px){/*stacks under TournamentsPast*/
         grid-column: 1 / -1;                
     }
 `;
@@ -76,7 +77,7 @@ const TournamentName = styled.span`
     padding: 8px 4px;
     background-color: ${props => props.theme.black};
     color: ${props => props.theme.white};
-    font-size: 15px;//consider changing
+    font-size: 15px;
     font-weight: 550;    
 `;
 
@@ -129,19 +130,20 @@ class TournamentsUpcoming extends Component{
 
     componentDidMount(){
         const today = new Date().getTime();
-        const range = today + 1000 * 60 * 60 * 24 * 60;//last number is # of days
+        const range = today + 1000 * 60 * 60 * 24 * daysBackward;//last number is # of days
         axios.get('http://' + process.env.DOMAIN + '/api/tournaments/listings?startDate='+ today + '&endDate='+ range)
         .then(tournaments => {
-            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
+            let imports = tournaments.data.map(t => import(/* webpackMode: "eager" */ `../../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
             Promise.all(imports).then(images => this.setState({tournaments: tournaments.data.map((t, i) =>  Object.assign({}, t, {banner: images[i].default}))}));
-            if(window.innerWidth > 706 && tournaments.data.length>3){
+            //caurosel logic
+            if(window.innerWidth > 706 && tournaments.data.length>3){//if not mobile and there are at least 4 upcoming tournmanets use caurosel
                 this.interval = setInterval(()=>{        
                     let first = this.listingRef.current.children[0]
-                    if(!this.state.listingHovered){
+                    if(!this.state.listingHovered){//if listing isn't being hovered scroll upwards
                         this.listingRef.current.scrollTop++
-                    }            
+                    }//if element scrolls to the bottom            
                     if(first && first.getBoundingClientRect().bottom <= this.listingRef.current.getBoundingClientRect().top){
-                        this.setState((prevState) => {
+                        this.setState((prevState) => {//rotate top tournament to the bottom of list and reset scroll position
                             return{
                                 cycle: true,
                                 scrollY: window.scrollY,
@@ -192,7 +194,7 @@ class TournamentsUpcoming extends Component{
                                     <DataIcon src={CalendarIcon} gridRow = '3/4'/><DataInfo gridRow = '3/4'>{Moment(new Date(t.eventDate)).format('MMM D, YYYY')}</DataInfo>
                                     <DataIcon src={LocationIcon} gridRow = '4/5'/><DataInfo gridRow = '4/5'>{t.venue}</DataInfo>
                                     <DataIcon src={Smashgg} gridRow = '5/6'/><TournamentLink gridRow = '5/6'>smash.gg</TournamentLink>
-                                    <DataIcon src={SeasonIcon} gridRow = '6/7'/><DataInfo gridRow = '6/7'>Spring 2020</DataInfo>
+                                    <DataIcon src={SeasonIcon} gridRow = '6/7'/><DataInfo gridRow = '6/7'>{t.season}</DataInfo>
                                 </UpcomingListing>
                             })
                         }                

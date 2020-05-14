@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import titles from '../helpers/articleTitles';
-import NewsIcon from './svgs/NewsIcon.jsx';
-import ArrowIcon from './svgs/ArrowIcon.jsx';
+import titles from '../../helpers/articleTitles';
+import NewsIcon from '../svgs/NewsIcon.jsx';
+import ArrowIcon from '../svgs/ArrowIcon.jsx';
 
 const headerBackground = '#697279';
 const articleHeaderSecondary = '#EEDF0F';
@@ -21,13 +21,13 @@ const NewsFlash = styled.div`
         border-bottom: solid 4px ${props => props.theme.newsColor};
     }
 
-    &>div{
+    &>div{/*article*/
         display: grid;
         grid-template-columns: 1fr 3fr;
         margin-top: 20px;
     }
 
-    @media screen and (max-width: 824px) {    
+    @media screen and (max-width: 824px) {/*shrinks article for a more vertical view*/ 
         width: 320px;
         margin: 0 auto 20px;
 
@@ -45,18 +45,14 @@ const ArticleHeader = styled.div`
     background: linear-gradient(${props => '110deg, '+ props.theme.newsColor + ' 87.9%, '+ articleHeaderSecondary + ' 88%, '+ articleHeaderSecondary + ' 97.9%, ' + headerBackground + ' 98%, ' + headerBackground + ' 100%'});
     color: ${props => props.theme.stripeBlack};
 
-    span{
-            margin: 0 16px;
-            svg{                            
-                width: 20px;
-                height: 20px;              
-                fill: ${props => props.theme.stripeBlack};
-            } 
-        }  
-    
-    div{
-        margin: 0 16px;                
-    } 
+    span{/*newspaper icon*/
+        margin: 0 16px;
+        svg{                            
+            width: 20px;
+            height: 20px;              
+            fill: ${props => props.theme.stripeBlack};
+        } 
+    }  
 `;
 
 const ArticleContent = styled.div`    
@@ -70,7 +66,7 @@ const ArticleContent = styled.div`
         margin: 0 auto;
     }
 
-    &>div{
+    &>div{/*abstract*/
         display: flex;
         flex-direction: column;
         background-color: ${props => props.theme.white};
@@ -82,7 +78,7 @@ const ArticleContent = styled.div`
             padding: 8px 20px;
         }
 
-        &>a{
+        &>a{/*more button*/
             align-self: flex-end;
             margin-top: auto;  
             margin-bottom: 12px;
@@ -113,19 +109,18 @@ const ArticleContent = styled.div`
         }                
     }
 
-    @media screen and (max-width: 824px) {        
+    @media screen and (max-width: 824px) {/*stacks contents for vertical view*/        
         flex-direction: column;
     }
 `;
 const articleCount = 2;
-const HomeNewsFlash = (props) =>{    
-
+const HomeNewsFlash = () =>{    
     const [thumbnails, setThumbnails] = useState([]);
     const [abstracts, setAbstracts] = useState([]);    
     useEffect(()=>{
-        let imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
+        let imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../../../public/article_images/${aFile.split(/(?=[A-Z])/).join('-').toLowerCase().replace('\'', '')}.jpg`));
         Promise.all(imports).then(images => setThumbnails(images.map(banner => banner.default)));
-        imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../articles/${aFile.replace('\'', '')}.jsx`));
+        imports = titles.filter((t,i) => i<articleCount).map(aFile => import(/* webpackMode: "eager" */ `../../articles/${aFile.replace('\'', '')}.jsx`));
         Promise.all(imports).then(aComponents =>{
             setAbstracts(aComponents.map(aComp => aComp.abstract));
         });

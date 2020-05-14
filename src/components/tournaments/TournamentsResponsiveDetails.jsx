@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import CaretIcon from './svgs/CaretIcon.jsx';
-import {matchIconStyles} from './TournamentsDetails.jsx';
+import CaretIcon from '../svgs/CaretIcon.jsx';
+import { matchIconStyles } from './TournamentsDetails.jsx';
 
 const moreInfoText = '#FFE7DF';
 const moreInfoBackground ='#E84035';
@@ -13,14 +13,14 @@ const moreInfoDataHeader = '#400D0C';
 const moreInfoData = '#AC1B20';
 
 const MobileDetails = styled.div`    
-    display: none;
+    display: none;/*hidden on desktop*/
     position: absolute;
     top: 0;           
     transition: margin .33s linear;                  
     width: 90%;    
     background-color: ${props => props.theme.black};
     color: ${moreInfoText};    
-    margin-top: ${props => props.show ? '0' : '-440px'};    
+    margin-top: ${props => props.show ? '0' : '-440px'};/*negative margin to hide above table*/   
     grid-template-columns: 1fr 64px;     
 
     p{
@@ -29,11 +29,11 @@ const MobileDetails = styled.div`
     }
 
     @media screen and (max-width: 960px){
-        display: grid;
+        display: grid;/*visible*/
     }
 
     @media screen and (max-width: 480px){
-        width: 100%;
+        width: 100%;/*widen details for less clutter on mobile*/
     }
 `;
 
@@ -113,7 +113,7 @@ const detailsInfoStyles = () => (`
     font-size: 22px;
     font-weight: 550;
 `);
-//add link prop for losers and eliminators
+
 const DetailsInfo = styled.span`
     ${detailsInfoStyles()}
     ${props => props.clipped ? `clip-path: polygon(5% 100%, 100% 100%, 100% 0, 0 0); text-align: right;` : ''}
@@ -154,7 +154,7 @@ const Collapser = styled.span`
     }
 `;
 
-const TournamentResponsiveDetails = (props) =>{
+const TournamentsResponsiveDetails = (props) =>{
     return <MobileDetails player = {props.player} show = {props.show}>
         <GamerTag>
             <Link to={`/players/${encodeURIComponent(props.player.gamerTag)}`}>{props.player.gamerTag}</Link>
@@ -192,4 +192,4 @@ const TournamentResponsiveDetails = (props) =>{
     </MobileDetails>
 };
 
-export default TournamentResponsiveDetails;
+export default TournamentsResponsiveDetails;

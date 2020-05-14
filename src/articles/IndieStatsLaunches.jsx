@@ -3,11 +3,7 @@ import styled from 'styled-components';
 import thumbnail from '../../public/article_images/indie-stats-launches.jpg';
 import brackets from '../../public/article_images/brackets-supported.png';
 
-const Container = styled.div`
-    img{
-
-    }
-`;
+const Container = styled.div``;
 
 const ArticleImages = styled.img`
     max-width: ${props => props.width};
@@ -35,7 +31,7 @@ const IndieStatsLaunches = () =>{
         <Timestamp>May 9th, 2020</Timestamp>
         <Abstract>{abstract}</Abstract>
         <p>
-            With the conclusion of the Spring 2020 season indieStats.gg has launched its new web application that helps
+            With the conclusion of the Spring 2020 season indiestats.gg has launched its new web application that helps
             everyday players track their progress as they attend sanctioned tournament series in the SoCal region.
             This has been a project 4 years in the making that started when one guy got tired of scouring through piles of 
             challonge and smash.gg brackets just to stay current on up-and-coming talent.
@@ -47,7 +43,7 @@ const IndieStatsLaunches = () =>{
         </p>
         <p>
             Data related to top players has always been available, but that was hardly ever the case for the remaining
-            players who make up the majority of the community. It is indieStats.gg's goal to bridge that gap as a more
+            players who make up the majority of the community. It is indiestats.gg's goal to bridge that gap as a more
             informed community is a thriving community.
         </p>
     </Container>

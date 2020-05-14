@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import CaretIcon from './svgs/CaretIcon.jsx';
@@ -81,20 +81,12 @@ const ExpanderPoint = styled.div`
     }
 `;
 
-class Expander extends Component{
-    constructor(props){
-        super(props);
-    };
-
-    render(){
-        return(
-            <ExpanderWrapper onClick = {this.props.onClick} expanded = {this.props.expanded}>
-                <ExpanderWing/>
-                <ExpanderPoint/>
-                <span><CaretIcon dims = {caretDims} fill = {theme.white}/></span>
-            </ExpanderWrapper>
-        );
-    };
+const Expander = (props) => {        
+    return <ExpanderWrapper onClick = {props.onClick} expanded = {props.expanded} className = {props.className}>
+        <ExpanderWing/>
+        <ExpanderPoint/>
+        <span><CaretIcon dims = {caretDims} fill = {theme.white}/></span>
+    </ExpanderWrapper>    
 };
 
 export default Expander;

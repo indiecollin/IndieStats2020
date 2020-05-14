@@ -35,7 +35,7 @@ const BrowserNotSupported = () => {
                 <a href='https://www.microsoft.com/en-us/edge'><img src={edge}></img></a>
                 <a href='https://www.opera.com/download'><img src={opera}></img></a>
             </div>
-            <h3>Please visit indieStats.gg using one of the browsers above!</h3>            
+            <h3>Please visit indiestats.gg using one of the browsers above!</h3>            
         </BrowserNotSupportedContainer>
     )
 }

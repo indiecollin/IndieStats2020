@@ -7,7 +7,7 @@ import {StaticRouter} from 'react-router';
 require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
-import App from './src/components/App.jsx';
+import App from './src/components/main/App.jsx';
 import importerController from './api/controllers/importer';
 import playersController from './api/controllers/players';
 import tournamentsController from './api/controllers/tournaments';

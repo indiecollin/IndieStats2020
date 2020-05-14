@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import theme from '../styles/Theme';
+import theme from '../../styles/Theme';
 import DatePicker from 'react-date-picker/dist/entry.nostyle';
-import styles from '../styles/datepicker.css';
-import SearchIcon from './svgs/SearchIcon.jsx';
-import Tooltip from './Tooltip.jsx';
+import styles from '../../styles/datepicker.css';
+import SearchIcon from '../svgs/SearchIcon.jsx';
+import Tooltip from '../Tooltip.jsx';
 
 const dateRangeHighlight = '#E6E6E6';
 
@@ -15,7 +15,7 @@ const HubWrapper = styled.div`
     top: 100px;        
     height: 790px;//derived from grid height
 
-     @media screen and (max-width: 1300px) { 
+     @media screen and (max-width: 1300px) {/*hide search hub on medium screens*/ 
         display: none;  
     }     
 `;
@@ -51,13 +51,13 @@ const SearchBar = styled.div`
         background-color: ${dateRangeHighlight};
         border: none;
         outline: none;
-    }
+    }            
+`;
 
-    div>span:hover svg{
+const SearchTooltip = styled(Tooltip)`
+    span:hover svg{
         fill: ${dateRangeHighlight};
     }
-
-    
     @media screen and (max-width: 480px){
         p{
             padding: 8px 0;
@@ -246,7 +246,7 @@ const TournamentsSearch = (props) => {
             </SearchBar>
             <SearchBar>
                 <input type='text' value = {players} onChange = {e => setPlayers(e.target.value)} onKeyPress = {(e) =>  e.charCode===13 ? search() : null} placeholder='Player Search'/>
-                <Tooltip>Multi-player Search: Enter Gamer Tags Separated by Commas</Tooltip>
+                <SearchTooltip>Multi-player Search: Enter Gamer Tags Separated by Commas</SearchTooltip>
             </SearchBar>
             <DateRange>
                 <DatePicker locale = 'en-US' value = {startDate} onChange = {setStartDate} />

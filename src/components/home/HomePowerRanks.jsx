@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
-import NavTriangle from './NavTriangle.jsx';
+import NavTriangle from '../NavTriangle.jsx';
 
 const headerPrimary = '#C00071';
 const headerSecondary = '#E31B73';
 const background =  '#FBCFE8';
 const playersPerPage = 5;
+const transitionTime = 300;
 
 const PowerRanks = styled.div`
     max-width: 424px;    
@@ -62,7 +63,7 @@ const PowerRanks = styled.div`
         min-width: 396px;
         height: 244px;
         
-        &>div{       
+        &>div{/*player row*/
             display: flex;        
             flex-direction: column;           
             justify-content: space-between;
@@ -114,7 +115,7 @@ const PowerRanks = styled.div`
             }
         }       
 
-        button{
+        button{/*nav buttons*/
             position: absolute;            
             &:first-child{
                 left: 0;
@@ -125,7 +126,7 @@ const PowerRanks = styled.div`
         } 
     }
 
-    @media screen and (max-width: 480px) {    
+    @media screen and (max-width: 480px) {/*shrinks component*/
         width: 320px;
         margin-left: auto;
         margin-right: auto;
@@ -142,7 +143,7 @@ const PowerRanks = styled.div`
             padding: 0 16px;
             height: 180px;            
 
-            &>div{                
+            &>div{/*player row*/             
                 img{
                     min-width: 32px;
                 }
@@ -163,7 +164,7 @@ class HomePowerRanks extends Component{
             playerIcons: [...Array(5).fill({})],            
             pageStart: 0,
             pageEnd: 4,
-            sliding: false,
+            sliding: false,//fixes transition bug
             ranks: []
         }        
         this.pageLeft = this.pageLeft.bind(this);
@@ -185,16 +186,17 @@ class HomePowerRanks extends Component{
                 return player;         
             });
             this.setState({ranks: players});
+            //images for players are handled in an sequential array that's tightly coupled with how ranks are ordered
             let imports = players.map(player => {
                 let playerImports = [];
-                playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.primary}`));
+                playerImports.push(import(/* webpackMode: "eager" */ `../../../public/char_icons/${player.primary}`));
                 if(player.sponsor){
-                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/sponsors/${player.sponsor}`));
+                    playerImports.push(import(/* webpackMode: "eager" */ `../../../public/sponsors/${player.sponsor}`));
                 }
                 if(player.secondary){
-                    playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.secondary}`));
+                    playerImports.push(import(/* webpackMode: "eager" */ `../../../public/char_icons/${player.secondary}`));
                     if(player.tertiary){
-                        playerImports.push(import(/* webpackMode: "eager" */ `../../public/char_icons/${player.tertiary}`));
+                        playerImports.push(import(/* webpackMode: "eager" */ `../../../public/char_icons/${player.tertiary}`));
                     }
                 }
                 return playerImports;
@@ -254,8 +256,8 @@ class HomePowerRanks extends Component{
                         .map((player, i) =>{
                             return (                        
                                 <Link to = {`/players/${player.gamerTag}`} key = {player.gamerTag}>
-                                <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {300} classNames = 'slide' component = {null}>                                
-                                    <div key = {player.gamerTag}> 
+                                <CSSTransition appear = {false} in = {this.state.sliding} key = {player.gamerTag} timeout = {transitionTime} classNames = 'slide' component = {null}>                                
+                                    <div key = {player.gamerTag}>{/*invisible image used to as placeholder for sponsor space */}
                                         {player.sponsor ? <img src = {this.state.playerIcons[i+this.state.pageStart].sponsor}/> : <img style = {{visibility: 'hidden'}}/>}
                                         <span>{player.gamerTag}</span>
                                         <div>

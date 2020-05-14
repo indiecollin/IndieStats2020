@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import XIcon from './svgs/XIcon.jsx';
+import XIcon from '../svgs/XIcon.jsx';
+
+const background = '#313232';
 
 const ContactContainer = styled.div`
     display: flex;
@@ -10,7 +12,7 @@ const ContactContainer = styled.div`
     margin: 140px auto 0;
     padding: 24px;
     color: ${props => props.theme.white};
-    background-color: #313232;    
+    background-color: ${background};    
 
     svg{
         position: absolute;
@@ -81,7 +83,7 @@ const ContactContainer = styled.div`
         }           
     }
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px){/*shrink component content for mobile view*/
         padding: 20px;
         h2{
             font-size: 20px;            
