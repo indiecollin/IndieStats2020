@@ -1,13 +1,4 @@
 An analytics app for the Super Smash Bros Ultimate competetive community.
+http://indiestats.gg/
 
-Estimated Release May 2020
-
-# IndieStats UI DEMO
-
-## Instructions  
-(Requires: NodeJS and GIT)  
-1: Clone this repository (`git clone https://github.com/indiecollin/IndieStats2020.git -b UI-DEMO`)  
-2. Run `npm install` within the IndieStats2020 folder created  
-3. Run `npm run build`  
-4. Run `npm run dev`  
-5. Access application via your browser at http://localhost:3000/
+indiestats is a web application that captures tournament data reporting and analytics for competitive eSport “Super Smash Bros”. The purpose of Smash Stats is to create a platform in which players can track their own progress against other rivals in the SoCal region and provide analytics to a community that would otherwise be lost among hundreds of online brackets. The application is backed by a MongoDB database and Node express server running on an EC2 in AWS. The data is collected through a semi-automatic process that pulls bracket documents from tournament hosting application APIs and is accessible via an express API. It is an isomorphic React SPA that is fully responsive and crossbrowser compatible for modern browsers.  The styling is done using Styled Components and the layouts are designed using CSS features like Grid, Flexbox, and Media queries. Bundling and tooling is managed with Babel and Webpack.
