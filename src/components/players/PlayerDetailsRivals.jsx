@@ -602,7 +602,7 @@ class PlayerDetailsRivals extends Component{
             const rivals = res.data;
             if(newPlayer) this.setState({rivals: rivals});
             axios.all([
-                axios.get('http://' + process.env.DOMAIN + '/api/players/matchHistory/' + player.gamerTag +'/' + (rival ? rival : rivals[0].gamerTag)),            
+                axios.get('http://' + process.env.DOMAIN + '/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),            
                 axios.get('http://' + process.env.DOMAIN + '/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
                 axios.get('http://' + process.env.DOMAIN + '/api/players/records/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),                
                 axios.get('http://' + process.env.DOMAIN + '/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
