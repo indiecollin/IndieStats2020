@@ -180,7 +180,7 @@ class HomeFeaturedTournaments extends Component{
         super(props);
         this.state = {
             tournaments: {recent: [], upcoming: []},
-            upcoming: true,//mode            
+            upcoming: false,//mode            
             pageStart: 0,
             pageEnd: 1 
         };        
