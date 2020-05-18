@@ -24,9 +24,17 @@ const BrowserNotSupportedContainer = styled.main`
     }
 `;
 
+const LinkPreview = styled.div`
+    display: none;
+`;
+
 const BrowserNotSupported = () => {
     return(
         <BrowserNotSupportedContainer>
+            <LinkPreview>
+                <h1>indiestats.gg: Analytics For All</h1>
+                <h2>Welcome to indiestats.gg. The only source of player stats for all competitors in the SoCal region!</h2>
+            </LinkPreview>
             <h1>Browser Not Supported</h1>            
             <div>
                 <a href='https://www.google.com/chrome/'><img src={chrome}></img></a>

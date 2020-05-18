@@ -31,7 +31,7 @@ app.get('*', (req, res)=>{
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Smash Stats</title>
+        <title>indiestats.gg</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, intitial-scale=1.0">
         <meta http-equiv="X-UA-Comptaible" content="ie=edge">
