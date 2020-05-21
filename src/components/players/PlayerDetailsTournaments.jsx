@@ -184,18 +184,16 @@ const PaginationButton = styled.button`
 `;
 
 const PlayerDetailsTournaments = (props) => {
-    const [tournaments, setTournaments] = useState([]);
-    const [banners, setBanners] = useState([]);
+    const [tournaments, setTournaments] = useState([]);    
     const [page, setPage] = useState(1);
     useEffect(() => {
         axios.get('https://' + process.env.DOMAIN + '/api/players/tournaments/' + encodeURIComponent(props.player.gamerTag))
         .then(res => {
             let imports = res.data.tournaments.map(t => import(/* webpackMode: "eager" */ `../../../public/tournament_banners/${t.shortName.split(' ')[0]}96px.png`));
-            Promise.all(imports).then(images => {                
-                setBanners(images.map(banner => banner.default));
-            });
-            setTournaments(res.data.tournaments);
-            setPage(1);
+            Promise.all(imports).then(images => {  
+                setTournaments(res.data.tournaments.map((t,i) => Object.assign({}, t, {banner: images[i].default})));                
+                setPage(1);              
+            });            
         });
     },[props.player]);
     
@@ -205,7 +203,7 @@ const PlayerDetailsTournaments = (props) => {
             .map((t, i) => {
                 return <Link key = {i} to = {`/tournaments/${t.shortName.replace(' ', '-')}`}>
                     <TournamentListing>
-                        <img src = {banners[i]}/>
+                        <img src = {t.banner}/>
                         <span>{t.name}</span>
                         <PlayerInfo>
                             <div><span>Place</span><span>{t.placement}</span></div>
