@@ -69,19 +69,19 @@ const PlayerInfo = styled.div`
 `;
 
 const CardsTooltip = styled(Tooltip)`  
-  display: none;/*hidden on desktop*/
+  display: none;/*hidden on large view*/
   top: 24px;
   right: 16px;
   p{
     width: 84px;
-    right: -12px;
+    right: -8px;
     top: -60px;
     &:after{
       left: 79%;
     }
   }
   @media screen and (max-width: 1180px) {/*adjusts grid for cards to be placed verticlly*/
-    display: block;
+    display: flex;/*visible when vertical */    
   }
 `;
 
@@ -128,8 +128,8 @@ const Players = (props) => {
   }  
 
   useEffect(() => {
-    axios.all([axios.get('http://' + process.env.DOMAIN + '/api/players/powerRanks'),
-    axios.get('http://' + process.env.DOMAIN + '/api/players/listing/')])
+    axios.all([axios.get('https://' + process.env.DOMAIN + '/api/players/powerRanks'),
+    axios.get('https://' + process.env.DOMAIN + '/api/players/listing/')])
     .then(axios.spread((ranks, players ) => {
       const tagDict = players.data.reduce((acc, cur) => {
         if(cur.icon || cur.iconColor || cur.tagColor){

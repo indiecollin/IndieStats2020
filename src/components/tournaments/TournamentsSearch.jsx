@@ -47,7 +47,8 @@ const SearchBar = styled.div`
         height: 20px;
         cursor: pointer;
         position: absolute;
-        right: 14px;
+        top: -1px;
+        right: 9px;
         background-color: ${dateRangeHighlight};
         border: none;
         outline: none;
@@ -61,8 +62,8 @@ const SearchTooltip = styled(Tooltip)`
     @media screen and (max-width: 480px){
         p{
             padding: 8px 0;
-            left: -72px;
-            top: -72px;
+            top: -62px;
+            left: -69px;
             &::after{
                 left: calc(50% + 8px);
             }

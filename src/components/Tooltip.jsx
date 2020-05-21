@@ -6,18 +6,25 @@ import TipIcon from './svgs/TipIcon.jsx';
 const tooltip = '#252839';
 
 const Wrapper = styled.span`    
-    cursor: pointer;
-    position: absolute;
-    top: 2px;
-    right: 16px;
     display: flex;                        
-    justify-content: center;                    
+    justify-content: center; 
+    align-items: center;                   
+    position: absolute;
+    top: -3px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
     box-sizing: content-box;
-    z-index: 1000;
+    z-index: 1000;    
+    cursor: pointer;
         
     &:hover p{
         display: block;
         opacity: 1;
+    }    
+
+    span{
+        height: 16px;
     }
 
     p{

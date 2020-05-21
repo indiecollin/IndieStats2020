@@ -8,7 +8,8 @@ Promise = require('bluebird');
    
 router.route('/smashgg')
 .post((req,res) => {          
-    mongoose.connect(`mongodb://${req.body.user}:${req.body.auth}@localhost:27017/IndieStats`, { useNewUrlParser: true });
+    mongoose.connect(`mongodb://${req.body.user}:${req.body.auth}@localhost:27017/IndieStats`, { useUnifiedTopology: true, useNewUrlParser: true });
+    mongoose.set('useCreateIndex', true);
     let phaseGroups =[];
     new Promise((resolve,reject) => {//pulls tournament phases from smash.gg                
         request('https://api.smash.gg/tournament/' + req.body.link + '/event/' + req.body.game + '?expand[]=phase', (err,res,body) => {                                    

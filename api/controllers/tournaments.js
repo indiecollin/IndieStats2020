@@ -3,7 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PSWD}@localhost:27017/IndieStats`, { useNewUrlParser: true });
+mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PSWD}@localhost:27017/IndieStats`, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 
 router.route('/tournaments/events')
 .get((req,res) => {         

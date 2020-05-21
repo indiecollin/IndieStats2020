@@ -421,7 +421,7 @@ class TournamentsDetails extends Component{
 
     componentDidUpdate(prevProps){
         if(this.props.tournament._id !== prevProps.tournament._id){
-            axios.get('http://' + process.env.DOMAIN + '/api/tournaments/players/' + this.props.tournament._id)
+            axios.get('https://' + process.env.DOMAIN + '/api/tournaments/players/' + this.props.tournament._id)
             .then(players => {                                
                 this.setState({
                     tournament: Object.assign({}, this.props.tournament, players.data),

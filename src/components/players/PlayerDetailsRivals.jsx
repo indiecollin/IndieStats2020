@@ -597,16 +597,16 @@ class PlayerDetailsRivals extends Component{
     }    
 
     getRivalData(player, rival, newPlayer){
-        (newPlayer ? axios.get('http://' + process.env.DOMAIN + '/api/players/rivals/' + encodeURIComponent(player.gamerTag)) : Promise.resolve({data:{}}))
+        (newPlayer ? axios.get('https://' + process.env.DOMAIN + '/api/players/rivals/' + encodeURIComponent(player.gamerTag)) : Promise.resolve({data:{}}))
         .then(res => {            
             const rivals = res.data;
             if(newPlayer) this.setState({rivals: rivals});
             axios.all([
-                axios.get('http://' + process.env.DOMAIN + '/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),            
-                axios.get('http://' + process.env.DOMAIN + '/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
-                axios.get('http://' + process.env.DOMAIN + '/api/players/records/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),                
-                axios.get('http://' + process.env.DOMAIN + '/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
-                axios.get('http://' + process.env.DOMAIN + '/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag))
+                axios.get('https://' + process.env.DOMAIN + '/api/players/matchHistory/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),            
+                axios.get('https://' + process.env.DOMAIN + '/api/players/player/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
+                axios.get('https://' + process.env.DOMAIN + '/api/players/records/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),                
+                axios.get('https://' + process.env.DOMAIN + '/api/players/highestSet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag)),
+                axios.get('https://' + process.env.DOMAIN + '/api/players/lastMet/' + encodeURIComponent(player.gamerTag) +'/' + encodeURIComponent(rival ? rival : rivals[0].gamerTag))
             ]).then(axios.spread((matchHistory, rival, records, highestSet, lastMet) => {                           
                 import(/* webpackMode: "eager" */ `../../../public/rival_portraits/${rival.data.mains ? rival.data.mains.split(',')[0] : 'default'}.png`).then(rivalImg => {
                     this.setState({rivalPortrait: rivalImg.default});
