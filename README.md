@@ -1,4 +1,4 @@
-####<https://indiestats.gg/>
+<https://indiestats.gg/>
 
 ### An analytics app for the Super Smash Bros Ultimate competetive community.
 
