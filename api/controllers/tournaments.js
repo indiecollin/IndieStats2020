@@ -25,7 +25,7 @@ router.route('/tournaments/events')
         else if(req.query.endDate){tournamentListQuery.eventDate = {$lte: new Date(+req.query.endDate)};}            
         if(req.query.search){ tournamentListQuery.$or = [{name: {$regex: new RegExp(decodeURI(req.query.search), 'i')}}, {shortName: {$regex: new RegExp(decodeURI(req.query.search), 'i')}}];}           
         if(req.query.lastTournament){ tournamentListQuery._id = {$gt: req.query.lastTournament} }        
-        schemas.tournamentListing.find(tournamentListQuery).sort({'eventDate': -1}).limit(req.query.count ? parseInt(req.query.count): 0).lean()
+        schemas.tournamentListing.find(tournamentListQuery).sort({'_id': 1}).limit(req.query.count ? parseInt(req.query.count): 0).lean()
         .then(tournamentListings => {                
             tournamentListings.forEach(tournamentListing => {                    
                 const curTournament = tournaments.find(tournament => {return tournament._id.toString() == tournamentListing._id.toString();});                
