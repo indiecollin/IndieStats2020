@@ -51,7 +51,7 @@ router.route('/tournaments/listings')
     else if(req.query.startDate){ tournamentListQuery.eventDate = {$gte: new Date(+req.query.startDate)};}
     else if(req.query.endDate){tournamentListQuery.eventDate = {$lte: new Date(+req.query.endDate)};}            
     if(req.query.search){ tournamentListQuery.$or = [{name: {$regex: new RegExp(req.query.search, 'i')}}, {shortName: {$regex: new RegExp(req.query.search, 'i')}}];}            
-    schemas.tournamentListing.find(tournamentListQuery).limit(req.query.count ? parseInt(req.query.count): 0).lean()
+    schemas.tournamentListing.find(tournamentListQuery).sort({'eventDate': -1}).limit(req.query.count ? parseInt(req.query.count): 0).lean()
     .then(tournamentListings => {
         if(tournamentListings){res.json(tournamentListings);}
         else{ res.status(404).send('Error Retrieving Tournaments.'); }                

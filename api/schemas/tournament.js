@@ -10,7 +10,7 @@ const tournamentSchema = new Schema({
     placement: Number,
     matches: String
   }],
-  matches: {        
+  matches: [{        
     winnerId: Number,
     loserId: Number,
     winnerScore: Number,
@@ -18,7 +18,7 @@ const tournamentSchema = new Schema({
     placement: Number,
     round: Number,
     bracket: Boolean
-  }
+  }]
 });
 
 module.exports = mongoose.model('tournament', tournamentSchema);
