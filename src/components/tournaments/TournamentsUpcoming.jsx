@@ -125,7 +125,7 @@ class TournamentsUpcoming extends Component{
             listingClickY: null,
             listingScrollUp: null,
             tournaments: []
-        };
+        };        
     }
 
     componentDidMount(){
@@ -178,7 +178,7 @@ class TournamentsUpcoming extends Component{
     componentWillUnmount() {
         clearInterval(this.interval);
     }
-
+    
     render(){
         return (
             <UpcomingTournamentsContainer>
@@ -187,7 +187,7 @@ class TournamentsUpcoming extends Component{
                     <UpcomingListingsWrapper expanded = {this.state.expanded} ref = {this.listingRef}>                        
                         {
                             this.state.tournaments.map((t, i) => {
-                                return <UpcomingListing key = {t.name}>
+                                return <UpcomingListing key = {t.name} onClick = {() => window.open(t.bracketLink)}>
                                     <TournamentBanner src={t.banner} />
                                     <TournamentName>{t.name}</TournamentName>
                                     <DataGrid></DataGrid>

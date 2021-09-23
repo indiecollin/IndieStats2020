@@ -47,7 +47,7 @@ const StyledFooter = styled.footer`
 const Footer = () => {
     return(
         <StyledFooter>
-            <span>© 2020 indiestats.gg</span>
+            <span>© 2021 indiestats.gg</span>
             <a href="mailto:collinalexcain@gmail.com">Contact Us</a>            
         </StyledFooter>
     )    

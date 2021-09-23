@@ -168,7 +168,7 @@ const DateRange = styled.div`
                         font-size: 20px;
                         font-weight: 550;
                         text-shadow: ${props => '1px -2px 0 ' + props.theme.black + ' , -2px -2px 0 ' + props.theme.black + ' , -2px 2px 0 ' + props.theme.black + ' , 2px 2px 0 ' + props.theme.black};
-                        margin: 0 40px;
+                        margin: 0 16px;
                     }
                     .react-calendar__navigation__prev2-button, .react-calendar__navigation__next2-button{
                         display: none;

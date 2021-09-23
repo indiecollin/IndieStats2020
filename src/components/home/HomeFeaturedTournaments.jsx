@@ -180,7 +180,7 @@ class HomeFeaturedTournaments extends Component{
         super(props);
         this.state = {
             tournaments: {recent: [], upcoming: []},
-            upcoming: false,//mode            
+            upcoming: true,//mode            
             pageStart: 0,
             pageEnd: 1 
         };        
@@ -197,10 +197,10 @@ class HomeFeaturedTournaments extends Component{
             Promise.all(imports).then(images => {                                               
                 let allTournaments = tournaments.data.map((t, i) => Object.assign({}, t, {banner: images[i].default}))
                 .reduce((acc, cur) => {//splits tournaments into two arrays as properties of an object
-                    if(new Date(cur.eventDate < new Date()) && !cur.featured){
+                    if(new Date(cur.eventDate) < new Date() && !cur.featured){
                         acc.recent.push(cur)
                     }
-                    else if(new Date(cur.eventDate >= new Date())){
+                    else if(new Date(cur.eventDate) >= new Date()){
                         acc.upcoming.push(cur)
                     }
                     return acc;
@@ -248,7 +248,7 @@ class HomeFeaturedTournaments extends Component{
                             .filter((t, i) => i >= this.state.pageStart && i <= this.state.pageEnd)
                             .map((t,i) => {
                                 return this.state.upcoming ?
-                                <TournamentListing key = {t.name}>
+                                <TournamentListing key = {t.name} onClick = {() => window.open(t.bracketLink)}>
                                         <img src = {t.banner}/>
                                         <div>
                                             <span>{t.shortName}</span>
