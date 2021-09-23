@@ -58,6 +58,7 @@ const UpcomingListing = styled.div`
     display: grid;
     grid-template-columns: 48px 1fr;                        
     background-color: ${props => props.theme.tourneyColor};
+    cursor: pointer;
 
     @media screen and (max-width: 706px){/*stacks under TournamentsPast*/
         grid-column: 1 / -1;                

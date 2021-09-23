@@ -69,10 +69,7 @@ const FeaturedTournaments = styled.div`
     }
 
     a{
-        text-decoration: none;  
-        &:hover{
-            outline: 2px solid ${props => props.theme.hoverRed};
-        }              
+        text-decoration: none;          
     }
 
     @media screen and (max-width: 480px) {/*shrinks component*/
@@ -98,7 +95,12 @@ const FeaturedTournaments = styled.div`
 const TournamentListing = styled.div`
     display: flex;          
     margin-top: 4px;        
-    margin-bottom: 4px;        
+    margin-bottom: 4px;
+    cursor: pointer;
+    
+    &:hover{
+        outline: 2px solid ${props => props.theme.hoverRed};
+    }
 
     img{
         width: 160px;
@@ -201,10 +203,10 @@ class HomeFeaturedTournaments extends Component{
                         acc.recent.push(cur)
                     }
                     else if(new Date(cur.eventDate) >= new Date()){
-                        acc.upcoming.push(cur)
+                        acc.upcoming.unshift(cur)
                     }
                     return acc;
-                }, {recent:[],upcoming: []});
+                }, {recent:[],upcoming: []});                
                 this.setState({tournaments: allTournaments});
             });
         });             
