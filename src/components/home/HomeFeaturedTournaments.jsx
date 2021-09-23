@@ -11,7 +11,7 @@ const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
 const tournamentsPerPage = 2;
-const daysBackward = 365;
+const daysBackward = 1000;
 const daysForward = 60;
 
 const FeaturedTournaments = styled.div`  
