@@ -11,7 +11,7 @@ const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
 const tournamentsPerPage = 2;
-const daysBackward = 100;
+const daysBackward = 10000;
 const daysForward = 60;
 
 const FeaturedTournaments = styled.div`  
@@ -197,10 +197,10 @@ class HomeFeaturedTournaments extends Component{
             Promise.all(imports).then(images => {                                               
                 let allTournaments = tournaments.data.map((t, i) => Object.assign({}, t, {banner: images[i].default}))
                 .reduce((acc, cur) => {//splits tournaments into two arrays as properties of an object
-                    if(new Date(cur.eventDate < new Date()) && !cur.featured){
+                    if(new Date(cur.eventDate) < new Date() && !cur.featured){
                         acc.recent.push(cur)
                     }
-                    else if(new Date(cur.eventDate >= new Date())){
+                    else if(new Date(cur.eventDate) >= new Date()){
                         acc.upcoming.push(cur)
                     }
                     return acc;
@@ -212,9 +212,10 @@ class HomeFeaturedTournaments extends Component{
 
     pageLeft(){
         this.setState(prevState => {
+        const pageEnd = prevState.pageEnd % 2 === 0 ? prevState.pageEnd + 1 : prevState.pageEnd
             return {
                 pageStart:  Math.max(0, prevState.pageStart - tournamentsPerPage),
-                pageEnd:  Math.max(tournamentsPerPage - 1, prevState.pageEnd - tournamentsPerPage)
+                pageEnd:  Math.max(tournamentsPerPage - 1, pageEnd - tournamentsPerPage)
             }
         });
     }
@@ -248,6 +249,7 @@ class HomeFeaturedTournaments extends Component{
                             .filter((t, i) => i >= this.state.pageStart && i <= this.state.pageEnd)
                             .map((t,i) => {
                                 return this.state.upcoming ?
+                                <a href={t.bracketLink} key = {t.name} target="_blank">
                                 <TournamentListing key = {t.name}>
                                         <img src = {t.banner}/>
                                         <div>
@@ -256,6 +258,7 @@ class HomeFeaturedTournaments extends Component{
                                             <span>{t.venue}</span>
                                         </div>
                                 </TournamentListing>
+                                </a>
                                 :
                                 <Link to={`/tournaments/${t.shortName.replace(' ', '-')}`} key = {t.name}>
                                     <TournamentListing>
