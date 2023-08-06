@@ -11,7 +11,7 @@ const headerPrimary = '#B80612';
 const headerSecondary = '#D82835';
 const background = '#FFC7C8';
 const tournamentsPerPage = 2;
-const daysBackward = 1000;
+const daysBackward = 10000;
 const daysForward = 60;
 
 const FeaturedTournaments = styled.div`  
@@ -214,9 +214,10 @@ class HomeFeaturedTournaments extends Component{
 
     pageLeft(){
         this.setState(prevState => {
+        const pageEnd = prevState.pageEnd % 2 === 0 ? prevState.pageEnd + 1 : prevState.pageEnd
             return {
                 pageStart:  Math.max(0, prevState.pageStart - tournamentsPerPage),
-                pageEnd:  Math.max(tournamentsPerPage - 1, prevState.pageEnd - tournamentsPerPage)
+                pageEnd:  Math.max(tournamentsPerPage - 1, pageEnd - tournamentsPerPage)
             }
         });
     }
